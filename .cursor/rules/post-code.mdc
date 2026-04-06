@@ -1,0 +1,14 @@
+---
+description: Post-code checklist — run after ANY code edit: lint then TypeScript check
+alwaysApply: false
+---
+
+# Post-Code Rules
+
+After any code change, in order:
+
+1. `rtk yarn lint` — fix ALL ESLint errors before proceeding
+2. `rtk yarn tsc --noEmit` — run only if TypeScript errors are suspected
+
+Stop at the first error. Fix it before moving to the next step.
+Never commit code that fails lint.

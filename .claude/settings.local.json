@@ -5,7 +5,21 @@
       "Bash(mkdir -p \"C:\\\\Projects\\\\FinApp\\\\fin-app-mobile\\\\.claude\\\\rules\")",
       "Bash(mkdir -p \"C:\\\\Projects\\\\FinApp\\\\fin-app-mobile\\\\.claude\\\\commands\")",
       "Bash(mkdir -p \"C:\\\\Projects\\\\FinApp\\\\fin-app-mobile\\\\.claude\\\\reviews\")",
-      "Bash(node:*)"
+      "Bash(node:*)",
+      "WebSearch",
+      "mcp__plugin_context7_context7__resolve-library-id",
+      "mcp__plugin_context7_context7__query-docs",
+      "Bash(rtk git:*)",
+      "Bash(rtk npx:*)",
+      "Bash(/c/nvm4w/nodejs/npx expo:*)",
+      "Bash(/c/nvm4w/nodejs/npm install:*)",
+      "Bash(rtk yarn:*)",
+      "Bash(yarn tsc:*)",
+      "Bash(command -v rtk)",
+      "Bash(yarn lint:*)",
+      "Bash(npx expo:*)",
+      "Bash(yarn add:*)",
+      "Bash(node_modules/.bin/eslint:*)"
     ]
   }
 }

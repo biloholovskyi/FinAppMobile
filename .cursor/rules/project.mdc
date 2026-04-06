@@ -1,0 +1,20 @@
+---
+alwaysApply: true
+---
+
+# fin-app-mobile
+
+React Native + Expo SDK 52. Expo Router v3 (file-based). NativeWind v4. FSD architecture.
+Backend: fin-app-backend REST API. Currency: UAH (uk-UA locale).
+
+## Commands (always prefix with `rtk`)
+
+- `rtk npx expo start` — dev server
+- `rtk npx expo start --clear` — dev server (clear cache)
+- `rtk yarn lint` — ESLint auto-fix
+- `rtk yarn tsc --noEmit` — TypeScript check (no emit)
+- `rtk eas build --platform all` — production build via EAS
+
+## Environment Variables
+
+- `EXPO_PUBLIC_API_URL` — REST API base URL (fin-app-backend)
