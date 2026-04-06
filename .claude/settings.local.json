@@ -19,7 +19,8 @@
       "Bash(yarn lint:*)",
       "Bash(npx expo:*)",
       "Bash(yarn add:*)",
-      "Bash(node_modules/.bin/eslint:*)"
+      "Bash(node_modules/.bin/eslint:*)",
+      "Bash(python3:*)"
     ]
   }
 }

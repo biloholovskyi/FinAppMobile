@@ -19,11 +19,13 @@ Backend: fin-app-backend REST API. Currency: UAH (uk-UA locale).
 | REST API call / React Query / Zustand | @.claude/rules/api.md |
 | Navigation / routing / deep links / layout | @.claude/rules/navigation.md |
 | After any code change (always) | @.claude/rules/post-code.md |
+| HTML screen design / prototype | Use `screen-designer` agent |
 
 ## Agents
 
 - `finapp-mobile-expert` — all development (screens, API, navigation, styling, bugs)
 - `code-reviewer` — code review after implementation
+- `screen-designer` — HTML screen designs (designs/screens/*.html)
 
 ## Environment Variables
 
