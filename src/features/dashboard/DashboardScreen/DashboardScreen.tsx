@@ -4,6 +4,7 @@ import { LinearGradient } from 'expo-linear-gradient'
 import { useDashboardScreen } from './useDashboardScreen'
 import { ExpenseComparisonCard } from './ExpenseComparisonCard'
 import { ExpenseDynamicsCard } from './ExpenseDynamicsCard'
+import { WalletsCard } from './WalletsCard'
 
 export function DashboardScreen() {
   const {
@@ -60,6 +61,8 @@ export function DashboardScreen() {
             chartDataPrev={chartDataPrev}
             currentDayOfMonth={currentDayOfMonth}
           />
+
+          <WalletsCard />
         </ScrollView>
       )}
     </SafeAreaView>

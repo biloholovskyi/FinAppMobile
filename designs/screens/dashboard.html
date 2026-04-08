@@ -327,6 +327,116 @@
       animation: fadeUp var(--t-slow) var(--ease-out) both;
       animation-delay: 0ms;
     }
+    /* ── Wallets section ─────────────────────────────── */
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+    .spinning { animation: spin 1s linear infinite; }
+
+    .wallets-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .total-balance {
+      font-family: 'DM Mono', monospace;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.5px;
+    }
+
+    .wallet-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .wallet-row:last-child { border-bottom: none; }
+
+    .wallet-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: var(--radius-sm);
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-default);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-secondary);
+      flex-shrink: 0;
+    }
+
+    .wallet-name-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .wallet-name {
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .integration-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 1px 6px;
+      border-radius: var(--radius-full);
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-subtle);
+      font-family: 'Inter', sans-serif;
+      font-size: 9px;
+      font-weight: 600;
+      color: var(--accent-green);
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+      width: fit-content;
+    }
+
+    .wallet-balance-col {
+      font-family: 'DM Mono', monospace;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      white-space: nowrap;
+      margin-right: 8px;
+    }
+    .balance-pos { color: var(--accent-green); }
+    .balance-neg { color: var(--accent-red); }
+    .balance-zero { color: var(--text-secondary); }
+
+    .btn-refresh {
+      width: 28px;
+      height: 28px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-default);
+      background: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-secondary);
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: border-color var(--t-fast) var(--ease-out),
+                  color var(--t-fast) var(--ease-out);
+    }
+    .btn-refresh:hover {
+      border-color: var(--accent-blue);
+      color: var(--accent-blue);
+    }
+    .btn-refresh:disabled { opacity: 0.4; cursor: not-allowed; }
   </style>
 </head>
 <body>
@@ -383,6 +493,54 @@
           <div class="card-label">ДИНАМІКА ВИТРАТ</div>
           <div class="chart-wrap">
             <canvas id="expenseChart"></canvas>
+          </div>
+        </div>
+
+        <!-- ── Block 3: Кошельки ──────────────────────── -->
+        <div class="card" style="animation-delay: 240ms;">
+          <div class="wallets-header">
+            <div class="card-label" style="margin-bottom: 0;">КОШЕЛЬКИ</div>
+            <span class="total-balance">₴56 170,50</span>
+          </div>
+
+          <!-- Наличные -->
+          <div class="wallet-row">
+            <div class="wallet-icon">
+              <i data-lucide="wallet" width="14" height="14"></i>
+            </div>
+            <div class="wallet-name-wrap">
+              <span class="wallet-name">Наличные</span>
+            </div>
+            <span class="wallet-balance-col balance-pos">₴12 450,00</span>
+          </div>
+
+          <!-- Monobank (обновляется — spinning) -->
+          <div class="wallet-row">
+            <div class="wallet-icon">
+              <i data-lucide="credit-card" width="14" height="14"></i>
+            </div>
+            <div class="wallet-name-wrap">
+              <span class="wallet-name">Monobank</span>
+              <span class="integration-badge">monobank</span>
+            </div>
+            <span class="wallet-balance-col balance-pos">₴45 820,50</span>
+            <button class="btn-refresh" disabled title="Обновить">
+              <i data-lucide="refresh-cw" width="13" height="13" class="spinning"></i>
+            </button>
+          </div>
+
+          <!-- Карта ПриватБанк -->
+          <div class="wallet-row">
+            <div class="wallet-icon">
+              <i data-lucide="credit-card" width="14" height="14"></i>
+            </div>
+            <div class="wallet-name-wrap">
+              <span class="wallet-name">Карта ПриватБанк</span>
+            </div>
+            <span class="wallet-balance-col balance-neg">−₴2 100,00</span>
+            <button class="btn-refresh" title="Обновить">
+              <i data-lucide="refresh-cw" width="13" height="13"></i>
+            </button>
           </div>
         </div>
 
