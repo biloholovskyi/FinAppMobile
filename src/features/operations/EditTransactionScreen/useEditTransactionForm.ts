@@ -31,7 +31,7 @@ export function useEditTransactionForm(transaction: Transaction | undefined) {
     type, setType,
     amountStr, setAmountStr,
     description, setDescription,
-    transactionTime,
+    transactionTime, setTransactionTime,
     categoryId, setCategoryId,
     subCategoryId, setSubCategoryId,
     targetWalletId, setTargetWalletId,
