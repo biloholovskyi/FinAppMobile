@@ -12,6 +12,7 @@ export function useEditTransactionForm(transaction: Transaction | undefined) {
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false)
   const [isSubCategoryModalOpen, setIsSubCategoryModalOpen] = useState(false)
   const [isWalletModalOpen, setIsWalletModalOpen] = useState(false)
+  const [isDatePickerOpen, setIsDatePickerOpen] = useState(false)
 
   useEffect(() => {
     if (!transaction) return
@@ -22,7 +23,7 @@ export function useEditTransactionForm(transaction: Transaction | undefined) {
     setCategoryId(transaction.categoryId)
     setSubCategoryId(transaction.subCategoryId)
     setTargetWalletId(transaction.targetWalletId ?? null)
-  }, [transaction?.id])
+  }, [transaction, transaction?.id])
 
   const showCategoryRows = type !== WalletTransactionType.transfer
   const showTargetWalletRow = type === WalletTransactionType.transfer
@@ -38,6 +39,7 @@ export function useEditTransactionForm(transaction: Transaction | undefined) {
     isCategoryModalOpen, setIsCategoryModalOpen,
     isSubCategoryModalOpen, setIsSubCategoryModalOpen,
     isWalletModalOpen, setIsWalletModalOpen,
+    isDatePickerOpen, setIsDatePickerOpen,
     showCategoryRows,
     showTargetWalletRow,
   }

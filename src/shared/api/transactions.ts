@@ -17,7 +17,7 @@ type UpdateTransactionDto = {
 }
 
 export const updateTransaction = (id: string, dto: UpdateTransactionDto): Promise<Transaction> =>
-  apiClient.patch(`/transactions/${id}`, dto).then(r => r.data)
+  apiClient.patch(`wallets/transactions/${id}`, dto).then(r => r.data)
 
 export const deleteTransaction = (id: string): Promise<void> =>
-  apiClient.delete(`/transactions/${id}`).then(() => undefined)
+  apiClient.delete(`wallets/transactions/${id}`).then(() => undefined)

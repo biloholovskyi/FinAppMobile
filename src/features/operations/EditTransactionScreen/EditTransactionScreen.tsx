@@ -7,7 +7,18 @@ import { hexToRgba } from '@/shared/utils/colors'
 import { useEditTransactionScreen } from './useEditTransactionScreen'
 import { CategoryPickerModal } from './CategoryPickerModal/CategoryPickerModal'
 import { WalletPickerModal } from './WalletPickerModal/WalletPickerModal'
+import { DateTimePickerModal } from './DateTimePickerModal/DateTimePickerModal'
 import { FormRow } from './FormRow'
+
+function formatTransactionTime(isoString: string): string {
+  if (!isoString) return '—'
+  const date = new Date(isoString)
+  const now = new Date()
+  const isToday = date.toDateString() === now.toDateString()
+  const timeStr = date.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })
+  if (isToday) return `Сегодня, ${timeStr}`
+  return `${date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' })}, ${timeStr}`
+}
 
 const TYPE_COLOR: Record<WalletTransactionType, string> = {
   [WalletTransactionType.expense]: '#FF4B6B',
@@ -30,12 +41,13 @@ export function EditTransactionScreen() {
   const {
     isLoading, isSaving, isDeleting,
     sourceWalletName, walletId,
-    type, setType, amountStr, setAmountStr, description, setDescription,
+    type, setType, amountStr, setAmountStr, description, setDescription, transactionTime, setTransactionTime,
     categoryId, setCategoryId, subCategoryId, setSubCategoryId,
     targetWalletId, setTargetWalletId,
     isCategoryModalOpen, setIsCategoryModalOpen,
     isSubCategoryModalOpen, setIsSubCategoryModalOpen,
     isWalletModalOpen, setIsWalletModalOpen,
+    isDatePickerOpen, setIsDatePickerOpen,
     showCategoryRows, showTargetWalletRow,
     selectedCategory, selectedSubCategory, selectedTargetWallet,
     hasSubCategories, categories, wallets, onSave, handleDelete,
@@ -108,7 +120,7 @@ export function EditTransactionScreen() {
                 categoryColor={selectedSubCategory?.color ?? undefined} isEmpty={!selectedSubCategory}
                 onPress={() => setIsSubCategoryModalOpen(true)} showChevron />
             )}
-            <View className="flex-row items-center gap-3 px-4 py-3.5">
+            <View className="flex-row items-center gap-3 px-4 py-3.5 border-b border-white/[0.04]">
               <View className="w-[30px] h-[30px] rounded-lg bg-[#181828] border border-white/[0.04] items-center justify-center flex-shrink-0">
                 <icons.PencilLine size={14} color="#8888AA" />
               </View>
@@ -118,6 +130,9 @@ export function EditTransactionScreen() {
                   placeholder="Добавить описание..." placeholderTextColor="#44445A" maxLength={512} />
               </View>
             </View>
+            <FormRow icon="calendar" label="Дата и время"
+              value={formatTransactionTime(transactionTime)}
+              onPress={() => setIsDatePickerOpen(true)} showChevron />
           </View>
 
           <View className="px-5 pt-5 gap-2.5">
@@ -143,6 +158,12 @@ export function EditTransactionScreen() {
         onSelect={setSubCategoryId} onClose={() => setIsSubCategoryModalOpen(false)} />
       <WalletPickerModal visible={isWalletModalOpen} wallets={wallets} selectedId={targetWalletId}
         sourceWalletId={walletId} onSelect={setTargetWalletId} onClose={() => setIsWalletModalOpen(false)} />
+      <DateTimePickerModal
+        visible={isDatePickerOpen}
+        value={transactionTime ? new Date(transactionTime) : new Date()}
+        onChange={date => setTransactionTime(date.toISOString())}
+        onClose={() => setIsDatePickerOpen(false)}
+      />
     </SafeAreaView>
   )
 }

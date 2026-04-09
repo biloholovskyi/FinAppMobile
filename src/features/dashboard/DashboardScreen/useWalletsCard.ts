@@ -24,6 +24,7 @@ export function useWalletsCard() {
       await fetchMonobankStatementByWallet(wallet.id)
       await fetchMonobankBalanceByWallet(wallet.id)
       await queryClient.invalidateQueries({ queryKey: QUERY_KEYS.wallets.all })
+      await queryClient.invalidateQueries({ queryKey: QUERY_KEYS.transactions.all })
     } finally {
       setRefreshingId(null)
     }
