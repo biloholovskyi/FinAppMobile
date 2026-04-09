@@ -1,9 +1,5 @@
-import { View, Text } from 'react-native'
+import { EditTransactionScreen } from '@/features/operations/EditTransactionScreen/EditTransactionScreen'
 
 export default function EditTransactionRoute() {
-  return (
-    <View>
-      <Text>Edit Transaction (coming soon)</Text>
-    </View>
-  )
+  return <EditTransactionScreen />
 }

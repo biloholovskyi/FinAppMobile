@@ -9,6 +9,7 @@ import {
   type SectionListRenderItem,
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { router } from 'expo-router'
 import * as icons from 'lucide-react-native'
 import type { LucideIcon } from 'lucide-react-native'
 import { WalletTransactionType, type Transaction } from '@/entities/transaction'
@@ -18,9 +19,9 @@ import { hexToRgba } from '@/shared/utils/colors'
 import { formatAmount } from '@/shared/utils/currency'
 import { formatDayTotal, formatTime } from '@/shared/utils/dateAndTime'
 
-type TxItemProps = { tx: Transaction }
+type TxItemProps = { tx: Transaction; onEdit: (id: string) => void }
 
-function TxItem({ tx }: TxItemProps) {
+function TxItem({ tx, onEdit }: TxItemProps) {
   const categoryInfo = tx.subCategory ?? tx.category ?? null
   const isTransfer = tx.type === WalletTransactionType.transfer
   const isIncome = tx.type === WalletTransactionType.income
@@ -77,6 +78,7 @@ function TxItem({ tx }: TxItemProps) {
             className="w-[30px] h-[30px] rounded-full items-center justify-center bg-[rgba(79,158,255,0.25)]"
             activeOpacity={0.7}
             hitSlop={8}
+            onPress={() => onEdit(tx.id)}
           >
             <icons.Pencil size={13} color="#4F9EFF" />
           </TouchableOpacity>
@@ -98,9 +100,13 @@ export function OperationsScreen() {
 
   const currentMonth = new Date().toLocaleDateString('ru-RU', { month: 'long', year: 'numeric' })
 
+  const handleEdit = useCallback((id: string) => {
+    router.push(`/transaction/${id}`)
+  }, [])
+
   const renderItem = useCallback<SectionListRenderItem<Transaction, DayGroup>>(
-    ({ item }) => <TxItem tx={item} />,
-    [],
+    ({ item }) => <TxItem tx={item} onEdit={handleEdit} />,
+    [handleEdit],
   )
 
   const renderSectionHeader = useCallback(
