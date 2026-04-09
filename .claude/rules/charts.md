@@ -1,3 +1,8 @@
+---
+paths:
+  - "designs/**/*.html"
+---
+
 # Charts Rule (Chart.js)
 
 Applies to: `designs/**/*.html` — load only when the screen contains charts or data visualizations.

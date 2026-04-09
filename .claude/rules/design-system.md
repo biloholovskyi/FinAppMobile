@@ -1,3 +1,8 @@
+---
+paths:
+  - "designs/**/*.html"
+---
+
 # Design System
 
 Applies to: `designs/**/*.html`

@@ -19,10 +19,6 @@ export function useDashboardScreen() {
     queryFn: fetchTransactions,
   })
 
-  console.log('[dashboard] transactions:', transactions.length, 'isError:', isError, 'error:', error)
-
-  console.log('transaction', transactions)
-
   const today = new Date()
   const currentDay = today.getDate()
   const currentMonthIndex = today.getMonth()

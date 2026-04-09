@@ -20,7 +20,35 @@
       "Bash(npx expo:*)",
       "Bash(yarn add:*)",
       "Bash(node_modules/.bin/eslint:*)",
-      "Bash(python3:*)"
+      "Bash(python3:*)",
+      "Bash(find *)",
+      "Bash(echo \"EXIT: $?\")",
+      "Bash(python3.exe -c \"print\\('hello'\\)\")",
+      "Bash(ls \"C:\\\\Users\\\\biloh\\\\.claude\\\\usage-data\\\\session-meta\"/*.json)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '[post-edit] Code changed — run /post-code before committing (rtk yarn lint && rtk yarn tsc --noEmit)'"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '[session-end] Remember: run /post-code if any code was changed this session'"
+          }
+        ]
+      }
     ]
   }
 }
