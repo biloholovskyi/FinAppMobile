@@ -51,7 +51,6 @@ fin-app-mobile/
 │       ├── commit/SKILL.md
 │       ├── lint/SKILL.md
 │       ├── post-code/SKILL.md
-│       ├── start-task/SKILL.md
 │       ├── implement-plan-step/SKILL.md
 │       ├── audit-plan/SKILL.md
 │       ├── audit-security/SKILL.md

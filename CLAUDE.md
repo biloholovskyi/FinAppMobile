@@ -17,10 +17,6 @@ Entry point for every Claude Code session. Load relevant rule(s) based on task t
 | Implementation planning | `ai/rules/common/implementation-plans.md` |
 | Plan audit | `ai/rules/common/skills/plan-audit.md` |
 | React / RN performance | `ai/rules/common/performance/_index.md` |
-| Git commit | `ai/rules/common/git-conventions.md` |
-| Branch kickoff | `ai/rules/common/skills/git-branch-kickoff.md` |
-| Release / EAS Build | `ai/rules/common/skills/git-release-flow.md` |
-| Hotfix | `ai/rules/common/skills/git-hotfix-flow.md` |
 | Full context | `.claude/AGENTS.md` |
 
 ## Dependency Constraints (CRITICAL)
@@ -55,7 +51,7 @@ Locale: `uk-UA` | Currency: `UAH`
 
 ## Skills
 
-`.claude/skills/`: `/commit`, `/lint`, `/post-code`, `/start-task`, `/implement-plan-step`, `/audit-plan`, `/audit-security`, `/review-react-perf`
+`.claude/skills/`: `/commit`, `/lint`, `/post-code`, `/implement-plan-step`, `/audit-plan`, `/audit-security`, `/review-react-perf`
 
 ## Agents
 

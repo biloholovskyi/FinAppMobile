@@ -150,7 +150,7 @@ Agent tier assignments:
 
 Skill tier assignments:
 - haiku: lint, test, build-all, check-circular, affected, typecheck-all, deploy-vercel-preview.
-- sonnet: commit, post-code, mr, start-task, release, release-flow, hotfix, fix-dual-runtime, db-migrate, extend-api-tester.
+- sonnet: commit, post-code, mr, release, release-flow, hotfix, fix-dual-runtime, db-migrate, extend-api-tester.
 - opus: audit-dual-runtime, audit-ui, audit-package-json, review-react-perf.
 - inherit: implement-plan-step, audit-plan, audit-security, deep-mr-review-backend-db, deep-mr-review-frontend.
 

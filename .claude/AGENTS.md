@@ -20,7 +20,6 @@ Full context index of all agents, skills, and rules.
 | `/commit` | Creating git commits with proper conventional format |
 | `/lint` | Running ESLint and fixing errors |
 | `/post-code` | Post-edit QA workflow (lint + tsc) |
-| `/start-task` | Starting a new feature/fix branch |
 | `/implement-plan-step` | Executing a single step from an implementation plan |
 | `/audit-plan` | Reviewing an implementation plan for completeness |
 | `/audit-security` | Security review of code changes |
@@ -44,7 +43,6 @@ Full context index of all agents, skills, and rules.
 | `ai/rules/common/react-18.md` | React 18 addendum (startTransition, useDeferredValue) |
 | `ai/rules/common/patterns.md` | TypeScript, async, error handling, testing patterns |
 | `ai/rules/common/post-code-workflow.md` | QA after edits (lint + tsc checklist) |
-| `ai/rules/common/git-conventions.md` | Commit format, branch naming, PR routing |
 | `ai/rules/common/commit-message-and-crosslinks.md` | Commit policy, crosslink style |
 | `ai/rules/common/token-economy.md` | Context-loading strategy, token efficiency |
 | `ai/rules/common/ai-models.md` | Model tier selection (haiku/sonnet/opus) |
@@ -74,9 +72,6 @@ Full context index of all agents, skills, and rules.
 | `ai/rules/common/skills/plan-audit.md` | Plan audit process |
 | `ai/rules/common/skills/agent-team-quality-gates.md` | Multi-agent quality gates |
 | `ai/rules/common/skills/feature-bug-phase-profiles.md` | Feature vs bug scope profiles |
-| `ai/rules/common/skills/git-branch-kickoff.md` | Branch creation workflow |
-| `ai/rules/common/skills/git-release-flow.md` | Release + EAS Build workflow |
-| `ai/rules/common/skills/git-hotfix-flow.md` | Hotfix workflow |
 
 ### Path-Gated Stubs (auto-loaded by Claude Code)
 

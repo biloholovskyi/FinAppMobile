@@ -12,11 +12,6 @@ Commit metadata and cross-reference policy for rules, prompts, and docs.
 
 ## Requirements
 
-Commit messages:
-- Use Conventional Commit format from `ai/rules/common/git-conventions.md`
-- Keep subject line <= COMMIT_SUBJECT_MAX_CHARS
-- Do not include COMMIT_FORBIDDEN_TRAILER in commit body or footers
-
 Crosslinks:
 - Use CROSSLINK_INTERNAL_STYLE for internal markdown links
 - Link rules with `ai/rules/...` paths (no `./` or `../` for rule links)
@@ -36,5 +31,4 @@ Crosslinks:
 
 ## Related Rules
 
-- `ai/rules/common/git-conventions.md`
 - `ai/rules/common/core-rules.md`

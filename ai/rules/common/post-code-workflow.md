@@ -40,4 +40,3 @@ Missing deps in useCallback/useEffect: add to dependency array
 ## Related Rules
 
 - `ai/rules/projects/fin-app-mobile/architecture.md` — project conventions
-- `ai/rules/common/git-conventions.md` — commit format after QA passes

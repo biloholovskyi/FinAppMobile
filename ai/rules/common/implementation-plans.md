@@ -151,7 +151,6 @@ Implement macro-phase (recommended order):
 - Audit and hardening (`ai/rules/common/skills/refactor-security-audit.md`)
 - Docs sync (when API/config/workflow changed)
 - Docs sync must apply Documentation SoT ownership map and mandatory cross-link direction
-- Commit-prep (`ai/rules/common/git-conventions.md`)
 
 Post-code: Reflect
 

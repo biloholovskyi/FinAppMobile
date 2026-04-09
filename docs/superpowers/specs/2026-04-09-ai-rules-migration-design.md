@@ -44,7 +44,6 @@ fin-app-mobile/
 │   ├── skills/
 │   │   ├── commit/SKILL.md               # новый
 │   │   ├── post-code/SKILL.md            # новый
-│   │   ├── start-task/SKILL.md           # новый
 │   │   ├── implement-plan-step/SKILL.md  # новый
 │   │   ├── audit-plan/SKILL.md           # новый
 │   │   ├── audit-security/SKILL.md       # новый

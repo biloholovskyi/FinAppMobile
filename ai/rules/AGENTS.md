@@ -14,7 +14,6 @@ Full catalog of all rule files. Use `ai/rules/common/core-rules.md` for task-bas
 - `ai/rules/common/react-18.md` — React 18 addendum (startTransition, useDeferredValue, useId)
 - `ai/rules/common/patterns.md` — TypeScript, async, error handling, testing, anti-patterns
 - `ai/rules/common/post-code-workflow.md` — mandatory QA after edits (lint + tsc + checklist)
-- `ai/rules/common/git-conventions.md` — commit format, branch naming, PR routing
 - `ai/rules/common/commit-message-and-crosslinks.md` — commit policy, crosslink style
 - `ai/rules/common/token-economy.md` — context-loading strategy, token efficiency rules
 - `ai/rules/common/ai-models.md` — model tier selection (haiku/sonnet/opus), decision matrix
@@ -44,6 +43,3 @@ Full catalog of all rule files. Use `ai/rules/common/core-rules.md` for task-bas
 - `ai/rules/common/skills/plan-audit.md` — plan audit process
 - `ai/rules/common/skills/agent-team-quality-gates.md` — multi-agent quality gates
 - `ai/rules/common/skills/feature-bug-phase-profiles.md` — feature vs bug scope profiles
-- `ai/rules/common/skills/git-branch-kickoff.md` — branch creation workflow (no Jira)
-- `ai/rules/common/skills/git-release-flow.md` — release + EAS Build + App Store submit
-- `ai/rules/common/skills/git-hotfix-flow.md` — hotfix workflow + EAS build

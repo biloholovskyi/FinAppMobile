@@ -51,5 +51,4 @@ Examples:
 
 ## References
 
-- `ai/rules/common/git-conventions.md`
 - `ai/rules/common/commit-message-and-crosslinks.md`

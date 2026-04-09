@@ -17,10 +17,7 @@ Load this first. Then load task-specific rule(s) from the table below.
 | Implementation planning | `ai/rules/common/implementation-plans.md` |
 | Plan audit | `ai/rules/common/skills/plan-audit.md` |
 | React / RN performance | `ai/rules/common/performance/_index.md` + `ai/rules/common/skills/react-best-practices.md` |
-| Git commit | `ai/rules/common/git-conventions.md` + `ai/rules/common/commit-message-and-crosslinks.md` |
-| Branch kickoff | `ai/rules/common/skills/git-branch-kickoff.md` |
-| Release / EAS Build | `ai/rules/common/skills/git-release-flow.md` |
-| Hotfix | `ai/rules/common/skills/git-hotfix-flow.md` |
+| Git commit | `ai/rules/common/commit-message-and-crosslinks.md` |
 | Quality gates (agent team) | `ai/rules/common/skills/agent-team-quality-gates.md` |
 | Feature vs bug scope | `ai/rules/common/skills/feature-bug-phase-profiles.md` |
 | Token budget | `ai/rules/common/token-economy.md` |

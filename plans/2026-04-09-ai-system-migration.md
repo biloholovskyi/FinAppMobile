@@ -53,7 +53,6 @@
 - `.claude/skills/commit/SKILL.md`
 - `.claude/skills/lint/SKILL.md`
 - `.claude/skills/post-code/SKILL.md`
-- `.claude/skills/start-task/SKILL.md`
 - `.claude/skills/implement-plan-step/SKILL.md`
 - `.claude/skills/audit-plan/SKILL.md`
 - `.claude/skills/audit-security/SKILL.md`
@@ -1573,7 +1572,6 @@ Before installing ANY new dependency:
 |-------|---------|
 | /post-code | Post-code QA: lint + tsc |
 | /commit | Generate conventional commit |
-| /start-task | Create work branch |
 | /lint | Run ESLint |
 | /implement-plan-step | Execute plan phase by phase |
 | /audit-plan | Verify implementation plan |
@@ -1691,7 +1689,6 @@ SSoT: `ai/rules/` | Entry point: `CLAUDE.md` (root) | Core routing: `ai/rules/co
 |-------|---------|-------|
 | /post-code | QA after code changes (lint + tsc) | sonnet |
 | /commit | Generate conventional commit | sonnet |
-| /start-task | Create work branch | sonnet |
 | /lint | Run ESLint | haiku |
 | /implement-plan-step | Execute plan phase by phase | inherit |
 | /audit-plan | Verify implementation plan | inherit |
