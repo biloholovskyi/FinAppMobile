@@ -16,8 +16,11 @@ type UpdateTransactionDto = {
   transactionTime?: string
 }
 
-export const updateTransaction = (id: string, dto: UpdateTransactionDto): Promise<Transaction> =>
-  apiClient.patch(`wallets/transactions/${id}`, dto).then(r => r.data)
+export const updateTransaction = (
+  id: string,
+  dto: UpdateTransactionDto,
+): Promise<Transaction> =>
+  apiClient.patch(`wallets/transactions/${id}`, dto).then((r) => r.data)
 
 export const deleteTransaction = (id: string): Promise<void> =>
   apiClient.delete(`wallets/transactions/${id}`).then(() => undefined)
