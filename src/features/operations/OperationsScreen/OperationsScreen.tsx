@@ -69,14 +69,29 @@ function TxItem({ tx }: TxItemProps) {
         )}
       </View>
 
-      <View className="items-end gap-[3px] flex-shrink-0">
-        <Text style={{ color: amountColor, fontFamily: 'monospace', fontSize: 13, fontWeight: '700' }}>
-          {amountStr}
-        </Text>
-        <Text className="text-[#44445A] text-[10px]">{formatTime(tx.transactionTime)}</Text>
-        <TouchableOpacity activeOpacity={0.7} hitSlop={8}>
-          <icons.Pencil size={12} color="#4F9EFF" />
-        </TouchableOpacity>
+      <View className="items-end justify-center gap-[7px] flex-shrink-0">
+        <View className="items-end gap-[2px]">
+          <Text style={{ color: amountColor, fontFamily: 'monospace', fontSize: 13, fontWeight: '700' }}>
+            {amountStr}
+          </Text>
+          <Text className="text-[#44445A] text-[10px]">{formatTime(tx.transactionTime)}</Text>
+        </View>
+        <View className="flex-row gap-[6px]">
+          <TouchableOpacity
+            className="w-[30px] h-[30px] rounded-full items-center justify-center bg-[rgba(79,158,255,0.25)]"
+            activeOpacity={0.7}
+            hitSlop={8}
+          >
+            <icons.Pencil size={13} color="#4F9EFF" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            className="w-[30px] h-[30px] rounded-full items-center justify-center bg-[rgba(255,75,107,0.2)]"
+            activeOpacity={0.7}
+            hitSlop={8}
+          >
+            <icons.Trash2 size={13} color="#FF4B6B" />
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   )

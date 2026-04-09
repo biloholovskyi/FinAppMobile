@@ -290,12 +290,10 @@
       cursor: pointer;
       transition: background var(--t-fast) var(--ease-out);
       border-radius: var(--radius-sm);
-      position: relative;
       animation: fadeUp var(--t-slow) var(--ease-out) both;
     }
     .tx-item:last-child { border-bottom: none; }
     .tx-item:hover { background: rgba(255,255,255,0.02); }
-    .tx-item:hover .tx-actions { opacity: 1; }
 
     .tx-icon {
       width: 38px;
@@ -366,12 +364,20 @@
       text-overflow: ellipsis;
     }
 
+    .tx-end {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 7px;
+      flex-shrink: 0;
+    }
+
     .tx-right {
       display: flex;
       flex-direction: column;
       align-items: flex-end;
-      gap: 3px;
-      flex-shrink: 0;
+      gap: 2px;
     }
 
     .tx-amount {
@@ -391,34 +397,34 @@
     }
 
     .tx-actions {
-      position: absolute;
-      right: 0;
-      top: 50%;
-      transform: translateY(-50%);
       display: flex;
-      gap: 4px;
-      opacity: 0;
-      transition: opacity var(--t-fast) var(--ease-out);
-      background: linear-gradient(to left, var(--bg-base) 60%, transparent);
-      padding-left: 24px;
+      gap: 6px;
+      flex-shrink: 0;
     }
 
     .tx-action-btn {
-      width: 28px;
-      height: 28px;
-      border-radius: var(--radius-sm);
-      border: 1px solid var(--border-default);
-      background: var(--bg-elevated);
+      width: 30px;
+      height: 30px;
+      border-radius: var(--radius-full);
+      border: none;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      transition: all var(--t-fast) var(--ease-out);
+      transition: transform var(--t-fast) var(--ease-spring),
+                  opacity var(--t-fast) var(--ease-out);
     }
-    .tx-action-btn.edit { color: var(--accent-blue); }
-    .tx-action-btn.delete { color: var(--accent-red); }
-    .tx-action-btn.edit:hover { border-color: var(--accent-blue); background: var(--accent-blue-glow); }
-    .tx-action-btn.delete:hover { border-color: var(--accent-red); background: var(--accent-red-glow); }
+    .tx-action-btn:active { transform: scale(0.9); }
+    .tx-action-btn.edit {
+      background: var(--accent-blue-glow);
+      color: var(--accent-blue);
+    }
+    .tx-action-btn.delete {
+      background: var(--accent-red-glow);
+      color: var(--accent-red);
+    }
+    .tx-action-btn.edit:hover { opacity: 0.8; }
+    .tx-action-btn.delete:hover { opacity: 0.8; }
 
     .day-section + .day-section {
       margin-top: 4px;
@@ -511,13 +517,15 @@
               </div>
               <span class="tx-wallet">Monobank</span>
             </div>
-            <div class="tx-right">
-              <span class="tx-amount neg">−320 ₽</span>
-              <span class="tx-time">13:45</span>
-            </div>
-            <div class="tx-actions">
-              <div class="tx-action-btn edit"><i data-lucide="pencil" width="13" height="13"></i></div>
-              <div class="tx-action-btn delete"><i data-lucide="trash-2" width="13" height="13"></i></div>
+            <div class="tx-end">
+              <div class="tx-right">
+                <span class="tx-amount neg">−320 ₽</span>
+                <span class="tx-time">13:45</span>
+              </div>
+              <div class="tx-actions">
+                <div class="tx-action-btn edit"><i data-lucide="pencil" width="13" height="13"></i></div>
+                <div class="tx-action-btn delete"><i data-lucide="trash-2" width="13" height="13"></i></div>
+              </div>
             </div>
           </div>
 
@@ -532,13 +540,15 @@
               </div>
               <span class="tx-wallet">Monobank</span>
             </div>
-            <div class="tx-right">
-              <span class="tx-amount neg">−180 ₽</span>
-              <span class="tx-time">11:20</span>
-            </div>
-            <div class="tx-actions">
-              <div class="tx-action-btn edit"><i data-lucide="pencil" width="13" height="13"></i></div>
-              <div class="tx-action-btn delete"><i data-lucide="trash-2" width="13" height="13"></i></div>
+            <div class="tx-end">
+              <div class="tx-right">
+                <span class="tx-amount neg">−180 ₽</span>
+                <span class="tx-time">11:20</span>
+              </div>
+              <div class="tx-actions">
+                <div class="tx-action-btn edit"><i data-lucide="pencil" width="13" height="13"></i></div>
+                <div class="tx-action-btn delete"><i data-lucide="trash-2" width="13" height="13"></i></div>
+              </div>
             </div>
           </div>
 
@@ -552,13 +562,15 @@
                 <span class="tx-wallet" style="margin-left: 0;">Наличные</span>
               </div>
             </div>
-            <div class="tx-right">
-              <span class="tx-amount pos">+25 000 ₽</span>
-              <span class="tx-time">09:00</span>
-            </div>
-            <div class="tx-actions">
-              <div class="tx-action-btn edit"><i data-lucide="pencil" width="13" height="13"></i></div>
-              <div class="tx-action-btn delete"><i data-lucide="trash-2" width="13" height="13"></i></div>
+            <div class="tx-end">
+              <div class="tx-right">
+                <span class="tx-amount pos">+25 000 ₽</span>
+                <span class="tx-time">09:00</span>
+              </div>
+              <div class="tx-actions">
+                <div class="tx-action-btn edit"><i data-lucide="pencil" width="13" height="13"></i></div>
+                <div class="tx-action-btn delete"><i data-lucide="trash-2" width="13" height="13"></i></div>
+              </div>
             </div>
           </div>
 
@@ -573,13 +585,15 @@
               </div>
               <span class="tx-wallet">Monobank</span>
             </div>
-            <div class="tx-right">
-              <span class="tx-amount neg">−950 ₽</span>
-              <span class="tx-time">08:30</span>
-            </div>
-            <div class="tx-actions">
-              <div class="tx-action-btn edit"><i data-lucide="pencil" width="13" height="13"></i></div>
-              <div class="tx-action-btn delete"><i data-lucide="trash-2" width="13" height="13"></i></div>
+            <div class="tx-end">
+              <div class="tx-right">
+                <span class="tx-amount neg">−950 ₽</span>
+                <span class="tx-time">08:30</span>
+              </div>
+              <div class="tx-actions">
+                <div class="tx-action-btn edit"><i data-lucide="pencil" width="13" height="13"></i></div>
+                <div class="tx-action-btn delete"><i data-lucide="trash-2" width="13" height="13"></i></div>
+              </div>
             </div>
           </div>
         </div>
@@ -602,13 +616,15 @@
               </div>
               <span class="tx-wallet">Visa *4141</span>
             </div>
-            <div class="tx-right">
-              <span class="tx-amount neg">−199 ₽</span>
-              <span class="tx-time">22:00</span>
-            </div>
-            <div class="tx-actions">
-              <div class="tx-action-btn edit"><i data-lucide="pencil" width="13" height="13"></i></div>
-              <div class="tx-action-btn delete"><i data-lucide="trash-2" width="13" height="13"></i></div>
+            <div class="tx-end">
+              <div class="tx-right">
+                <span class="tx-amount neg">−199 ₽</span>
+                <span class="tx-time">22:00</span>
+              </div>
+              <div class="tx-actions">
+                <div class="tx-action-btn edit"><i data-lucide="pencil" width="13" height="13"></i></div>
+                <div class="tx-action-btn delete"><i data-lucide="trash-2" width="13" height="13"></i></div>
+              </div>
             </div>
           </div>
 
@@ -623,13 +639,15 @@
               </div>
               <span class="tx-wallet">Наличные</span>
             </div>
-            <div class="tx-right">
-              <span class="tx-amount neg">−450 ₽</span>
-              <span class="tx-time">16:30</span>
-            </div>
-            <div class="tx-actions">
-              <div class="tx-action-btn edit"><i data-lucide="pencil" width="13" height="13"></i></div>
-              <div class="tx-action-btn delete"><i data-lucide="trash-2" width="13" height="13"></i></div>
+            <div class="tx-end">
+              <div class="tx-right">
+                <span class="tx-amount neg">−450 ₽</span>
+                <span class="tx-time">16:30</span>
+              </div>
+              <div class="tx-actions">
+                <div class="tx-action-btn edit"><i data-lucide="pencil" width="13" height="13"></i></div>
+                <div class="tx-action-btn delete"><i data-lucide="trash-2" width="13" height="13"></i></div>
+              </div>
             </div>
           </div>
 
@@ -644,13 +662,15 @@
               </div>
               <span class="tx-wallet">Monobank → Наличные</span>
             </div>
-            <div class="tx-right">
-              <span class="tx-amount neg">−1 650 ₽</span>
-              <span class="tx-time">14:00</span>
-            </div>
-            <div class="tx-actions">
-              <div class="tx-action-btn edit"><i data-lucide="pencil" width="13" height="13"></i></div>
-              <div class="tx-action-btn delete"><i data-lucide="trash-2" width="13" height="13"></i></div>
+            <div class="tx-end">
+              <div class="tx-right">
+                <span class="tx-amount neg">−1 650 ₽</span>
+                <span class="tx-time">14:00</span>
+              </div>
+              <div class="tx-actions">
+                <div class="tx-action-btn edit"><i data-lucide="pencil" width="13" height="13"></i></div>
+                <div class="tx-action-btn delete"><i data-lucide="trash-2" width="13" height="13"></i></div>
+              </div>
             </div>
           </div>
         </div>
@@ -673,13 +693,15 @@
               </div>
               <span class="tx-wallet">Monobank</span>
             </div>
-            <div class="tx-right">
-              <span class="tx-amount pos">+5 000 ₽</span>
-              <span class="tx-time">18:00</span>
-            </div>
-            <div class="tx-actions">
-              <div class="tx-action-btn edit"><i data-lucide="pencil" width="13" height="13"></i></div>
-              <div class="tx-action-btn delete"><i data-lucide="trash-2" width="13" height="13"></i></div>
+            <div class="tx-end">
+              <div class="tx-right">
+                <span class="tx-amount pos">+5 000 ₽</span>
+                <span class="tx-time">18:00</span>
+              </div>
+              <div class="tx-actions">
+                <div class="tx-action-btn edit"><i data-lucide="pencil" width="13" height="13"></i></div>
+                <div class="tx-action-btn delete"><i data-lucide="trash-2" width="13" height="13"></i></div>
+              </div>
             </div>
           </div>
 
@@ -694,13 +716,15 @@
               </div>
               <span class="tx-wallet">Monobank</span>
             </div>
-            <div class="tx-right">
-              <span class="tx-amount neg">−85 ₽</span>
-              <span class="tx-time">09:15</span>
-            </div>
-            <div class="tx-actions">
-              <div class="tx-action-btn edit"><i data-lucide="pencil" width="13" height="13"></i></div>
-              <div class="tx-action-btn delete"><i data-lucide="trash-2" width="13" height="13"></i></div>
+            <div class="tx-end">
+              <div class="tx-right">
+                <span class="tx-amount neg">−85 ₽</span>
+                <span class="tx-time">09:15</span>
+              </div>
+              <div class="tx-actions">
+                <div class="tx-action-btn edit"><i data-lucide="pencil" width="13" height="13"></i></div>
+                <div class="tx-action-btn delete"><i data-lucide="trash-2" width="13" height="13"></i></div>
+              </div>
             </div>
           </div>
         </div>
