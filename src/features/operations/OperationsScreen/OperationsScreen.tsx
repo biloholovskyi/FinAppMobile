@@ -13,14 +13,10 @@ import * as icons from 'lucide-react-native'
 import type { LucideIcon } from 'lucide-react-native'
 import { WalletTransactionType, type Transaction } from '@/entities/transaction'
 import { FILTERS, useOperationsScreen, type DayGroup } from './useOperationsScreen'
+import { resolveIcon } from '@/shared/utils/icons'
 import { hexToRgba } from '@/shared/utils/colors'
 import { formatAmount } from '@/shared/utils/currency'
 import { formatDayTotal, formatTime } from '@/shared/utils/dateAndTime'
-
-function resolveIcon(name: string): LucideIcon {
-  const pascal = name.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join('')
-  return (icons as unknown as Record<string, LucideIcon>)[pascal] ?? icons.CircleHelp
-}
 
 type TxItemProps = { tx: Transaction }
 
