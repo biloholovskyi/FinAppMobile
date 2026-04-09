@@ -1,3 +1,7 @@
+[1.1.1] 09.04.2026
+
+- Fix amount on edit
+
 [1.1.0] 08.04.2026
 
 - [FAM-12] Transactions edit screen

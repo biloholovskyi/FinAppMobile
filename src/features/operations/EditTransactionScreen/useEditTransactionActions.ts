@@ -26,7 +26,7 @@ export function useEditTransactionActions(transactionId: string) {
     mutationFn: (payload: SavePayload) =>
     updateTransaction(transactionId, {
         type: payload.type,
-        amount: Math.round(parseFloat(payload.amountStr) * 100),
+        amount: payload.amountStr,
         description: payload.description || undefined,
         transactionTime: payload.transactionTime,
         categoryId: payload.categoryId,
