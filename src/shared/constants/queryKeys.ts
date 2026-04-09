@@ -5,4 +5,7 @@ export const QUERY_KEYS = {
   wallets: {
     all: ['wallets'] as const,
   },
+  categories: {
+    all: ['categories'] as const,
+  },
 } as const

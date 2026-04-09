@@ -20,6 +20,7 @@ export type Transaction = {
   type: WalletTransactionType | null
   categoryId: string | null
   subCategoryId: string | null
+  targetWalletId?: string | null
   category?: TransactionCategory | null
   subCategory?: TransactionCategory | null
   amount: number
