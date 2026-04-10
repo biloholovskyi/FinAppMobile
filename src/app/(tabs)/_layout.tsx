@@ -1,5 +1,5 @@
 import { Tabs } from 'expo-router'
-import { Home, List } from 'lucide-react-native'
+import { Home, List, PieChart } from 'lucide-react-native'
 
 export default function TabsLayout() {
   return (
@@ -20,6 +20,13 @@ export default function TabsLayout() {
         options={{
           title: 'Главная',
           tabBarIcon: ({ color, size }) => <Home color={color} size={size} />,
+        }}
+      />
+      <Tabs.Screen
+        name="statistics"
+        options={{
+          title: 'Статистика',
+          tabBarIcon: ({ color, size }) => <PieChart color={color} size={size} />,
         }}
       />
       <Tabs.Screen
