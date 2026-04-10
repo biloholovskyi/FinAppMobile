@@ -6,6 +6,7 @@ import {
   ScrollView,
   TouchableOpacity,
   Pressable,
+  RefreshControl,
   type SectionListRenderItem,
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -19,9 +20,9 @@ import { hexToRgba } from '@/shared/utils/colors'
 import { formatAmount } from '@/shared/utils/currency'
 import { formatDayTotal, formatTime } from '@/shared/utils/dateAndTime'
 
-type TxItemProps = { tx: Transaction; onEdit: (id: string) => void }
+type TxItemProps = { tx: Transaction; onEdit: (id: string) => void; onDelete: (id: string) => void }
 
-function TxItem({ tx, onEdit }: TxItemProps) {
+function TxItem({ tx, onEdit, onDelete }: TxItemProps) {
   const categoryInfo = tx.subCategory ?? tx.category ?? null
   const isTransfer = tx.type === WalletTransactionType.transfer
   const isIncome = tx.type === WalletTransactionType.income
@@ -86,6 +87,7 @@ function TxItem({ tx, onEdit }: TxItemProps) {
             className="w-[30px] h-[30px] rounded-full items-center justify-center bg-[rgba(255,75,107,0.2)]"
             activeOpacity={0.7}
             hitSlop={8}
+            onPress={() => onDelete(tx.id)}
           >
             <icons.Trash2 size={13} color="#FF4B6B" />
           </TouchableOpacity>
@@ -96,7 +98,7 @@ function TxItem({ tx, onEdit }: TxItemProps) {
 }
 
 export function OperationsScreen() {
-  const { filter, setFilter, grouped, isLoading } = useOperationsScreen()
+  const { filter, setFilter, grouped, isLoading, refetch, isRefetching, onDelete } = useOperationsScreen()
 
   const currentMonth = new Date().toLocaleDateString('ru-RU', { month: 'long', year: 'numeric' })
 
@@ -105,8 +107,8 @@ export function OperationsScreen() {
   }, [])
 
   const renderItem = useCallback<SectionListRenderItem<Transaction, DayGroup>>(
-    ({ item }) => <TxItem tx={item} onEdit={handleEdit} />,
-    [handleEdit],
+    ({ item }) => <TxItem tx={item} onEdit={handleEdit} onDelete={onDelete} />,
+    [handleEdit, onDelete],
   )
 
   const renderSectionHeader = useCallback(
@@ -185,6 +187,14 @@ export function OperationsScreen() {
           renderSectionHeader={renderSectionHeader}
           stickySectionHeadersEnabled={false}
           showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl
+              refreshing={isRefetching}
+              onRefresh={refetch}
+              tintColor="#4F9EFF"
+              colors={['#4F9EFF']}
+            />
+          }
         />
       )}
     </SafeAreaView>

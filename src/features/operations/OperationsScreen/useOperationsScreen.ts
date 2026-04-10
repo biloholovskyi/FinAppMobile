@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react'
-import { useQuery } from '@tanstack/react-query'
-import { fetchTransactions } from '@/shared/api/transactions'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { fetchTransactions, deleteTransaction } from '@/shared/api/transactions'
 import { QUERY_KEYS } from '@/shared/constants/queryKeys'
 import { WalletTransactionType, type Transaction } from '@/entities/transaction'
 
@@ -39,10 +39,18 @@ export const FILTERS: { key: FilterType; label: string }[] = [
 
 export function useOperationsScreen() {
   const [filter, setFilter] = useState<FilterType>('all')
+  const queryClient = useQueryClient()
 
-  const { data: transactions = [], isLoading } = useQuery({
+  const { data: transactions = [], isLoading, refetch, isRefetching } = useQuery({
     queryKey: QUERY_KEYS.transactions.all,
     queryFn: fetchTransactions,
+  })
+
+  const { mutate: onDelete } = useMutation({
+    mutationFn: deleteTransaction,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.transactions.all })
+    },
   })
 
   const grouped = useMemo<DayGroup[]>(() => {
@@ -62,5 +70,5 @@ export function useOperationsScreen() {
     return Object.values(map).sort((a, b) => b.date.localeCompare(a.date))
   }, [transactions, filter])
 
-  return { filter, setFilter, grouped, isLoading }
+  return { filter, setFilter, grouped, isLoading, refetch, isRefetching, onDelete }
 }

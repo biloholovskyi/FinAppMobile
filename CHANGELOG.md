@@ -1,5 +1,7 @@
 [1.1.2] 09.04.2026
 
+- [FAM-10] Delete transaction
+- [FAM-15] Refresh transactions
 - [FAM-9] Setting prettier
 
 [1.1.1] 09.04.2026
