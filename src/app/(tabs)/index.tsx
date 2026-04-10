@@ -1,3 +1,5 @@
-import { TransactionsScreen } from "@/features/transactions/TransactionsScreen/TransactionsScreen";
+import { DashboardScreen } from '@/features/dashboard/DashboardScreen/DashboardScreen'
 
-export default TransactionsScreen;
+export default function IndexRoute() {
+  return <DashboardScreen />
+}

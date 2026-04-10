@@ -1,30 +1,62 @@
-# fin-app-mobile
+# CLAUDE.md — fin-app-mobile
 
-React Native + Expo SDK 52. Expo Router (file-based). NativeWind v4. FSD.
-Backend: fin-app-backend REST API. Currency: UAH (uk-UA locale).
+Entry point for every Claude Code session. Load relevant rule(s) based on task type.
 
-## Quick Commands (always prefix with rtk)
+## Task Routing
 
-- `rtk npx expo start`              — dev server
-- `rtk npx expo start --clear`      — dev server (clear cache)
-- `rtk yarn lint`                   — ESLint auto-fix
-- `rtk yarn tsc --noEmit`           — TypeScript check (no emit)
-- `rtk eas build --platform all`    — production build via EAS
+| Task | Load |
+|------|------|
+| New screen / component / hook | `ai/rules/projects/fin-app-mobile/architecture.md` |
+| API integration / React Query / Zustand | `ai/rules/projects/fin-app-mobile/state-management.md` |
+| Navigation / routing / deep links | `ai/rules/projects/fin-app-mobile/architecture.md` |
+| Styling / NativeWind / design tokens | `ai/rules/projects/fin-app-mobile/architecture.md` |
+| HTML screen design (designs/) | `.claude/rules/design-system.md` + `.claude/rules/charts.md` |
+| React patterns / component rules | `ai/rules/common/react.md` |
+| TypeScript / async / error patterns | `ai/rules/common/patterns.md` |
+| Post-code QA | `ai/rules/common/post-code-workflow.md` |
+| Implementation planning | `ai/rules/common/implementation-plans.md` |
+| Plan audit | `ai/rules/common/skills/plan-audit.md` |
+| React / RN performance | `ai/rules/common/performance/_index.md` |
+| Full context | `.claude/AGENTS.md` |
 
-## Load Rules by Task
+## Dependency Constraints (CRITICAL)
 
-| Task | Rule file |
-|------|-----------|
-| New screen / component / hook / style | @.claude/rules/screens.md |
-| REST API call / React Query / Zustand | @.claude/rules/api.md |
-| Navigation / routing / deep links / layout | @.claude/rules/navigation.md |
-| After any code change (always) | @.claude/rules/post-code.md |
+Before writing any code, verify these pinned versions:
+
+| Package | Version | IMPORTANT |
+|---------|---------|-----------|
+| Expo SDK | **52.x** | Ecosystem anchor — all packages must be SDK 52 compatible |
+| React Native | **0.76.x** | New Architecture enabled |
+| React | **18.3.x** | NOT React 19 |
+| Expo Router | **3.x** | NOT v2 API |
+| NativeWind | **4.x** | `className` prop — NOT v2/v3 `style={{}}` approach |
+| TanStack Query | **5.x** | `useQuery({ queryKey, queryFn })` — NOT v4 `useQuery(key, fn)` |
+| Zustand | **4.x** | |
+| TypeScript | **5.x** | strict: true required |
+
+## Quick Reference
+
+```bash
+rtk npx expo start           # Dev server
+rtk yarn lint                # ESLint (ALWAYS run after edits)
+rtk yarn tsc --noEmit        # TypeScript check
+rtk npx eas build --profile production --platform all  # Build
+```
+
+FSD import direction (strict): `app → features → entities → shared`
+
+Money: API in kopecks → `/100` display, `Math.round(*100)` submit
+
+Locale: `uk-UA` | Currency: `UAH`
+
+## Skills
+
+`.claude/skills/`: `/commit`, `/lint`, `/post-code`, `/implement-plan-step`, `/audit-plan`, `/audit-security`, `/review-react-perf`
 
 ## Agents
 
-- `finapp-mobile-expert` — all development (screens, API, navigation, styling, bugs)
-- `code-reviewer` — code review after implementation
+`.claude/agents/`: `finapp-mobile-expert`, `code-reviewer`, `screen-designer`, `codebase-researcher`, `plan-auditor`, `react-performance-reviewer`
 
-## Environment Variables
+## Post-Code Reminder
 
-- `EXPO_PUBLIC_API_URL` — REST API base URL (fin-app-backend)
+After any code change: `rtk yarn lint` → fix all errors → then commit.

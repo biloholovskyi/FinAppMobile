@@ -9,7 +9,6 @@
       "WebSearch",
       "mcp__plugin_context7_context7__resolve-library-id",
       "mcp__plugin_context7_context7__query-docs",
-      "Bash(rtk git:*)",
       "Bash(rtk npx:*)",
       "Bash(/c/nvm4w/nodejs/npx expo:*)",
       "Bash(/c/nvm4w/nodejs/npm install:*)",
@@ -19,7 +18,37 @@
       "Bash(yarn lint:*)",
       "Bash(npx expo:*)",
       "Bash(yarn add:*)",
-      "Bash(node_modules/.bin/eslint:*)"
+      "Bash(node_modules/.bin/eslint:*)",
+      "Bash(python3:*)",
+      "Bash(find *)",
+      "Bash(echo \"EXIT: $?\")",
+      "Bash(python3.exe -c \"print\\('hello'\\)\")",
+      "Bash(ls \"C:\\\\Users\\\\biloh\\\\.claude\\\\usage-data\\\\session-meta\"/*.json)",
+      "Bash(C:/Users/biloh/AppData/Local/Microsoft/WindowsApps/python3.exe:*)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '[post-edit] Code changed — run /post-code before committing (rtk yarn lint && rtk yarn tsc --noEmit)'"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '[session-end] Remember: run /post-code if any code was changed this session'"
+          }
+        ]
+      }
     ]
   }
 }

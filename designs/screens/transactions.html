@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FinApp — Транзакции</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=DM+Mono:wght@400;500;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg-void:    #050508;
+      --bg-base:    #0A0A12;
+      --bg-surface: #10101C;
+      --bg-elevated:#181828;
+      --bg-overlay: #1E1E35;
+
+      --border-subtle:  rgba(255,255,255,0.04);
+      --border-default: rgba(255,255,255,0.08);
+      --border-strong:  rgba(255,255,255,0.16);
+
+      --accent-blue:        #4F9EFF;
+      --accent-blue-glow:   rgba(79,158,255,0.25);
+      --accent-green:       #00E089;
+      --accent-green-glow:  rgba(0,224,137,0.2);
+      --accent-red:         #FF4B6B;
+      --accent-red-glow:    rgba(255,75,107,0.2);
+      --accent-amber:       #FFB020;
+      --accent-amber-glow:  rgba(255,176,32,0.2);
+      --accent-purple:      #A374FF;
+      --accent-purple-glow: rgba(163,116,255,0.2);
+
+      --text-primary:   #F2F2FF;
+      --text-secondary: #8888AA;
+      --text-muted:     #44445A;
+      --text-inverse:   #080810;
+
+      --shadow-card: 0 4px 24px rgba(0,0,0,0.4);
+      --glow-blue:   0 0 20px rgba(79,158,255,0.3), 0 0 60px rgba(79,158,255,0.1);
+      --glow-green:  0 0 20px rgba(0,224,137,0.3);
+      --glow-red:    0 0 20px rgba(255,75,107,0.3);
+
+      --radius-sm:   8px;
+      --radius-md:   16px;
+      --radius-lg:   24px;
+      --radius-full: 9999px;
+
+      --ease-out:    cubic-bezier(0.4,0,0.2,1);
+      --ease-spring: cubic-bezier(0.34,1.56,0.64,1);
+      --t-fast: 150ms;
+      --t-base: 280ms;
+      --t-slow: 500ms;
+    }
+
+    body {
+      background: radial-gradient(ellipse at top, #0A0612 0%, #02020A 60%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+      font-family: 'Inter', sans-serif;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes glowPulse {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.6; }
+    }
+    @keyframes shimmer {
+      0%   { background-position: -200% 0; }
+      100% { background-position:  200% 0; }
+    }
+    @keyframes scaleIn {
+      from { opacity: 0; transform: scale(0.85); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+
+    .phone {
+      width: 375px;
+      height: 812px;
+      background: var(--bg-base);
+      border-radius: 44px;
+      overflow: hidden;
+      position: relative;
+      box-shadow:
+        0 0 0 1px var(--border-default),
+        0 40px 80px rgba(0,0,0,0.7),
+        inset 0 0 0 1px rgba(255,255,255,0.06);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .status-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 24px 0;
+      color: var(--text-primary);
+      flex-shrink: 0;
+    }
+
+    .status-time {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 15px;
+    }
+
+    .status-icons {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      color: var(--text-primary);
+    }
+
+    .screen {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      scrollbar-width: none;
+      display: flex;
+      flex-direction: column;
+    }
+    .screen::-webkit-scrollbar { display: none; }
+
+    .screen-content {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      scrollbar-width: none;
+      padding-bottom: 8px;
+    }
+    .screen-content::-webkit-scrollbar { display: none; }
+
+    .home-indicator {
+      width: 134px;
+      height: 5px;
+      background: var(--text-primary);
+      border-radius: var(--radius-full);
+      margin: 8px auto;
+      opacity: 0.3;
+      flex-shrink: 0;
+    }
+
+    .screen-header {
+      padding: 16px 20px 10px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      flex-shrink: 0;
+      animation: fadeUp var(--t-slow) var(--ease-out) both;
+    }
+
+    .header-left {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .screen-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 700;
+      font-size: 22px;
+      color: var(--text-primary);
+      letter-spacing: -0.4px;
+    }
+
+    .screen-subtitle {
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--text-secondary);
+      letter-spacing: 0.1px;
+    }
+
+    .btn-add {
+      width: 34px;
+      height: 34px;
+      border-radius: var(--radius-md);
+      background: var(--accent-blue);
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-inverse);
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: transform var(--t-fast) var(--ease-spring),
+                  box-shadow var(--t-base) var(--ease-out);
+      box-shadow: 0 2px 12px rgba(79,158,255,0.35);
+    }
+    .btn-add:hover {
+      transform: scale(1.08);
+      box-shadow: var(--glow-blue);
+    }
+    .btn-add:active { transform: scale(0.95); }
+
+    .filters-wrap {
+      padding: 4px 20px 12px;
+      flex-shrink: 0;
+      animation: fadeUp var(--t-slow) var(--ease-out) both;
+      animation-delay: 60ms;
+    }
+
+    .filters-scroll {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      padding-bottom: 2px;
+    }
+    .filters-scroll::-webkit-scrollbar { display: none; }
+
+    .filter-pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 14px;
+      border-radius: var(--radius-full);
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      white-space: nowrap;
+      cursor: pointer;
+      border: 1px solid var(--border-default);
+      background: var(--bg-elevated);
+      color: var(--text-secondary);
+      transition: all var(--t-fast) var(--ease-out);
+      flex-shrink: 0;
+    }
+    .filter-pill:hover { border-color: var(--border-strong); color: var(--text-primary); }
+    .filter-pill.active {
+      background: var(--accent-blue-glow);
+      border-color: var(--accent-blue);
+      color: var(--accent-blue);
+    }
+
+    .day-section {
+      padding: 0 20px;
+      animation: fadeUp var(--t-slow) var(--ease-out) both;
+    }
+    .day-section:nth-child(1) { animation-delay: 120ms; }
+    .day-section:nth-child(2) { animation-delay: 180ms; }
+    .day-section:nth-child(3) { animation-delay: 240ms; }
+
+    .day-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 0 8px;
+    }
+
+    .day-label {
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+    }
+
+    .day-total {
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+    .day-total.pos { color: var(--accent-green); }
+    .day-total.neg { color: var(--accent-red); }
+
+    .day-divider {
+      height: 1px;
+      background: var(--border-subtle);
+      margin-bottom: 6px;
+    }
+
+    .tx-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border-subtle);
+      cursor: pointer;
+      transition: background var(--t-fast) var(--ease-out);
+      border-radius: var(--radius-sm);
+      animation: fadeUp var(--t-slow) var(--ease-out) both;
+    }
+    .tx-item:last-child { border-bottom: none; }
+    .tx-item:hover { background: rgba(255,255,255,0.02); }
+
+    .tx-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .tx-icon.food     { background: rgba(0,224,137,0.15); color: var(--accent-green); }
+    .tx-icon.transport{ background: rgba(79,158,255,0.15); color: var(--accent-blue); }
+    .tx-icon.grocery  { background: rgba(255,176,32,0.15); color: var(--accent-amber); }
+    .tx-icon.sub      { background: rgba(163,116,255,0.15); color: var(--accent-purple); }
+    .tx-icon.health   { background: rgba(255,75,107,0.15); color: var(--accent-red); }
+    .tx-icon.work     { background: rgba(0,224,137,0.15); color: var(--accent-green); }
+    .tx-icon.transfer { background: rgba(79,158,255,0.15); color: var(--accent-blue); }
+    .tx-icon.none     { background: rgba(136,136,170,0.12); color: var(--text-secondary); }
+
+    .tx-body {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .tx-desc {
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .tx-meta {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .tx-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 7px;
+      border-radius: var(--radius-full);
+      font-family: 'Inter', sans-serif;
+      font-size: 10px;
+      font-weight: 500;
+    }
+    .tx-badge.food     { background: rgba(0,224,137,0.15); color: var(--accent-green); }
+    .tx-badge.transport{ background: rgba(79,158,255,0.15); color: var(--accent-blue); }
+    .tx-badge.grocery  { background: rgba(255,176,32,0.15); color: var(--accent-amber); }
+    .tx-badge.sub      { background: rgba(163,116,255,0.15); color: var(--accent-purple); }
+    .tx-badge.health   { background: rgba(255,75,107,0.15); color: var(--accent-red); }
+    .tx-badge.work     { background: rgba(0,224,137,0.15); color: var(--accent-green); }
+    .tx-badge.transfer { background: rgba(79,158,255,0.15); color: var(--accent-blue); }
+
+    .tx-wallet {
+      font-family: 'Inter', sans-serif;
+      font-size: 10px;
+      font-weight: 400;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .tx-end {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 7px;
+      flex-shrink: 0;
+    }
+
+    .tx-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 2px;
+    }
+
+    .tx-amount {
+      font-family: 'DM Mono', monospace;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+    .tx-amount.pos { color: var(--accent-green); }
+    .tx-amount.neg { color: var(--accent-red); }
+
+    .tx-time {
+      font-family: 'Inter', sans-serif;
+      font-size: 10px;
+      font-weight: 400;
+      color: var(--text-muted);
+    }
+
+    .tx-actions {
+      display: flex;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .tx-action-btn {
+      width: 30px;
+      height: 30px;
+      border-radius: var(--radius-full);
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: transform var(--t-fast) var(--ease-spring),
+                  opacity var(--t-fast) var(--ease-out);
+    }
+    .tx-action-btn:active { transform: scale(0.9); }
+    .tx-action-btn.edit {
+      background: var(--accent-blue-glow);
+      color: var(--accent-blue);
+    }
+    .tx-action-btn.delete {
+      background: var(--accent-red-glow);
+      color: var(--accent-red);
+    }
+    .tx-action-btn.edit:hover { opacity: 0.8; }
+    .tx-action-btn.delete:hover { opacity: 0.8; }
+
+    .day-section + .day-section {
+      margin-top: 4px;
+    }
+
+    .tab-bar {
+      display: flex;
+      justify-content: space-around;
+      padding: 12px 0 4px;
+      background: var(--bg-surface);
+      border-top: 1px solid var(--border-subtle);
+      flex-shrink: 0;
+    }
+
+    .tab-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      color: var(--text-muted);
+      font-family: 'Inter', sans-serif;
+      font-size: 10px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: color var(--t-fast) var(--ease-out);
+      padding: 2px 12px;
+      border-radius: var(--radius-sm);
+    }
+    .tab-item.active { color: var(--accent-blue); }
+    .tab-item:hover:not(.active) { color: var(--text-secondary); }
+
+    .tab-icon {
+      width: 22px;
+      height: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="phone">
+    <div class="status-bar">
+      <span class="status-time">9:41</span>
+      <div class="status-icons">
+        <i data-lucide="signal" width="14" height="14"></i>
+        <i data-lucide="wifi" width="14" height="14"></i>
+        <i data-lucide="battery" width="14" height="14"></i>
+      </div>
+    </div>
+
+    <div class="screen">
+      <div class="screen-header">
+        <div class="header-left">
+          <span class="screen-title">Транзакции</span>
+          <span class="screen-subtitle">Апрель 2026</span>
+        </div>
+        <button class="btn-add" aria-label="Создать транзакцию">
+          <i data-lucide="plus" width="18" height="18"></i>
+        </button>
+      </div>
+
+      <div class="filters-wrap">
+        <div class="filters-scroll">
+          <div class="filter-pill active" data-filter="all">Все</div>
+          <div class="filter-pill" data-filter="expense">Расходы</div>
+          <div class="filter-pill" data-filter="income">Доходы</div>
+          <div class="filter-pill" data-filter="transfer">Переводы</div>
+        </div>
+      </div>
+
+      <div class="screen-content">
+
+        <div class="day-section">
+          <div class="day-header">
+            <span class="day-label">Сегодня</span>
+            <span class="day-total neg">−1 450 ₽</span>
+          </div>
+          <div class="day-divider"></div>
+
+          <div class="tx-item" style="animation-delay: 120ms;">
+            <div class="tx-icon food">
+              <i data-lucide="utensils" width="16" height="16"></i>
+            </div>
+            <div class="tx-body">
+              <span class="tx-desc">Обед в кафе</span>
+              <div class="tx-meta">
+                <span class="tx-badge food">Еда</span>
+              </div>
+              <span class="tx-wallet">Monobank</span>
+            </div>
+            <div class="tx-end">
+              <div class="tx-right">
+                <span class="tx-amount neg">−320 ₽</span>
+                <span class="tx-time">13:45</span>
+              </div>
+              <div class="tx-actions">
+                <div class="tx-action-btn edit"><i data-lucide="pencil" width="13" height="13"></i></div>
+                <div class="tx-action-btn delete"><i data-lucide="trash-2" width="13" height="13"></i></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tx-item" style="animation-delay: 150ms;">
+            <div class="tx-icon transport">
+              <i data-lucide="car" width="16" height="16"></i>
+            </div>
+            <div class="tx-body">
+              <span class="tx-desc">Такси</span>
+              <div class="tx-meta">
+                <span class="tx-badge transport">Транспорт</span>
+              </div>
+              <span class="tx-wallet">Monobank</span>
+            </div>
+            <div class="tx-end">
+              <div class="tx-right">
+                <span class="tx-amount neg">−180 ₽</span>
+                <span class="tx-time">11:20</span>
+              </div>
+              <div class="tx-actions">
+                <div class="tx-action-btn edit"><i data-lucide="pencil" width="13" height="13"></i></div>
+                <div class="tx-action-btn delete"><i data-lucide="trash-2" width="13" height="13"></i></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tx-item" style="animation-delay: 180ms;">
+            <div class="tx-icon none">
+              <i data-lucide="circle-help" width="16" height="16"></i>
+            </div>
+            <div class="tx-body">
+              <span class="tx-desc">Зарплата</span>
+              <div class="tx-meta">
+                <span class="tx-wallet" style="margin-left: 0;">Наличные</span>
+              </div>
+            </div>
+            <div class="tx-end">
+              <div class="tx-right">
+                <span class="tx-amount pos">+25 000 ₽</span>
+                <span class="tx-time">09:00</span>
+              </div>
+              <div class="tx-actions">
+                <div class="tx-action-btn edit"><i data-lucide="pencil" width="13" height="13"></i></div>
+                <div class="tx-action-btn delete"><i data-lucide="trash-2" width="13" height="13"></i></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tx-item" style="animation-delay: 210ms;">
+            <div class="tx-icon grocery">
+              <i data-lucide="shopping-cart" width="16" height="16"></i>
+            </div>
+            <div class="tx-body">
+              <span class="tx-desc">Продукты</span>
+              <div class="tx-meta">
+                <span class="tx-badge grocery">Продукты</span>
+              </div>
+              <span class="tx-wallet">Monobank</span>
+            </div>
+            <div class="tx-end">
+              <div class="tx-right">
+                <span class="tx-amount neg">−950 ₽</span>
+                <span class="tx-time">08:30</span>
+              </div>
+              <div class="tx-actions">
+                <div class="tx-action-btn edit"><i data-lucide="pencil" width="13" height="13"></i></div>
+                <div class="tx-action-btn delete"><i data-lucide="trash-2" width="13" height="13"></i></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="day-section">
+          <div class="day-header">
+            <span class="day-label">Вчера</span>
+            <span class="day-total neg">−2 299 ₽</span>
+          </div>
+          <div class="day-divider"></div>
+
+          <div class="tx-item" style="animation-delay: 240ms;">
+            <div class="tx-icon sub">
+              <i data-lucide="tv" width="16" height="16"></i>
+            </div>
+            <div class="tx-body">
+              <span class="tx-desc">Netflix</span>
+              <div class="tx-meta">
+                <span class="tx-badge sub">Подписки</span>
+              </div>
+              <span class="tx-wallet">Visa *4141</span>
+            </div>
+            <div class="tx-end">
+              <div class="tx-right">
+                <span class="tx-amount neg">−199 ₽</span>
+                <span class="tx-time">22:00</span>
+              </div>
+              <div class="tx-actions">
+                <div class="tx-action-btn edit"><i data-lucide="pencil" width="13" height="13"></i></div>
+                <div class="tx-action-btn delete"><i data-lucide="trash-2" width="13" height="13"></i></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tx-item" style="animation-delay: 270ms;">
+            <div class="tx-icon health">
+              <i data-lucide="heart" width="16" height="16"></i>
+            </div>
+            <div class="tx-body">
+              <span class="tx-desc">Аптека</span>
+              <div class="tx-meta">
+                <span class="tx-badge health">Здоровье</span>
+              </div>
+              <span class="tx-wallet">Наличные</span>
+            </div>
+            <div class="tx-end">
+              <div class="tx-right">
+                <span class="tx-amount neg">−450 ₽</span>
+                <span class="tx-time">16:30</span>
+              </div>
+              <div class="tx-actions">
+                <div class="tx-action-btn edit"><i data-lucide="pencil" width="13" height="13"></i></div>
+                <div class="tx-action-btn delete"><i data-lucide="trash-2" width="13" height="13"></i></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tx-item" style="animation-delay: 300ms;">
+            <div class="tx-icon transfer">
+              <i data-lucide="arrow-right-left" width="16" height="16"></i>
+            </div>
+            <div class="tx-body">
+              <span class="tx-desc">Перевод другу</span>
+              <div class="tx-meta">
+                <span class="tx-badge transfer">Перевод</span>
+              </div>
+              <span class="tx-wallet">Monobank → Наличные</span>
+            </div>
+            <div class="tx-end">
+              <div class="tx-right">
+                <span class="tx-amount neg">−1 650 ₽</span>
+                <span class="tx-time">14:00</span>
+              </div>
+              <div class="tx-actions">
+                <div class="tx-action-btn edit"><i data-lucide="pencil" width="13" height="13"></i></div>
+                <div class="tx-action-btn delete"><i data-lucide="trash-2" width="13" height="13"></i></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="day-section">
+          <div class="day-header">
+            <span class="day-label">7 апреля 2026</span>
+            <span class="day-total pos">+5 000 ₽</span>
+          </div>
+          <div class="day-divider"></div>
+
+          <div class="tx-item" style="animation-delay: 330ms;">
+            <div class="tx-icon work">
+              <i data-lucide="briefcase" width="16" height="16"></i>
+            </div>
+            <div class="tx-body">
+              <span class="tx-desc">Фриланс</span>
+              <div class="tx-meta">
+                <span class="tx-badge work">Работа</span>
+              </div>
+              <span class="tx-wallet">Monobank</span>
+            </div>
+            <div class="tx-end">
+              <div class="tx-right">
+                <span class="tx-amount pos">+5 000 ₽</span>
+                <span class="tx-time">18:00</span>
+              </div>
+              <div class="tx-actions">
+                <div class="tx-action-btn edit"><i data-lucide="pencil" width="13" height="13"></i></div>
+                <div class="tx-action-btn delete"><i data-lucide="trash-2" width="13" height="13"></i></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tx-item" style="animation-delay: 360ms;">
+            <div class="tx-icon food">
+              <i data-lucide="utensils" width="16" height="16"></i>
+            </div>
+            <div class="tx-body">
+              <span class="tx-desc">Кофе</span>
+              <div class="tx-meta">
+                <span class="tx-badge food">Еда</span>
+              </div>
+              <span class="tx-wallet">Monobank</span>
+            </div>
+            <div class="tx-end">
+              <div class="tx-right">
+                <span class="tx-amount neg">−85 ₽</span>
+                <span class="tx-time">09:15</span>
+              </div>
+              <div class="tx-actions">
+                <div class="tx-action-btn edit"><i data-lucide="pencil" width="13" height="13"></i></div>
+                <div class="tx-action-btn delete"><i data-lucide="trash-2" width="13" height="13"></i></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="tab-bar">
+        <div class="tab-item">
+          <div class="tab-icon"><i data-lucide="home" width="20" height="20"></i></div>
+          <span>Главная</span>
+        </div>
+        <div class="tab-item active">
+          <div class="tab-icon"><i data-lucide="list" width="20" height="20"></i></div>
+          <span>Операции</span>
+        </div>
+        <div class="tab-item">
+          <div class="tab-icon"><i data-lucide="wallet" width="20" height="20"></i></div>
+          <span>Кошельки</span>
+        </div>
+        <div class="tab-item">
+          <div class="tab-icon"><i data-lucide="settings" width="20" height="20"></i></div>
+          <span>Настройки</span>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="home-indicator"></div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    const pills = document.querySelectorAll('.filter-pill');
+    pills.forEach(pill => {
+      pill.addEventListener('click', () => {
+        pills.forEach(p => p.classList.remove('active'));
+        pill.classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>

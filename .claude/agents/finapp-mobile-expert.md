@@ -40,15 +40,18 @@ that is part of the FinApp monorepo (alongside fin-app-backend and fin-app-front
 
 ## On-Demand Rule Loading
 
-Before starting any task, check CLAUDE.md routing table and load the rule file(s)
-relevant to your task. Do not load all rules upfront — load only what applies.
+Before starting any task, load the rule file(s) relevant to your task.
+Do not load all rules upfront — load only what applies.
 
 | Task type | Load |
 |-----------|------|
-| Screen / component / hook / style | @.claude/rules/screens.md |
-| API / React Query / Zustand | @.claude/rules/api.md |
-| Navigation / routing / deep links | @.claude/rules/navigation.md |
-| After ANY code change | @.claude/rules/post-code.md |
+| Screen / component / hook / style | `ai/rules/projects/fin-app-mobile/architecture.md` |
+| API / React Query / Zustand | `ai/rules/projects/fin-app-mobile/state-management.md` |
+| Navigation / routing / deep links | `ai/rules/projects/fin-app-mobile/architecture.md` |
+| React patterns / TypeScript | `ai/rules/common/react.md` + `ai/rules/common/patterns.md` |
+| Performance | `ai/rules/common/performance/_index.md` |
+| After ANY code change | `ai/rules/common/post-code-workflow.md` |
+| Full context | `CLAUDE.md` (root) or `.claude/AGENTS.md` |
 
 ## Library Documentation (context7)
 

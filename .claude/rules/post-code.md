@@ -1,4 +1,12 @@
+---
+paths:
+  - "src/**/*.ts"
+  - "src/**/*.tsx"
+---
+
 # Post-Code Rules
+
+Source of truth: `ai/rules/common/post-code-workflow.md`
 
 After any code change, in order:
 
