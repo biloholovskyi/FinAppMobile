@@ -1,4 +1,8 @@
-[1.1.2] 09.04.2026
+[1.1.3] 10.04.2026
+
+- [FAM-16] GitHub Actions
+
+[1.1.2] 10.04.2026
 
 - [FAM-16] GitHub Actions
 - [FAM-10] Delete transaction
