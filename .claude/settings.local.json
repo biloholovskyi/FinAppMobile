@@ -24,7 +24,12 @@
       "Bash(echo \"EXIT: $?\")",
       "Bash(python3.exe -c \"print\\('hello'\\)\")",
       "Bash(ls \"C:\\\\Users\\\\biloh\\\\.claude\\\\usage-data\\\\session-meta\"/*.json)",
-      "Bash(C:/Users/biloh/AppData/Local/Microsoft/WindowsApps/python3.exe:*)"
+      "Bash(C:/Users/biloh/AppData/Local/Microsoft/WindowsApps/python3.exe:*)",
+      "Bash(python .claude/skills/ui-ux-pro-max/scripts/search.py \"fintech mobile finance budget categories spending tracker dark\" --design-system -p \"FinApp Mobile\")",
+      "Bash(where python:*)",
+      "Bash(where python3:*)",
+      "Bash(py --version)",
+      "Bash(/c/Users/biloh/AppData/Local/Microsoft/WindowsApps/python.exe:*)"
     ]
   },
   "hooks": {

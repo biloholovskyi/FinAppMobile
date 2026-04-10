@@ -8,4 +8,7 @@ export const QUERY_KEYS = {
   categories: {
     all: ['categories'] as const,
   },
+  budgets: {
+    month: (month: string) => ['budgets', 'month', month] as const,
+  },
 } as const
