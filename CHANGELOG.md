@@ -1,3 +1,7 @@
+[1.2.0] 10.04.2026
+
+- [FAM-13] Design category expense
+
 [1.1.3] 10.04.2026
 
 - [FAM-16] GitHub Actions
