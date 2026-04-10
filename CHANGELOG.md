@@ -1,5 +1,6 @@
 [1.1.2] 09.04.2026
 
+- [FAM-16] GitHub Actions
 - [FAM-10] Delete transaction
 - [FAM-15] Refresh transactions
 - [FAM-9] Setting prettier
