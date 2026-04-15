@@ -1,5 +1,6 @@
 [1.3.0] 15.04.2026
 
+- [FAM-164] Category create/edit screen design
 - [FAM-161] Category screen design
 
 [1.2.0] 10.04.2026

@@ -29,7 +29,8 @@
       "Bash(where python:*)",
       "Bash(where python3:*)",
       "Bash(py --version)",
-      "Bash(/c/Users/biloh/AppData/Local/Microsoft/WindowsApps/python.exe:*)"
+      "Bash(/c/Users/biloh/AppData/Local/Microsoft/WindowsApps/python.exe:*)",
+      "Bash(python .claude/skills/ui-ux-pro-max/scripts/search.py \"fintech mobile form category management\" --design-system -p \"FinApp Category\")"
     ]
   },
   "hooks": {
