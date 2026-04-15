@@ -1,3 +1,7 @@
+[1.3.0] 15.04.2026
+
+- [FAM-161] Category screen design
+
 [1.2.0] 10.04.2026
 
 - [FAM-160] Categori esxpense
