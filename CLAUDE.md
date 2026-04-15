@@ -10,7 +10,7 @@ Entry point for every Claude Code session. Load relevant rule(s) based on task t
 | API integration / React Query / Zustand | `ai/rules/projects/fin-app-mobile/state-management.md` |
 | Navigation / routing / deep links | `ai/rules/projects/fin-app-mobile/architecture.md` |
 | Styling / NativeWind / design tokens | `ai/rules/projects/fin-app-mobile/architecture.md` |
-| HTML screen design (designs/) | `.claude/rules/design-system.md` + `.claude/rules/charts.md` |
+| HTML screen design (designs/) | `ai/rules/design/design-system.md` + `ai/rules/design/charts.md` |
 | React patterns / component rules | `ai/rules/common/react.md` |
 | TypeScript / async / error patterns | `ai/rules/common/patterns.md` |
 | Post-code QA | `ai/rules/common/post-code-workflow.md` |
