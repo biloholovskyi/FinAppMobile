@@ -33,3 +33,9 @@ export const updateSubcategory = (
   dto: UpdateCategoryDto,
 ): Promise<CategoryModel> =>
   apiClient.put(`/subcategories/${id}`, dto).then(r => r.data)
+
+export const deleteCategory = (id: string): Promise<void> =>
+  apiClient.delete(`/categories/${id}`).then(r => r.data)
+
+export const deleteSubcategory = (id: string): Promise<void> =>
+  apiClient.delete(`/subcategories/${id}`).then(r => r.data)

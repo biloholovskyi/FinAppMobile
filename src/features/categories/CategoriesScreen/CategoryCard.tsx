@@ -13,14 +13,14 @@ const PRIORITY_MAP: Record<string, { label: string; color: string }> = {
 type Props = {
   category: CategoryModel
   onEdit: (id: string, isSubcategory?: boolean) => void
-  onDelete: (id: string) => void
+  onDelete: (id: string, isSubcategory?: boolean) => void
   onAddSubcategory: (parentId: string) => void
 }
 
 type SubRowProps = {
   sub: CategoryModel
   onEdit: (id: string, isSubcategory?: boolean) => void
-  onDelete: (id: string) => void
+  onDelete: (id: string, isSubcategory?: boolean) => void
 }
 
 function SubRow({ sub, onEdit, onDelete }: SubRowProps) {
@@ -55,7 +55,7 @@ function SubRow({ sub, onEdit, onDelete }: SubRowProps) {
           className="w-7 h-7 rounded-lg border border-white/[0.04] items-center justify-center"
           activeOpacity={0.7}
           hitSlop={6}
-          onPress={() => onDelete(sub.id)}
+          onPress={() => onDelete(sub.id, true)}
         >
           <Trash2 size={12} color="#FF4B6B" />
         </TouchableOpacity>

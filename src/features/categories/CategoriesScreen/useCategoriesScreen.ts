@@ -1,12 +1,14 @@
 import { useCallback } from 'react'
-import { useQuery } from '@tanstack/react-query'
+import { Alert } from 'react-native'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useRouter } from 'expo-router'
-import { fetchCategories } from '@/shared/api/categories'
+import { fetchCategories, deleteCategory, deleteSubcategory } from '@/shared/api/categories'
 import { QUERY_KEYS } from '@/shared/constants/queryKeys'
 import type { CategoryModel } from '@/entities/category'
 
 export function useCategoriesScreen() {
   const router = useRouter()
+  const queryClient = useQueryClient()
 
   const { data = [], isLoading, refetch, isRefetching } = useQuery<CategoryModel[]>({
     queryKey: QUERY_KEYS.categories.all,
@@ -37,9 +39,24 @@ export function useCategoriesScreen() {
     [router],
   )
 
-  const handleDelete = useCallback((_id: string) => {
-    // TODO: показать подтверждение удаления
-  }, [])
+  const { mutate: removeMutation } = useMutation({
+    mutationFn: ({ id, isSubcategory }: { id: string; isSubcategory?: boolean }) =>
+      isSubcategory ? deleteSubcategory(id) : deleteCategory(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.categories.all })
+    },
+  })
+
+  const handleDelete = useCallback((id: string, isSubcategory?: boolean) => {
+    Alert.alert(
+      'Удалить?',
+      isSubcategory ? 'Подкатегория будет удалена.' : 'Категория и все подкатегории будут удалены.',
+      [
+        { text: 'Отмена', style: 'cancel' },
+        { text: 'Удалить', style: 'destructive', onPress: () => removeMutation({ id, isSubcategory }) },
+      ],
+    )
+  }, [removeMutation])
 
   return {
     categories: data,

@@ -1,9 +1,12 @@
 ---
-description: Post-code checklist — run after ANY code edit: lint then TypeScript check
+description: Post-code checklist — run after ANY code edit
+globs: ["src/**/*.ts", "src/**/*.tsx"]
 alwaysApply: false
 ---
 
-# Post-Code Rules
+# Post-Code
+
+Source of truth: @ai/rules/common/post-code-workflow.md
 
 After any code change, in order:
 

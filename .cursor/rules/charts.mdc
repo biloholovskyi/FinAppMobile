@@ -1,0 +1,18 @@
+---
+description: Chart/analytics patterns for HTML mockups — see SSoT
+globs: ["designs/**/*.html"]
+alwaysApply: false
+---
+
+# Charts (HTML mockups)
+
+Source of truth: @ai/rules/design/charts.md
+
+## Quick Rules
+
+- Chart.js via CDN only
+- Colors from design-system CSS variables — no hardcoded hex
+- Dark theme — grid lines and labels must contrast against dark background
+- Tooltips: match card styling (rounded, blur, same border radius)
+- Currency in tooltips: `UAH`, `uk-UA` formatting
+- Animations on mount: staggered with other `fadeUp` elements
