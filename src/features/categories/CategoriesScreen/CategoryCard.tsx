@@ -7,17 +7,21 @@ import type { CategoryModel } from '@/entities/category'
 
 const PRIORITY_MAP: Record<string, { label: string; color: string }> = {
   hight: { label: 'Высокий', color: '#FF4B6B' },
-  medium: { label: 'Средний', color: '#FFB020' },
   low: { label: 'Низкий', color: '#4F9EFF' },
 }
 
 type Props = {
   category: CategoryModel
-  onEdit: (id: string) => void
+  onEdit: (id: string, isSubcategory?: boolean) => void
   onDelete: (id: string) => void
+  onAddSubcategory: (parentId: string) => void
 }
 
-type SubRowProps = { sub: CategoryModel; onEdit: (id: string) => void; onDelete: (id: string) => void }
+type SubRowProps = {
+  sub: CategoryModel
+  onEdit: (id: string, isSubcategory?: boolean) => void
+  onDelete: (id: string) => void
+}
 
 function SubRow({ sub, onEdit, onDelete }: SubRowProps) {
   const color = sub.color ?? '#8888AA'
@@ -43,7 +47,7 @@ function SubRow({ sub, onEdit, onDelete }: SubRowProps) {
           className="w-7 h-7 rounded-lg border border-white/[0.04] items-center justify-center"
           activeOpacity={0.7}
           hitSlop={6}
-          onPress={() => onEdit(sub.id)}
+          onPress={() => onEdit(sub.id, true)}
         >
           <Pencil size={12} color="#4F9EFF" />
         </TouchableOpacity>
@@ -60,7 +64,7 @@ function SubRow({ sub, onEdit, onDelete }: SubRowProps) {
   )
 }
 
-export function CategoryCard({ category, onEdit, onDelete }: Props) {
+export function CategoryCard({ category, onEdit, onDelete, onAddSubcategory }: Props) {
   const [expanded, setExpanded] = useState(false)
   const hasSubs = (category.subCategory?.length ?? 0) > 0
   const color = category.color ?? '#8888AA'
@@ -125,7 +129,7 @@ export function CategoryCard({ category, onEdit, onDelete }: Props) {
           <TouchableOpacity
             className="flex-row items-center gap-2 pl-8 pr-3.5 py-2.5 opacity-70"
             activeOpacity={0.8}
-            onPress={() => {}}
+            onPress={() => onAddSubcategory(category.id)}
           >
             <Plus size={13} color="#4F9EFF" />
             <Text className="text-[#4F9EFF] text-[12px] font-semibold">Добавить подкатегорию</Text>

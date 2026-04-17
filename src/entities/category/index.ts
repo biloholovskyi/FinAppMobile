@@ -1,3 +1,10 @@
+export const CategoryPriority = {
+  hight: 'hight',
+  low: 'low',
+} as const
+
+export type CategoryPriorityValue = typeof CategoryPriority[keyof typeof CategoryPriority]
+
 export type CategoryModel = {
   id: string
   name: string

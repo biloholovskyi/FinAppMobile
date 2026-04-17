@@ -1,5 +1,6 @@
 [1.3.0] 15.04.2026
 
+- [FAM-162] Create/edit category/subcategory
 - [FAM-163] Categires screen
 - [FAM-164] Category create/edit screen design
 - [FAM-161] Category screen design

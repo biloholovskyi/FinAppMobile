@@ -24,13 +24,19 @@ export function CategoriesScreen() {
     handleAddCategory,
     handleEdit,
     handleDelete,
+    handleAddSubcategory,
   } = useCategoriesScreen()
 
   const renderItem = useCallback(
     ({ item }: { item: CategoryModel }) => (
-      <CategoryCard category={item} onEdit={handleEdit} onDelete={handleDelete} />
+      <CategoryCard
+        category={item}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
+        onAddSubcategory={handleAddSubcategory}
+      />
     ),
-    [handleEdit, handleDelete],
+    [handleEdit, handleDelete, handleAddSubcategory],
   )
 
   return (
