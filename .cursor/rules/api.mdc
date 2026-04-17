@@ -1,37 +1,25 @@
 ---
-description: REST API calls, React Query hooks, Zustand stores, axios patterns
+description: REST API, React Query, Zustand, axios — see SSoT
 globs: ["src/shared/api/**", "src/**/stores/**", "src/**/hooks/use*.ts"]
 alwaysApply: false
 ---
 
-# API Rules
+# API & State
 
-## REST (Axios + React Query)
+Source of truth: @ai/rules/projects/fin-app-mobile/state-management.md
 
-- Never call axios directly in screens, components, or custom hooks outside shared/api/
-- All HTTP calls defined in `src/shared/api/*.ts` modules — export functions, not instance
+## Quick Rules
+
+- Never call `axios` directly outside `src/shared/api/`
+- All HTTP in `src/shared/api/*.ts` — export functions, not instance
 - Use `apiClient` from `src/shared/api/base.ts` — never create new axios instances
-- Axios instance should include: baseURL from EXPO_PUBLIC_API_URL, auth header, timeout
-
-## React Query
-
-- Use for ALL server state: lists, detail views, paginated data, mutations
-- Every mutation MUST call `queryClient.invalidateQueries()` for affected query keys after success — never leave stale cache after a write operation
-- Query keys: use typed constants, not raw strings inline — `QUERY_KEYS.wallets.all` not `['wallets']`
-- Use `enabled` flag for conditional queries (data not ready yet)
-- Optimistic updates: only where UX strongly demands it, not by default
-
-## Zustand
-
-- Use for UI state and offline/local data only — not server data
-- One store per feature domain (e.g., walletsUiStore, transactionFiltersStore)
-- Keep stores flat — avoid deep nesting
-- Persist stores with expo-secure-store for sensitive data, AsyncStorage for preferences
-- Never put API response data directly into Zustand (that's React Query's job)
-
-## Error Handling
-
-- Network errors: show user-facing message via toast/alert, log to console
-- 401: trigger re-authentication flow, not just a toast
-- Never swallow errors silently (no empty catch blocks)
-- Validate API response shape before use — don't trust unknown
+- Axios instance: `baseURL` from `EXPO_PUBLIC_API_URL`, auth header, timeout
+- React Query for ALL server state (lists, detail, pagination, mutations)
+- Every mutation MUST call `queryClient.invalidateQueries()` after success — never leave stale cache
+- Query keys: typed constants only — `QUERY_KEYS.wallets.all`, not raw `['wallets']`
+- Use `enabled` flag for conditional queries
+- Zustand: UI state and offline/local data only — never API response data
+- One store per feature domain; keep flat
+- Persist: `expo-secure-store` for secrets, AsyncStorage for preferences
+- 401 → trigger re-auth flow, not just a toast
+- Never swallow errors (no empty catch); validate API response shape before use

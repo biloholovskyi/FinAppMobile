@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "hooks": {
+    "afterFileEdit": [
+      { "command": "./.cursor/hooks/post-edit-reminder.sh" }
+    ],
+    "stop": [
+      { "command": "./.cursor/hooks/session-end-reminder.sh", "loop_limit": 1 }
+    ]
+  }
+}

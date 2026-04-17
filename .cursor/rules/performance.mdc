@@ -1,0 +1,19 @@
+---
+description: React Native performance — re-renders, FlatList, waterfalls, memoization
+alwaysApply: false
+---
+
+# Performance
+
+Source of truth: @ai/rules/common/performance/_index.md
+RN checklist: @ai/rules/common/skills/react-best-practices.md
+
+## Priority Checklist
+
+- **P1 Waterfalls** — parallelize independent API calls (`Promise.all`); see @ai/rules/common/performance/async-waterfalls.md
+- **P2 FlatList** — `keyExtractor` (stable ID), `getItemLayout` (fixed height), `windowSize=5` for >50 items, `maxToRenderPerBatch=10`, `removeClippedSubviews={true}` Android, `renderItem` in `useCallback`, item in `React.memo`
+- **P3 Re-renders** — missing `useCallback`/`useMemo`; see @ai/rules/common/performance/rerender-strategy.md
+- **P4 Derived state** — no `useEffect` for state derivable in render; see @ai/rules/common/performance/rerender-derived-state.md
+- **P5 Static JSX** — hoist objects/arrays out of render; see @ai/rules/common/performance/rendering-hoist-jsx.md
+- **React Query** — set `staleTime`; deduplicate via `QUERY_KEYS`; see @ai/rules/common/performance/client-swr-dedup.md
+- **NativeWind** — don't compute `className` arrays inline on every render

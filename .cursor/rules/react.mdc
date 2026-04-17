@@ -1,0 +1,22 @@
+---
+description: React Native component & hook patterns — see SSoT
+globs: ["src/**/*.ts", "src/**/*.tsx"]
+alwaysApply: false
+---
+
+# React / React Native
+
+Source of truth: @ai/rules/common/react.md
+React 18 addendum: @ai/rules/common/react-18.md
+
+## Quick Rules
+
+- Functional components only; no class components
+- Hooks at top level; follow Rules of Hooks
+- `useCallback` for handlers passed as props / deps of other hooks
+- `useMemo` for expensive computations, not cheap ones
+- `React.memo` for list-item components in FlatList
+- No derived state via `useEffect` — compute in render
+- Prefer `useDeferredValue` / `startTransition` for non-urgent updates
+- No state updates inside render
+- Cleanup in `useEffect` — cancel subscriptions, timers, abort controllers
