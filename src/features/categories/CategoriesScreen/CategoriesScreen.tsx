@@ -1,8 +1,9 @@
 import { useCallback } from 'react'
 import { View, Text, FlatList, TouchableOpacity, RefreshControl } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { Plus, Clock } from 'lucide-react-native'
+import { Plus } from 'lucide-react-native'
 import type { CategoryModel } from '@/entities/category'
+import { ComingSoonSection } from '@/shared/ui/ComingSoonSection/ComingSoonSection'
 import { CategoryCard } from './CategoryCard'
 import { useCategoriesScreen } from './useCategoriesScreen'
 
@@ -11,22 +12,6 @@ function ExpenseHeader() {
     <Text className="text-[11px] font-semibold tracking-widest uppercase text-[#44445A] px-1 pb-2">
       Расходы
     </Text>
-  )
-}
-
-function IncomeSection() {
-  return (
-    <View className="mt-3">
-      <Text className="text-[11px] font-semibold tracking-widest uppercase text-[#44445A] px-1 pb-2">
-        Доходы
-      </Text>
-      <View className="bg-[#10101C] border border-white/[0.08] rounded-2xl p-6 items-center gap-3">
-        <Clock size={32} color="#44445A" />
-        <Text className="text-[#44445A] text-[13px] text-center leading-5">
-          {'Категории доходов\nскоро будут добавлены'}
-        </Text>
-      </View>
-    </View>
   )
 }
 
@@ -78,7 +63,12 @@ export function CategoriesScreen() {
             </Text>
           </View>
         }
-        ListFooterComponent={<IncomeSection />}
+        ListFooterComponent={
+          <ComingSoonSection
+            title="Доходы"
+            message={'Категории доходов\nскоро будут добавлены'}
+          />
+        }
         refreshControl={
           <RefreshControl
             refreshing={isRefetching}
