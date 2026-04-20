@@ -1,5 +1,6 @@
 [1.4.0] 20.04.2026
 
+- [FAM-167] Create transaction
 - [FAM-173] Overal codegan
 
 [1.3.0] 15.04.2026

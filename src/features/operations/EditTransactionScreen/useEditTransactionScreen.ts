@@ -6,30 +6,29 @@ import type { Wallet } from '@/entities/wallet'
 import { WalletTransactionType } from '@/entities/transaction'
 
 export function useEditTransactionScreen() {
-  const { transaction, categories, wallets, isLoading } =
-    useEditTransactionData()
+  const { transaction, categories, wallets, isLoading, isCreateMode } = useEditTransactionData()
   const form = useEditTransactionForm(transaction)
-  const actions = useEditTransactionActions(transaction?.id ?? '')
+  const actions = useEditTransactionActions(transaction?.id)
 
-  const selectedCategory: CategoryModel | null =
-    categories.find((c) => c.id === form.categoryId) ?? null
+  const selectedCategory: CategoryModel | null = categories.find((c) => c.id === form.categoryId) ?? null
   const selectedSubCategory: CategoryModel | null =
-    selectedCategory?.subCategory?.find((sc) => sc.id === form.subCategoryId) ??
-    null
-  const selectedTargetWallet: Wallet | null =
-    wallets.find((w) => w.id === form.targetWalletId) ?? null
-  const sourceWalletName = transaction?.wallet?.name ?? ''
+    selectedCategory?.subCategory?.find((sc) => sc.id === form.subCategoryId) ?? null
+  const selectedSourceWallet: Wallet | null = wallets.find((w) => w.id === form.sourceWalletId) ?? null
+  const selectedTargetWallet: Wallet | null = wallets.find((w) => w.id === form.targetWalletId) ?? null
   const hasSubCategories = (selectedCategory?.subCategory?.length ?? 0) > 0
 
+  const walletId = isCreateMode ? (form.sourceWalletId ?? '') : (transaction?.walletId ?? '')
+  const sourceWalletName = isCreateMode ? (selectedSourceWallet?.name ?? '') : (transaction?.wallet?.name ?? '')
+
   const onSave = () => {
-    if (!transaction) return
+    if (!isCreateMode && !transaction) return
+    if (isCreateMode && !form.sourceWalletId) return
 
     const transformedAmount =
-      form.type === WalletTransactionType.expense
-        ? `-${form.amountStr}`
-        : form.amountStr
+      form.type === WalletTransactionType.expense ? `-${form.amountStr}` : form.amountStr
 
     actions.handleSave({
+      walletId: form.sourceWalletId ?? undefined,
       type: form.type,
       amountStr: transformedAmount,
       description: form.description,
@@ -41,24 +40,20 @@ export function useEditTransactionScreen() {
   }
 
   return {
-    // Loading/saving state
     isLoading,
     isSaving: actions.isSaving,
     isDeleting: actions.isDeleting,
-    // Source info (read-only)
+    isCreateMode,
     sourceWalletName,
-    walletId: transaction?.walletId ?? '',
-    // Derived values
+    walletId,
     selectedCategory,
     selectedSubCategory,
+    selectedSourceWallet,
     selectedTargetWallet,
     hasSubCategories,
-    // Data for pickers
     categories,
     wallets,
-    // Form state + setters (spread from form)
     ...form,
-    // Actions
     onSave,
     handleDelete: actions.handleDelete,
   }

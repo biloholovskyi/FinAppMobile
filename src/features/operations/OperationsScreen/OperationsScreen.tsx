@@ -143,6 +143,7 @@ export function OperationsScreen() {
         <TouchableOpacity
           className="w-[34px] h-[34px] rounded-xl bg-[#4F9EFF] items-center justify-center"
           activeOpacity={0.8}
+          onPress={() => router.push('/transaction/create')}
         >
           <icons.Plus size={18} color="#080810" />
         </TouchableOpacity>

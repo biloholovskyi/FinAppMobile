@@ -6,11 +6,13 @@ import { getWallets } from '@/shared/api/wallets'
 import { QUERY_KEYS } from '@/shared/constants/queryKeys'
 
 export function useEditTransactionData() {
-  const { id } = useLocalSearchParams<{ id: string }>()
+  const { id } = useLocalSearchParams<{ id?: string }>()
+  const isCreateMode = !id
 
   const { data: transactions = [], isLoading: txLoading } = useQuery({
     queryKey: QUERY_KEYS.transactions.all,
     queryFn: fetchTransactions,
+    enabled: !isCreateMode,
   })
 
   const { data: categories = [], isLoading: catLoading } = useQuery({
@@ -23,8 +25,8 @@ export function useEditTransactionData() {
     queryFn: getWallets,
   })
 
-  const transaction = transactions.find(tx => tx.id === id)
-  const isLoading = txLoading || catLoading || walletsLoading
+  const transaction = transactions.find((tx) => tx.id === id)
+  const isLoading = (!isCreateMode && txLoading) || catLoading || walletsLoading
 
-  return { transaction, categories, wallets, isLoading }
+  return { transaction, categories, wallets, isLoading, isCreateMode }
 }
