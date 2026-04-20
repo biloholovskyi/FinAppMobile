@@ -41,5 +41,4 @@ yarn-error.*
 /ios
 /android
 
-# orval generated API
-src/shared/api/generated/
+# orval generated API — committed intentionally, generated locally via yarn api:generate
