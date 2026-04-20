@@ -23,3 +23,10 @@ Source of truth: @ai/rules/projects/fin-app-mobile/state-management.md
 - Persist: `expo-secure-store` for secrets, AsyncStorage for preferences
 - 401 → trigger re-auth flow, not just a toast
 - Never swallow errors (no empty catch); validate API response shape before use
+
+## Generated API (Orval)
+
+- Use generated hooks from `src/shared/api/generated/` for new features — legacy manual files are read-only
+- Import models only from `src/shared/api/generated/models/` — never redeclare manually
+- Run `npm run api:generate` when backend contract changes
+- Generated mutations still require manual `queryClient.invalidateQueries()` in `onSuccess`

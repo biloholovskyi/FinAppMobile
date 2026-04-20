@@ -23,7 +23,7 @@ export const apiClient = axios.create({
   },
 });
 
-// Add auth interceptor
+// Auth interceptor
 apiClient.interceptors.request.use((config) => {
   const token = getAuthToken(); // from secure storage
   if (token) config.headers.Authorization = `Bearer ${token}`;
@@ -43,6 +43,41 @@ export const fetchTransactions = (): Promise<Transaction[]> =>
 
 export const createTransaction = (dto: CreateTransactionDto): Promise<Transaction> =>
   apiClient.post('/transactions', dto).then((r) => r.data);
+```
+
+## Generated API (Orval)
+
+`src/shared/api/generated/` — single source of hooks and types for new features. Generated from `../fin-app-backend/docs/openapi.json` via `npm run api:generate`.
+
+### Rules
+
+- Use generated hooks for all new features — do NOT write manual API functions
+- Import models only from `src/shared/api/generated/models/` — never redeclare types manually
+- Manual files (`wallets.ts`, `transactions.ts`, `budgets.ts`, `categories.ts`) are legacy — read-only, do not extend
+- Run `npm run api:generate` when the backend OpenAPI contract changes
+
+### Usage Examples
+
+```typescript
+// Hook import
+import { useGetAllWallets } from '@/shared/api/generated/wallets/wallets';
+
+// Type import
+import type { WalletModel } from '@/shared/api/generated/models';
+```
+
+### Invalidation (still required)
+
+Generated mutation hooks do NOT call `queryClient.invalidateQueries()` automatically — add `onSuccess` manually in the feature hook:
+
+```typescript
+const mutation = useCreateWallet({
+  mutation: {
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: getGetAllWalletsQueryKey() });
+    },
+  },
+});
 ```
 
 ## TanStack Query v5 (CRITICAL)
@@ -96,12 +131,12 @@ const queryClient = useQueryClient();
 const createMutation = useMutation({
   mutationFn: createTransaction,
   onSuccess: () => {
-    // REQUIRED: invalidate affected query keys
+    // REQUIRED: invalidate affected queries
     queryClient.invalidateQueries({ queryKey: QUERY_KEYS.transactions.all });
     queryClient.invalidateQueries({ queryKey: QUERY_KEYS.wallets.all });
   },
   onError: (error) => {
-    // Show user-facing error
+    // Show user-facing error message
     showToast(getErrorMessage(error));
   },
 });
@@ -167,7 +202,7 @@ const { error } = useQuery({ queryKey, queryFn });
 
 if (error) {
   // Show user-facing message
-  return <ErrorView message="Не вдалося завантажити дані" onRetry={refetch} />;
+  return <ErrorView message="Failed to load data" onRetry={refetch} />;
 }
 ```
 
@@ -182,7 +217,7 @@ Never swallow errors silently (no empty catch blocks).
 ### API Response Validation
 
 ```typescript
-// Validate shape before use — don't trust unknown
+// Validate shape before use — never trust unknown
 const transactions = data ?? [];
 const amount = item.amount ?? 0; // handle missing fields defensively
 ```
