@@ -1,6 +1,6 @@
 {
   "name": "app-skeleton",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "main": "expo-router/entry",
   "scripts": {
     "start": "expo start",
@@ -8,7 +8,9 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "lint": "eslint src --fix",
-    "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json}\""
+    "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json}\"",
+    "api:generate": "orval --config orval.config.ts",
+    "api:generate:watch": "orval --config orval.config.ts --watch"
   },
   "dependencies": {
     "@react-native-community/datetimepicker": "^9.1.0",
@@ -38,6 +40,7 @@
     "@types/react": "~19.1.0",
     "eslint": "^9.0.0",
     "eslint-config-expo": "^55.0.0",
+    "orval": "7.9.0",
     "prettier": "^3.8.1",
     "prettier-plugin-tailwindcss": "^0.7.2",
     "tailwindcss": "^3.0.0",

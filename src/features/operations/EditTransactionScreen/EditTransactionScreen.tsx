@@ -7,6 +7,7 @@ import { hexToRgba } from '@/shared/utils/colors'
 import { useEditTransactionScreen } from './useEditTransactionScreen'
 import { CategoryPickerModal } from './CategoryPickerModal/CategoryPickerModal'
 import { WalletPickerModal } from './WalletPickerModal/WalletPickerModal'
+import { SourceWalletPickerModal } from './SourceWalletPickerModal'
 import { DateTimePickerModal } from './DateTimePickerModal/DateTimePickerModal'
 import { FormRow } from './FormRow'
 
@@ -39,17 +40,19 @@ const TYPES = [WalletTransactionType.expense, WalletTransactionType.income, Wall
 
 export function EditTransactionScreen() {
   const {
-    isLoading, isSaving, isDeleting,
+    isLoading, isSaving, isDeleting, isCreateMode,
     sourceWalletName, walletId,
     type, setType, amountStr, setAmountStr, description, setDescription, transactionTime, setTransactionTime,
+    sourceWalletId, setSourceWalletId,
     categoryId, setCategoryId, subCategoryId, setSubCategoryId,
     targetWalletId, setTargetWalletId,
     isCategoryModalOpen, setIsCategoryModalOpen,
     isSubCategoryModalOpen, setIsSubCategoryModalOpen,
+    isSourceWalletModalOpen, setIsSourceWalletModalOpen,
     isWalletModalOpen, setIsWalletModalOpen,
     isDatePickerOpen, setIsDatePickerOpen,
     showCategoryRows, showTargetWalletRow,
-    selectedCategory, selectedSubCategory, selectedTargetWallet,
+    selectedCategory, selectedSubCategory, selectedSourceWallet, selectedTargetWallet,
     hasSubCategories, categories, wallets, onSave, handleDelete,
   } = useEditTransactionScreen()
 
@@ -72,7 +75,9 @@ export function EditTransactionScreen() {
           <icons.ChevronLeft size={18} color="#4F9EFF" />
           <Text className="text-[#4F9EFF] text-sm font-medium">Назад</Text>
         </TouchableOpacity>
-        <Text className="text-[#F2F2FF] text-[17px] font-bold">Редактировать</Text>
+        <Text className="text-[#F2F2FF] text-[17px] font-bold">
+          {isCreateMode ? 'Создать' : 'Редактировать'}
+        </Text>
         <View className="w-14" />
       </View>
 
@@ -104,7 +109,10 @@ export function EditTransactionScreen() {
           </View>
 
           <View className="mx-5 bg-[#10101C] border border-white/[0.08] rounded-2xl overflow-hidden">
-            <FormRow icon="building-2" label="Кошелёк" value={sourceWalletName} />
+            <FormRow icon="building-2" label="Кошелёк"
+              value={sourceWalletName || undefined} isEmpty={isCreateMode && !selectedSourceWallet}
+              onPress={isCreateMode ? () => setIsSourceWalletModalOpen(true) : undefined}
+              showChevron={isCreateMode} />
             {showTargetWalletRow && (
               <FormRow icon="wallet" label="Кошелёк-получатель"
                 value={selectedTargetWallet?.name ?? 'Выберите...'} isEmpty={!selectedTargetWallet}
@@ -141,11 +149,13 @@ export function EditTransactionScreen() {
               {isSaving ? <ActivityIndicator color="#080810" size="small" /> :
                 <Text style={{ color: '#080810', fontSize: 15, fontWeight: '600' }}>Сохранить</Text>}
             </TouchableOpacity>
-            <TouchableOpacity className="w-full py-3 items-center" onPress={() => handleDelete()}
-              disabled={isSaving || isDeleting} activeOpacity={0.7}>
-              {isDeleting ? <ActivityIndicator color="#FF4B6B" size="small" /> :
-                <Text className="text-[#FF4B6B] text-sm font-medium">Удалить транзакцию</Text>}
-            </TouchableOpacity>
+            {!isCreateMode && (
+              <TouchableOpacity className="w-full py-3 items-center" onPress={() => handleDelete()}
+                disabled={isSaving || isDeleting} activeOpacity={0.7}>
+                {isDeleting ? <ActivityIndicator color="#FF4B6B" size="small" /> :
+                  <Text className="text-[#FF4B6B] text-sm font-medium">Удалить транзакцию</Text>}
+              </TouchableOpacity>
+            )}
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -156,6 +166,10 @@ export function EditTransactionScreen() {
       <CategoryPickerModal visible={isSubCategoryModalOpen} title="Подкатегория"
         categories={selectedCategory?.subCategory ?? []} selectedId={subCategoryId}
         onSelect={setSubCategoryId} onClose={() => setIsSubCategoryModalOpen(false)} />
+      <SourceWalletPickerModal visible={isSourceWalletModalOpen} wallets={wallets}
+        selectedId={sourceWalletId} excludeId={targetWalletId}
+        onSelect={setSourceWalletId}
+        onClose={() => setIsSourceWalletModalOpen(false)} />
       <WalletPickerModal visible={isWalletModalOpen} wallets={wallets} selectedId={targetWalletId}
         sourceWalletId={walletId} onSelect={setTargetWalletId} onClose={() => setIsWalletModalOpen(false)} />
       <DateTimePickerModal
