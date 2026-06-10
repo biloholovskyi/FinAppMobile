@@ -10,6 +10,7 @@ import { WalletPickerModal } from './WalletPickerModal/WalletPickerModal'
 import { SourceWalletPickerModal } from './SourceWalletPickerModal'
 import { DateTimePickerModal } from './DateTimePickerModal/DateTimePickerModal'
 import { FormRow } from './FormRow'
+import { ErrorBanner } from './ErrorBanner'
 
 function formatTransactionTime(isoString: string): string {
   if (!isoString) return '—'
@@ -54,6 +55,7 @@ export function EditTransactionScreen() {
     showCategoryRows, showTargetWalletRow,
     selectedCategory, selectedSubCategory, selectedSourceWallet, selectedTargetWallet,
     hasSubCategories, categories, wallets, onSave, handleDelete,
+    errorMessage, clearError,
   } = useEditTransactionScreen()
 
   if (isLoading) {
@@ -144,6 +146,7 @@ export function EditTransactionScreen() {
           </View>
 
           <View className="px-5 pt-5 gap-2.5">
+            {errorMessage && <ErrorBanner message={errorMessage} onClose={clearError} />}
             <TouchableOpacity className="w-full py-4 rounded-2xl items-center" style={{ backgroundColor: accentColor }}
               onPress={onSave} disabled={isSaving || isDeleting} activeOpacity={0.85}>
               {isSaving ? <ActivityIndicator color="#080810" size="small" /> :

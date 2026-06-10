@@ -56,5 +56,7 @@ export function useEditTransactionScreen() {
     ...form,
     onSave,
     handleDelete: actions.handleDelete,
+    errorMessage: actions.errorMessage,
+    clearError: actions.clearError,
   }
 }
