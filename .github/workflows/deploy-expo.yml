@@ -3,8 +3,6 @@ name: Expo Publish Update
 on:
   push:
     branches: [main]
-  pull_request:
-    branches: [main]
 
 jobs:
   publish:
@@ -33,13 +31,6 @@ jobs:
         run: yarn tsc --noEmit
 
       - name: 🚀 Publish to production
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         env:
           EXPO_PUBLIC_API_URL: ${{ secrets.EXPO_PUBLIC_API_URL }}
         run: eas update --branch production --message "${{ github.event.head_commit.message }} (${{ github.sha }})"
-
-      - name: 🔍 Publish preview for PR
-        if: github.event_name == 'pull_request'
-        env:
-          EXPO_PUBLIC_API_URL: ${{ secrets.EXPO_PUBLIC_API_URL }}
-        run: eas update --branch pr-${{ github.event.pull_request.number }} --message "PR #${{ github.event.pull_request.number }}: ${{ github.event.pull_request.title }}"
