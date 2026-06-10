@@ -12,7 +12,7 @@ type UpdateTransactionDto = {
   categoryId?: string | null
   subCategoryId?: string | null
   description?: string
-  amount?: number | string
+  amount?: number
   transactionTime?: string
 }
 

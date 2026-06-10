@@ -19,3 +19,11 @@ export function formatUah(value: number, kopecks?: boolean): string {
     maximumFractionDigits: 0,
   })
 }
+
+export function parseAmountInput(raw: string): number | null {
+  const normalized = raw.trim().replace(',', '.')
+  if (normalized === '') return null
+  const value = Number(normalized)
+  if (!Number.isFinite(value) || value <= 0) return null
+  return value
+}

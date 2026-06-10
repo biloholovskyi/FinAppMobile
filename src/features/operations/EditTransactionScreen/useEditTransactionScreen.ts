@@ -4,6 +4,7 @@ import { useEditTransactionActions } from './useEditTransactionActions'
 import type { CategoryModel } from '@/entities/category'
 import type { Wallet } from '@/entities/wallet'
 import { WalletTransactionType } from '@/entities/transaction'
+import { parseAmountInput } from '@/shared/utils/currency'
 
 export function useEditTransactionScreen() {
   const { transaction, categories, wallets, isLoading, isCreateMode } = useEditTransactionData()
@@ -24,13 +25,17 @@ export function useEditTransactionScreen() {
     if (!isCreateMode && !transaction) return
     if (isCreateMode && !form.sourceWalletId) return
 
-    const transformedAmount =
-      form.type === WalletTransactionType.expense ? `-${form.amountStr}` : form.amountStr
+    const amount = parseAmountInput(form.amountStr)
+    if (amount === null) {
+      actions.setValidationError('Введите корректную сумму')
+      return
+    }
+    const signedAmount = form.type === WalletTransactionType.expense ? -amount : amount
 
     actions.handleSave({
       walletId: form.sourceWalletId ?? undefined,
       type: form.type,
-      amountStr: transformedAmount,
+      amount: signedAmount,
       description: form.description,
       transactionTime: form.transactionTime,
       categoryId: form.categoryId,

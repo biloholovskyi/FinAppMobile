@@ -13,7 +13,7 @@ const DELETE_ERROR_FALLBACK = 'Не удалось удалить транзак
 type SavePayload = {
   walletId?: string
   type: WalletTransactionType
-  amountStr: string
+  amount: number
   description: string
   transactionTime: string
   categoryId: string | null
@@ -42,7 +42,7 @@ export function useEditTransactionActions(transactionId: string | undefined) {
     mutationFn: (p: SavePayload) =>
       updateTransaction(transactionId!, {
         type: p.type,
-        amount: p.amountStr,
+        amount: p.amount,
         description: p.description || undefined,
         transactionTime: p.transactionTime,
         categoryId: p.categoryId,
@@ -69,7 +69,7 @@ export function useEditTransactionActions(transactionId: string | undefined) {
         data: {
           walletId: payload.walletId,
           type: payload.type,
-          amount: payload.amountStr,
+          amount: payload.amount,
           description: payload.description || undefined,
           transactionTime: payload.transactionTime,
           categoryId: payload.categoryId,
@@ -87,9 +87,12 @@ export function useEditTransactionActions(transactionId: string | undefined) {
 
   const clearError = () => setErrorMessage(null)
 
+  const setValidationError = (message: string) => setErrorMessage(message)
+
   return {
     handleSave,
     handleDelete,
+    setValidationError,
     isSaving: isCreating || isUpdating,
     isDeleting,
     errorMessage,
