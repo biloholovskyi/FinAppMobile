@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(rtk yarn lint)",
+      "PowerShell(yarn lint)"
+    ]
+  }
+}

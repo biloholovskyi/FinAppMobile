@@ -1,3 +1,8 @@
+[1.5.0] 10.06.2026
+
+- [FAM](https://ticktick.com/webapp/#p/683eff21ebb75c000000031c/tasks/6a26d9dfebb75c000000085c): Fix edit/create transaction
+- [FAM](https://ticktick.com/webapp/#p/683eff21ebb75c000000031c/tasks/6a26d9feebb75c0000000867): Error validation UI
+
 [1.4.2] 10.06.2026
 
 - [FAM](https://ticktick.com/webapp/#p/683eff21ebb75c000000031c/tasks/6a26d95aebb75c00000007fb): Fix mibile pipe
