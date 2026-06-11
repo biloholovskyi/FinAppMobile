@@ -5,9 +5,9 @@
  * Financial application REST API
  * OpenAPI spec version: 1.5.0
  */
-import type { BudgetRowDto } from './budgetRowDto';
 
-export interface UpdateBudgetDto {
-  salary: number;
-  budgetRows: BudgetRowDto[];
+export interface UpdateHomePaymentDto {
+  name?: string;
+  staticAmount?: number;
+  coefficient?: number;
 }

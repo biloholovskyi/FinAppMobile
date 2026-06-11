@@ -26,6 +26,8 @@ export interface ShoppingItemModel {
   budgetId?: ShoppingItemModelBudgetId;
   /** @nullable */
   groupId?: ShoppingItemModelGroupId;
+  /** @nullable */
+  link?: string | null;
   createdAt: string;
   updatedAt: string;
 }
