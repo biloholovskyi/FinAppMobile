@@ -5,9 +5,10 @@
  * Financial application REST API
  * OpenAPI spec version: 1.5.0
  */
-import type { BudgetRowDto } from './budgetRowDto';
 
-export interface UpdateBudgetDto {
-  salary: number;
-  budgetRows: BudgetRowDto[];
-}
+export type CurrencyRateControllerGetRateParams = {
+/**
+ * ISO 4217 alpha code (USD, EUR, ...)
+ */
+currency: string;
+};

@@ -5,13 +5,13 @@
  * Financial application REST API
  * OpenAPI spec version: 1.5.0
  */
-import type { SettingType } from './settingType';
+import type { PokerResultModelType } from './pokerResultModelType';
 
-export interface SettingModel {
+export interface PokerResultModel {
   id: string;
-  name: string;
-  value: string;
-  type: SettingType;
+  type: PokerResultModelType;
+  result: number;
+  datetime: string;
   createdAt: string;
   updatedAt: string;
 }

@@ -2,7 +2,10 @@
   "permissions": {
     "allow": [
       "PowerShell(rtk yarn lint)",
-      "PowerShell(yarn lint)"
+      "PowerShell(yarn lint)",
+      "PowerShell(yarn api:generate)",
+      "PowerShell(npm run lint 2>&1)",
+      "PowerShell(npx tsc --noEmit 2>&1)"
     ]
   }
 }

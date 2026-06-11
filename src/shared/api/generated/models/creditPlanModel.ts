@@ -5,13 +5,12 @@
  * Financial application REST API
  * OpenAPI spec version: 1.5.0
  */
-import type { SettingType } from './settingType';
 
-export interface SettingModel {
+export interface CreditPlanModel {
   id: string;
-  name: string;
-  value: string;
-  type: SettingType;
+  creditId: string;
+  targetDate: string;
+  targetDebt: string;
   createdAt: string;
   updatedAt: string;
 }

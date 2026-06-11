@@ -6,23 +6,29 @@
  * OpenAPI spec version: 1.5.0
  */
 import {
+  useMutation,
   useQuery
 } from '@tanstack/react-query';
 import type {
   DataTag,
   DefinedInitialDataOptions,
   DefinedUseQueryResult,
+  MutationFunction,
   QueryClient,
   QueryFunction,
   QueryKey,
   UndefinedInitialDataOptions,
+  UseMutationOptions,
+  UseMutationResult,
   UseQueryOptions,
   UseQueryResult
 } from '@tanstack/react-query';
 
 import type {
+  CreateSettingDto,
   SettingModel,
-  SettingsControllerGetSettingsParams
+  SettingsControllerGetSettingsParams,
+  UpdateSettingDto
 } from '.././models';
 
 import { axiosInstance } from '../../base';
@@ -112,3 +118,120 @@ export function useSettingsControllerGetSettings<TData = Awaited<ReturnType<type
 
 
 
+export const settingsControllerCreate = (
+    createSettingDto: CreateSettingDto,
+ signal?: AbortSignal
+) => {
+      
+      
+      return axiosInstance<SettingModel>(
+      {url: `/settings`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createSettingDto, signal
+    },
+      );
+    }
+  
+
+
+export const getSettingsControllerCreateMutationOptions = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof settingsControllerCreate>>, TError,{data: CreateSettingDto}, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof settingsControllerCreate>>, TError,{data: CreateSettingDto}, TContext> => {
+
+const mutationKey = ['settingsControllerCreate'];
+const {mutation: mutationOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof settingsControllerCreate>>, {data: CreateSettingDto}> = (props) => {
+          const {data} = props ?? {};
+
+          return  settingsControllerCreate(data,)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type SettingsControllerCreateMutationResult = NonNullable<Awaited<ReturnType<typeof settingsControllerCreate>>>
+    export type SettingsControllerCreateMutationBody = CreateSettingDto
+    export type SettingsControllerCreateMutationError = void
+
+    export const useSettingsControllerCreate = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof settingsControllerCreate>>, TError,{data: CreateSettingDto}, TContext>, }
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof settingsControllerCreate>>,
+        TError,
+        {data: CreateSettingDto},
+        TContext
+      > => {
+
+      const mutationOptions = getSettingsControllerCreateMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    export const settingsControllerUpdate = (
+    name: string,
+    updateSettingDto: UpdateSettingDto,
+ ) => {
+      
+      
+      return axiosInstance<SettingModel>(
+      {url: `/settings/${name}`, method: 'PATCH',
+      headers: {'Content-Type': 'application/json', },
+      data: updateSettingDto
+    },
+      );
+    }
+  
+
+
+export const getSettingsControllerUpdateMutationOptions = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof settingsControllerUpdate>>, TError,{name: string;data: UpdateSettingDto}, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof settingsControllerUpdate>>, TError,{name: string;data: UpdateSettingDto}, TContext> => {
+
+const mutationKey = ['settingsControllerUpdate'];
+const {mutation: mutationOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof settingsControllerUpdate>>, {name: string;data: UpdateSettingDto}> = (props) => {
+          const {name,data} = props ?? {};
+
+          return  settingsControllerUpdate(name,data,)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type SettingsControllerUpdateMutationResult = NonNullable<Awaited<ReturnType<typeof settingsControllerUpdate>>>
+    export type SettingsControllerUpdateMutationBody = UpdateSettingDto
+    export type SettingsControllerUpdateMutationError = void
+
+    export const useSettingsControllerUpdate = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof settingsControllerUpdate>>, TError,{name: string;data: UpdateSettingDto}, TContext>, }
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof settingsControllerUpdate>>,
+        TError,
+        {name: string;data: UpdateSettingDto},
+        TContext
+      > => {
+
+      const mutationOptions = getSettingsControllerUpdateMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    

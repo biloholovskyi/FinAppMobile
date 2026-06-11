@@ -1,3 +1,7 @@
+[1.6.0] 11.06.2026
+
+- [FAM](https://ticktick.com/webapp/#p/683eff21ebb75c000000031c/tasks/6a29d6d1ebb75c00000004a7): Different currencie
+
 [1.5.0] 10.06.2026
 
 - [FAM](https://ticktick.com/webapp/#p/683eff21ebb75c000000031c/tasks/6a26d9dfebb75c000000085c): Fix edit/create transaction
