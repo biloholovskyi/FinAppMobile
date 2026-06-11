@@ -6,6 +6,7 @@ import {
   fetchMonobankStatementByWallet,
   fetchMonobankBalanceByWallet,
 } from '../../../shared/api/wallets'
+import { useWalletsTotalBalance } from './useWalletsTotalBalance'
 import type { Wallet } from '../../../entities/wallet'
 
 export function useWalletsCard() {
@@ -16,7 +17,7 @@ export function useWalletsCard() {
   })
   const [refreshingId, setRefreshingId] = useState<string | null>(null)
 
-  const totalBalance = wallets.reduce((sum, w) => sum + w.balance, 0)
+  const totalBalance = useWalletsTotalBalance(wallets)
 
   const handleRefresh = useCallback(async (wallet: Wallet) => {
     setRefreshingId(wallet.id)
