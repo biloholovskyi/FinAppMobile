@@ -42,3 +42,7 @@ yarn-error.*
 /android
 
 # orval generated API — committed intentionally, generated locally via yarn api:generate
+
+# Claude skills python cache
+.claude/skills/**/__pycache__/
+*.pyc

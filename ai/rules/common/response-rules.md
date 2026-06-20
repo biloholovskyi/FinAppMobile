@@ -1,8 +1,4 @@
----
-alwaysApply: true
----
-
-# Response Style
+# Response Rules
 
 - No summaries after completing tasks
 - No "would you like me to continue?" — just stop or continue, don't ask
