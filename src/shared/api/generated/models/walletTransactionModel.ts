@@ -9,6 +9,7 @@ import type { WalletTransactionModelTargetWalletId } from './walletTransactionMo
 import type { WalletTransactionModelCategoryId } from './walletTransactionModelCategoryId';
 import type { WalletTransactionModelSubCategoryId } from './walletTransactionModelSubCategoryId';
 import type { WalletTransactionModelType } from './walletTransactionModelType';
+import type { WalletTransactionModelTargetAmount } from './walletTransactionModelTargetAmount';
 import type { WalletTransactionModelDescription } from './walletTransactionModelDescription';
 import type { WalletTransactionModelExternalId } from './walletTransactionModelExternalId';
 
@@ -23,6 +24,8 @@ export interface WalletTransactionModel {
   subCategoryId?: WalletTransactionModelSubCategoryId;
   type: WalletTransactionModelType;
   amount: number;
+  /** @nullable */
+  targetAmount?: WalletTransactionModelTargetAmount;
   /** @nullable */
   description?: WalletTransactionModelDescription;
   transactionTime: string;

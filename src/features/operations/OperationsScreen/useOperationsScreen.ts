@@ -39,6 +39,7 @@ export const FILTERS: { key: FilterType; label: string }[] = [
 
 export function useOperationsScreen() {
   const [filter, setFilter] = useState<FilterType>('all')
+  const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null)
   const queryClient = useQueryClient()
 
   const { data: transactions = [], isLoading, refetch, isRefetching } = useQuery({
@@ -46,12 +47,26 @@ export function useOperationsScreen() {
     queryFn: fetchTransactions,
   })
 
-  const { mutate: onDelete } = useMutation({
+  const { mutate: deleteMutate, isPending: isDeleting } = useMutation({
     mutationFn: deleteTransaction,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.transactions.all })
+      setPendingDeleteId(null)
+    },
+    onError: (error) => {
+      console.error('Failed to delete transaction', error)
     },
   })
+
+  const pendingDelete = transactions.find(tx => tx.id === pendingDeleteId) ?? null
+
+  const requestDelete = (tx: Transaction) => setPendingDeleteId(tx.id)
+  const confirmDelete = () => {
+    if (pendingDeleteId) deleteMutate(pendingDeleteId)
+  }
+  const cancelDelete = () => {
+    if (!isDeleting) setPendingDeleteId(null)
+  }
 
   const grouped = useMemo<DayGroup[]>(() => {
     const filtered =
@@ -70,5 +85,17 @@ export function useOperationsScreen() {
     return Object.values(map).sort((a, b) => b.date.localeCompare(a.date))
   }, [transactions, filter])
 
-  return { filter, setFilter, grouped, isLoading, refetch, isRefetching, onDelete }
+  return {
+    filter,
+    setFilter,
+    grouped,
+    isLoading,
+    refetch,
+    isRefetching,
+    pendingDelete,
+    requestDelete,
+    confirmDelete,
+    cancelDelete,
+    isDeleting,
+  }
 }

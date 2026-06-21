@@ -4,4 +4,4 @@ paths:
   - "src/**/*.jsx"
 ---
 Source of truth:
-- ai/rules/projects/fin-app-mobile/architecture.md
+- ai/rules/common/react.md

@@ -4,4 +4,4 @@ paths:
   - "src/**/*.tsx"
 ---
 Source of truth:
-- ai/rules/common/post-code-workflow.md
+- ai/rules/common/patterns.md

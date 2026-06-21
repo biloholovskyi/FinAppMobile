@@ -9,6 +9,7 @@ export const fetchTransactions = async (): Promise<Transaction[]> => {
 type UpdateTransactionDto = {
   type?: WalletTransactionType
   targetWalletId?: string | null
+  targetAmount?: number
   categoryId?: string | null
   subCategoryId?: string | null
   description?: string

@@ -78,8 +78,12 @@ Full context index of all agents, skills, and rules.
 | File | Auto-loaded when |
 |------|-----------------|
 | `.claude/rules/screens.md` | Editing `src/**/*.tsx`, `src/**/*.jsx` |
-| `.claude/rules/api.md` | Editing `src/**/*.ts`, `src/**/*.tsx` |
-| `.claude/rules/navigation.md` | Editing `src/app/**` or expo-router imports |
+| `.claude/rules/navigation.md` | Editing `src/app/**` |
+| `.claude/rules/architecture.md` | Editing `src/**` |
+| `.claude/rules/api.md` | Editing `src/shared/api/**` |
+| `.claude/rules/react.md` | Editing `src/**/*.tsx`, `src/**/*.jsx` |
+| `.claude/rules/patterns.md` | Editing `src/**/*.ts`, `src/**/*.tsx` |
+| `.claude/rules/performance.md` | Editing `src/**` |
 | `.claude/rules/post-code.md` | Editing `src/**/*.ts`, `src/**/*.tsx` |
 | `.claude/rules/design-system.md` | Editing `designs/**/*.html` |
 | `.claude/rules/charts.md` | Editing `designs/**/*.html` |
