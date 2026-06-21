@@ -16,6 +16,7 @@ export type Transaction = {
   walletId: string
   wallet: {
     name: string
+    currency?: string
   }
   type: WalletTransactionType | null
   categoryId: string | null
@@ -24,9 +25,12 @@ export type Transaction = {
   category?: TransactionCategory | null
   subCategory?: TransactionCategory | null
   amount: number
+  targetAmount?: number | null
   description: string
   transactionTime: string
   externalId: string | null
   createdAt: string
   updatedAt: string
 }
+
+export { useTransferTargetAmount } from './lib/useTransferTargetAmount'

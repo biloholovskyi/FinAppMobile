@@ -392,6 +392,99 @@
       color: var(--text-muted);
     }
 
+    /* --- Зачислено (получатель перевода) --- */
+    .form-row-credited {
+      align-items: center;
+    }
+
+    .credited-input-wrap {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 3px;
+    }
+
+    .credited-currency {
+      font-family: 'DM Mono', monospace;
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--accent-blue);
+      letter-spacing: -0.3px;
+    }
+
+    .credited-value-input {
+      font-family: 'DM Mono', monospace;
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--accent-blue);
+      background: none;
+      border: none;
+      outline: none;
+      padding: 0;
+      width: 90px;
+      letter-spacing: -0.3px;
+      caret-color: var(--accent-blue);
+    }
+
+    .rate-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 10px 3px 4px;
+      border-radius: var(--radius-full);
+      background: var(--accent-blue-glow);
+      color: var(--accent-blue);
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      font-weight: 500;
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+    .rate-pill .rate-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .rate-pill .rate-value {
+      font-family: 'DM Mono', monospace;
+      font-weight: 500;
+      letter-spacing: -0.2px;
+    }
+
+    /* --- Демо-переключатель валюты получателя (только для прототипа) --- */
+    .demo-toggle-row {
+      padding: 10px 16px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      border-top: 1px dashed var(--border-subtle);
+    }
+    .demo-toggle-label {
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      font-weight: 400;
+      color: var(--text-muted);
+    }
+    .demo-toggle-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 10px;
+      border-radius: var(--radius-full);
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-default);
+      color: var(--text-secondary);
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all var(--t-fast) var(--ease-out);
+    }
+    .demo-toggle-btn:hover {
+      border-color: var(--border-strong);
+      color: var(--text-primary);
+    }
+
     .buttons-wrap {
       padding: 20px 20px 0;
       display: flex;
@@ -476,7 +569,7 @@
           <span class="amount-label">Сумма</span>
           <div class="amount-input-wrap" id="amountWrap">
             <input class="amount-value" id="amountInput" type="text" value="320" inputmode="decimal" maxlength="10">
-            <span class="amount-currency">₽</span>
+            <span class="amount-currency" id="amountCurrency">₽</span>
           </div>
         </div>
 
@@ -500,10 +593,29 @@
             </div>
             <div class="form-row-content">
               <span class="form-row-label">Кошелёк-получатель</span>
-              <span class="form-row-value">Наличные</span>
+              <span class="form-row-value" id="walletToValue">Валютный счёт (USD)</span>
             </div>
             <div class="form-row-right">
               <i data-lucide="chevron-right" width="16" height="16" class="chevron"></i>
+            </div>
+          </div>
+
+          <div class="form-row row-hidden" id="rowCredited">
+            <div class="form-row-icon">
+              <i data-lucide="arrow-down-to-line" width="14" height="14"></i>
+            </div>
+            <div class="form-row-content form-row-credited">
+              <span class="form-row-label">Зачислено</span>
+              <div class="credited-input-wrap">
+                <span class="credited-currency" id="creditedCurrency">$</span>
+                <input class="credited-value-input" id="creditedInput" type="text" value="3,52" inputmode="decimal" maxlength="12">
+              </div>
+            </div>
+            <div class="form-row-right">
+              <span class="rate-pill row-hidden" id="ratePill">
+                <span class="rate-icon"><i data-lucide="repeat" width="11" height="11"></i></span>
+                <span class="rate-value" id="rateValue">1 ₽ = 0,011 $</span>
+              </span>
             </div>
           </div>
 
@@ -544,6 +656,14 @@
               <i data-lucide="chevron-right" width="16" height="16" class="chevron"></i>
             </div>
           </div>
+
+          <div class="demo-toggle-row row-hidden" id="rowDemoToggle">
+            <span class="demo-toggle-label">Демо: валюта получателя</span>
+            <button class="demo-toggle-btn" id="btnDemoCurrency" type="button">
+              <i data-lucide="shuffle" width="12" height="12"></i>
+              <span id="demoCurrencyLabel">USD (другая)</span>
+            </button>
+          </div>
         </div>
 
         <div class="buttons-wrap">
@@ -563,11 +683,38 @@
     const segBtns = document.querySelectorAll('.seg-btn');
     const rowCategory = document.getElementById('rowCategory');
     const rowWalletTo = document.getElementById('rowWalletTo');
+    const rowCredited = document.getElementById('rowCredited');
+    const rowDemoToggle = document.getElementById('rowDemoToggle');
     const amountWrap = document.getElementById('amountWrap');
     const amountInput = document.getElementById('amountInput');
+    const amountCurrency = document.getElementById('amountCurrency');
+    const walletToValue = document.getElementById('walletToValue');
+    const creditedCurrency = document.getElementById('creditedCurrency');
+    const creditedInput = document.getElementById('creditedInput');
+    const ratePill = document.getElementById('ratePill');
+    const rateValue = document.getElementById('rateValue');
+    const btnDemoCurrency = document.getElementById('btnDemoCurrency');
+    const demoCurrencyLabel = document.getElementById('demoCurrencyLabel');
     const btnSave = document.getElementById('btnSave');
 
     let currentType = 'expense';
+
+    // Демо: валюта кошелька-отправителя всегда ₽ (Monobank).
+    // Переключаем валюту кошелька-получателя между "другой" (USD) и "такой же" (RUB),
+    // чтобы показать оба состояния — с курсом и без курса.
+    let recipientIsDifferentCurrency = true;
+
+    const SENDER_CURRENCY_SYMBOL = '₽';
+
+    // Демо-курс ₽ -> $ (условный, только для прототипа).
+    // Меняется, если пользователь вручную правит поле "Зачислено".
+    const DEMO_RATE_RUB_TO_USD = 0.011;
+    let currentRate = DEMO_RATE_RUB_TO_USD;
+
+    const recipientCurrencyMap = {
+      different: { code: 'USD', symbol: '$', label: 'USD (другая)', walletName: 'Валютный счёт (USD)' },
+      same:      { code: 'RUB', symbol: '₽', label: 'RUB (такая же)', walletName: 'Накопительный счёт (₽)' },
+    };
 
     const activeClassMap = {
       expense: 'active-expense',
@@ -599,6 +746,65 @@
       transfer: 'var(--accent-blue)',
     };
 
+    function formatAmountRu(value) {
+      return value.toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function formatRateRu(value) {
+      return value.toLocaleString('ru-RU', { minimumFractionDigits: 3, maximumFractionDigits: 3 });
+    }
+
+    function parseRu(value) {
+      const parsed = parseFloat(String(value || '0').replace(',', '.'));
+      return Number.isFinite(parsed) ? parsed : 0;
+    }
+
+    function activeRecipient() {
+      return recipientIsDifferentCurrency
+        ? recipientCurrencyMap.different
+        : recipientCurrencyMap.same;
+    }
+
+    function updateRatePill() {
+      const recipient = activeRecipient();
+      if (recipientIsDifferentCurrency) {
+        rateValue.textContent = '1 ' + SENDER_CURRENCY_SYMBOL + ' = ' + formatRateRu(currentRate) + ' ' + recipient.symbol;
+        ratePill.classList.remove('row-hidden');
+      } else {
+        ratePill.classList.add('row-hidden');
+      }
+    }
+
+    // Пересчёт "Зачислено" по сумме отправителя и текущему курсу (демо-логика, без копеек —
+    // в реальном приложении сумма приходит в копейках и делится на 100 при отображении).
+    function recalcCreditedFromSent() {
+      const recipient = activeRecipient();
+      const sentAmount = parseRu(amountInput.value);
+      creditedCurrency.textContent = recipient.symbol;
+      const rate = recipientIsDifferentCurrency ? currentRate : 1;
+      creditedInput.value = formatAmountRu(sentAmount * rate);
+      updateRatePill();
+    }
+
+    // Пользователь вручную ввёл "Зачислено" — пересчитываем курс от введённой суммы.
+    function recalcRateFromCredited() {
+      const sentAmount = parseRu(amountInput.value);
+      const creditedAmount = parseRu(creditedInput.value);
+      if (recipientIsDifferentCurrency && sentAmount > 0) {
+        currentRate = creditedAmount / sentAmount;
+      }
+      updateRatePill();
+    }
+
+    // Полная синхронизация при смене режима/валюты получателя.
+    function recalcTransferConversion() {
+      const recipient = activeRecipient();
+      walletToValue.textContent = recipient.walletName;
+      demoCurrencyLabel.textContent = recipient.label;
+      if (!recipientIsDifferentCurrency) currentRate = DEMO_RATE_RUB_TO_USD;
+      recalcCreditedFromSent();
+    }
+
     function setType(type) {
       currentType = type;
 
@@ -618,9 +824,14 @@
       if (type === 'transfer') {
         rowCategory.classList.add('row-hidden');
         rowWalletTo.classList.remove('row-hidden');
+        rowCredited.classList.remove('row-hidden');
+        rowDemoToggle.classList.remove('row-hidden');
+        recalcTransferConversion();
       } else {
         rowCategory.classList.remove('row-hidden');
         rowWalletTo.classList.add('row-hidden');
+        rowCredited.classList.add('row-hidden');
+        rowDemoToggle.classList.add('row-hidden');
       }
 
       btnSave.style.background = saveBgMap[type];
@@ -632,7 +843,22 @@
       btn.addEventListener('click', () => setType(btn.dataset.type));
     });
 
+    amountInput.addEventListener('input', () => {
+      if (currentType === 'transfer') recalcCreditedFromSent();
+    });
+
+    creditedInput.addEventListener('input', () => {
+      if (currentType === 'transfer') recalcRateFromCredited();
+    });
+
+    btnDemoCurrency.addEventListener('click', () => {
+      recipientIsDifferentCurrency = !recipientIsDifferentCurrency;
+      recalcTransferConversion();
+    });
+
     rowWalletTo.classList.add('row-hidden');
+    rowCredited.classList.add('row-hidden');
+    rowDemoToggle.classList.add('row-hidden');
 
     setType('expense');
   </script>

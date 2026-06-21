@@ -4,12 +4,14 @@ import { Stack, router } from 'expo-router'
 import * as icons from 'lucide-react-native'
 import { WalletTransactionType } from '@/entities/transaction'
 import { hexToRgba } from '@/shared/utils/colors'
+import { getCurrencySymbol } from '@/shared/utils/currency'
 import { useEditTransactionScreen } from './useEditTransactionScreen'
 import { CategoryPickerModal } from './CategoryPickerModal/CategoryPickerModal'
 import { WalletPickerModal } from './WalletPickerModal/WalletPickerModal'
 import { SourceWalletPickerModal } from './SourceWalletPickerModal'
 import { DateTimePickerModal } from './DateTimePickerModal/DateTimePickerModal'
 import { FormRow } from './FormRow'
+import { CreditedAmountRow } from './CreditedAmountRow'
 import { ErrorBanner } from './ErrorBanner'
 
 function formatTransactionTime(isoString: string): string {
@@ -53,6 +55,7 @@ export function EditTransactionScreen() {
     isWalletModalOpen, setIsWalletModalOpen,
     isDatePickerOpen, setIsDatePickerOpen,
     showCategoryRows, showTargetWalletRow,
+    showCreditedRow, creditedValue, onCreditedChange, sourceCurrency, targetCurrency, conversionRate,
     selectedCategory, selectedSubCategory, selectedSourceWallet, selectedTargetWallet,
     hasSubCategories, categories, wallets, onSave, handleDelete,
     errorMessage, clearError,
@@ -106,7 +109,7 @@ export function EditTransactionScreen() {
               <TextInput className="text-[#F2F2FF] text-center min-w-[40px] max-w-[220px]"
                 style={{ fontSize: 42, fontWeight: '700', letterSpacing: -2 }}
                 value={amountStr} onChangeText={setAmountStr} keyboardType="decimal-pad" maxLength={10} selectTextOnFocus />
-              <Text className="text-[#8888AA]" style={{ fontSize: 24, fontWeight: '700' }}>₴</Text>
+              <Text className="text-[#8888AA]" style={{ fontSize: 24, fontWeight: '700' }}>{getCurrencySymbol(sourceCurrency)}</Text>
             </View>
           </View>
 
@@ -119,6 +122,10 @@ export function EditTransactionScreen() {
               <FormRow icon="wallet" label="Кошелёк-получатель"
                 value={selectedTargetWallet?.name ?? 'Выберите...'} isEmpty={!selectedTargetWallet}
                 onPress={() => setIsWalletModalOpen(true)} showChevron />
+            )}
+            {showCreditedRow && (
+              <CreditedAmountRow value={creditedValue} onChangeText={onCreditedChange}
+                sourceCurrency={sourceCurrency} targetCurrency={targetCurrency} rate={conversionRate} />
             )}
             {showCategoryRows && (
               <FormRow icon="tag" label="Категория" value={selectedCategory?.name}

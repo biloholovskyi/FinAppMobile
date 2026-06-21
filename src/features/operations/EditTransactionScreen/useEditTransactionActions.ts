@@ -19,6 +19,7 @@ type SavePayload = {
   categoryId: string | null
   subCategoryId: string | null
   targetWalletId: string | null
+  targetAmount: number | null
 }
 
 export function useEditTransactionActions(transactionId: string | undefined) {
@@ -48,6 +49,7 @@ export function useEditTransactionActions(transactionId: string | undefined) {
         categoryId: p.categoryId,
         subCategoryId: p.subCategoryId,
         targetWalletId: p.targetWalletId,
+        targetAmount: p.targetAmount ?? undefined,
       }),
     onSuccess: invalidateAndBack,
     onError: onSaveError,
@@ -75,6 +77,7 @@ export function useEditTransactionActions(transactionId: string | undefined) {
           categoryId: payload.categoryId,
           subCategoryId: payload.subCategoryId,
           targetWalletId: payload.targetWalletId,
+          targetAmount: payload.targetAmount ?? undefined,
         },
       })
     }

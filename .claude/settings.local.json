@@ -35,7 +35,9 @@
       "Bash(rtk npm *)",
       "Bash(yarn list *)",
       "Bash(yarn api:generate)",
-      "Bash(rtk ls *)"
+      "Bash(rtk ls *)",
+      "Bash(npx eslint *)",
+      "Bash(npx tsc *)"
     ]
   },
   "hooks": {

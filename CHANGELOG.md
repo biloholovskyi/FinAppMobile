@@ -1,5 +1,6 @@
-[1.7.0] 20.06.2026
+[1.7.0] 21.06.2026
 
+- [FAM](https://ticktick.com/webapp/#p/683eff21ebb75c000000031c/tasks/6a341da3ebb75c000000035a): Transfer transaction, add new amount
 - [FAM](https://ticktick.com/webapp/#p/683eff21ebb75c000000031c/tasks/6a29d68cebb75c0000000483): Mobile AI 2.0
 
 [1.6.0] 11.06.2026

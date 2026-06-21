@@ -17,7 +17,7 @@ import { WalletTransactionType, type Transaction } from '@/entities/transaction'
 import { FILTERS, useOperationsScreen, type DayGroup } from './useOperationsScreen'
 import { resolveIcon } from '@/shared/utils/icons'
 import { hexToRgba } from '@/shared/utils/colors'
-import { formatAmount } from '@/shared/utils/currency'
+import { formatAmount, getCurrencySymbol } from '@/shared/utils/currency'
 import { formatDayTotal, formatTime } from '@/shared/utils/dateAndTime'
 
 type TxItemProps = { tx: Transaction; onEdit: (id: string) => void; onDelete: (id: string) => void }
@@ -34,7 +34,10 @@ function TxItem({ tx, onEdit, onDelete }: TxItemProps) {
     ? icons.ArrowRightLeft
     : resolveIcon(categoryInfo?.icon ?? '')
 
-  const amountStr = isIncome ? `+${formatAmount(tx.amount)} ₴` : `−${formatAmount(tx.amount)} ₴`
+  const currencySymbol = getCurrencySymbol(tx.wallet?.currency)
+  const amountStr = isIncome
+    ? `+${formatAmount(tx.amount)} ${currencySymbol}`
+    : `−${formatAmount(tx.amount)} ${currencySymbol}`
   const amountColor = isIncome ? '#00E089' : '#FF4B6B'
 
   return (
