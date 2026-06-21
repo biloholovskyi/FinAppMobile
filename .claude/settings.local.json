@@ -37,7 +37,9 @@
       "Bash(yarn api:generate)",
       "Bash(rtk ls *)",
       "Bash(npx eslint *)",
-      "Bash(npx tsc *)"
+      "Bash(npx tsc *)",
+      "PowerShell(yarn lint *)",
+      "PowerShell(yarn tsc *)"
     ]
   },
   "hooks": {

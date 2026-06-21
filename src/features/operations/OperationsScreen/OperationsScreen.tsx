@@ -15,12 +15,13 @@ import * as icons from 'lucide-react-native'
 import type { LucideIcon } from 'lucide-react-native'
 import { WalletTransactionType, type Transaction } from '@/entities/transaction'
 import { FILTERS, useOperationsScreen, type DayGroup } from './useOperationsScreen'
+import { DeleteTransactionModal } from './DeleteTransactionModal/DeleteTransactionModal'
 import { resolveIcon } from '@/shared/utils/icons'
 import { hexToRgba } from '@/shared/utils/colors'
 import { formatAmount, getCurrencySymbol } from '@/shared/utils/currency'
 import { formatDayTotal, formatTime } from '@/shared/utils/dateAndTime'
 
-type TxItemProps = { tx: Transaction; onEdit: (id: string) => void; onDelete: (id: string) => void }
+type TxItemProps = { tx: Transaction; onEdit: (id: string) => void; onDelete: (tx: Transaction) => void }
 
 function TxItem({ tx, onEdit, onDelete }: TxItemProps) {
   const categoryInfo = tx.subCategory ?? tx.category ?? null
@@ -90,7 +91,7 @@ function TxItem({ tx, onEdit, onDelete }: TxItemProps) {
             className="w-[30px] h-[30px] rounded-full items-center justify-center bg-[rgba(255,75,107,0.2)]"
             activeOpacity={0.7}
             hitSlop={8}
-            onPress={() => onDelete(tx.id)}
+            onPress={() => onDelete(tx)}
           >
             <icons.Trash2 size={13} color="#FF4B6B" />
           </TouchableOpacity>
@@ -101,7 +102,19 @@ function TxItem({ tx, onEdit, onDelete }: TxItemProps) {
 }
 
 export function OperationsScreen() {
-  const { filter, setFilter, grouped, isLoading, refetch, isRefetching, onDelete } = useOperationsScreen()
+  const {
+    filter,
+    setFilter,
+    grouped,
+    isLoading,
+    refetch,
+    isRefetching,
+    pendingDelete,
+    requestDelete,
+    confirmDelete,
+    cancelDelete,
+    isDeleting,
+  } = useOperationsScreen()
 
   const currentMonth = new Date().toLocaleDateString('ru-RU', { month: 'long', year: 'numeric' })
 
@@ -110,8 +123,8 @@ export function OperationsScreen() {
   }, [])
 
   const renderItem = useCallback<SectionListRenderItem<Transaction, DayGroup>>(
-    ({ item }) => <TxItem tx={item} onEdit={handleEdit} onDelete={onDelete} />,
-    [handleEdit, onDelete],
+    ({ item }) => <TxItem tx={item} onEdit={handleEdit} onDelete={requestDelete} />,
+    [handleEdit, requestDelete],
   )
 
   const renderSectionHeader = useCallback(
@@ -201,6 +214,13 @@ export function OperationsScreen() {
           }
         />
       )}
+
+      <DeleteTransactionModal
+        transaction={pendingDelete}
+        isDeleting={isDeleting}
+        onConfirm={confirmDelete}
+        onCancel={cancelDelete}
+      />
     </SafeAreaView>
   )
 }
