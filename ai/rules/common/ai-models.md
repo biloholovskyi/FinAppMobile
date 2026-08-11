@@ -128,18 +128,19 @@ Selection criteria for assigning model tiers:
 | File scope | 0-1 files | 1-8 files | 9+ files or cross-cutting | Varies |
 | Reasoning depth | None (mechanical) | Moderate (pattern matching) | Deep (trade-offs, risk) | Parent decides |
 | Cost sensitivity | Lowest priority | Default choice | Use only when quality requires it | N/A |
-| Examples | build, lint, test, deploy | commit, MR, migrations, fix | plan audit, full audit, perf review | deep MR review, implement-plan |
+| Examples | lint, typecheck, EAS status | commit, screen implementation, fix | plan audit, security audit, perf review | implement-plan-step |
 
 Agent tier assignments:
-- haiku: codebase-researcher, command-runner, parallel-tester, vercel-deploy-runner.
-- sonnet: dependency-analyst, dual-runtime-package-auditor, dual-runtime-package-remediator, test-coverage-auditor.
-- opus: plan-auditor, full-package-auditor, react-performance-reviewer, ui-guidelines-reviewer.
+- haiku: codebase-researcher, command-runner.
+- sonnet: finapp-mobile-expert, code-reviewer, screen-designer, dependency-analyst, eas-deployer.
+- opus: plan-auditor, react-performance-reviewer, full-package-auditor.
 
-Skill tier assignments:
-- haiku: lint, test, build-all, check-circular, affected, typecheck-all, deploy-vercel-preview.
-- sonnet: commit, post-code, mr, release, release-flow, hotfix, fix-dual-runtime, db-migrate, extend-api-tester.
-- opus: audit-dual-runtime, audit-ui, audit-package-json, review-react-perf.
-- inherit: implement-plan-step, audit-plan, audit-security, deep-mr-review-backend-db, deep-mr-review-frontend.
+Skill tier assignments (must match the `model:` field in each `.claude/skills/<name>/SKILL.md`):
+- haiku: lint, typecheck, post-code, commit, eas-status.
+- sonnet: start-task, deploy-preflight, eas-build, eas-submit, implement-plan-step, audit-plan, audit-security, review-react-perf.
+- no declared model (inherits the session model): ui-ux-pro-max.
+
+Open question: `review-react-perf` is a deep-reasoning audit and the criteria above argue for opus, but the skill declares sonnet. Escalate deliberately rather than drifting.
 
 Review and update assignments when agent/skill responsibilities change.
 

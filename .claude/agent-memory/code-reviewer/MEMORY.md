@@ -1,8 +1,22 @@
 # Agent Memory Index — code-reviewer
 
-This file is auto-loaded each session. Keep entries concise (≤150 chars each).
-Memory files live in this directory alongside this index.
+This file is auto-loaded each session. Keep entries under 150 characters and link to the memory file.
+Guidance: `.claude/agent-memory/README.md`.
 
-## Memories
+Store recurring review findings and deviations the user has explicitly accepted, so they are not re-reported every review.
 
-(empty — will be populated as the reviewer finds recurring patterns)
+## User
+
+_(empty)_
+
+## Feedback
+
+_(empty)_
+
+## Project
+
+_(empty)_
+
+## Reference
+
+_(empty)_

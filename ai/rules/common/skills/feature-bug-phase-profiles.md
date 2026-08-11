@@ -75,5 +75,5 @@ Anti-Patterns:
 Related Rules:
 - `ai/rules/common/implementation-plans.md` - canonical phase lifecycle
 - `ai/rules/common/skills/agent-team-quality-gates.md` - phase gates and role split
-- `ai/rules/projects/non-restrict-proxy/architecture.md` - C4 and diagramming requirements
+- `ai/rules/projects/fin-app-mobile/architecture.md` - FSD layers and architecture boundaries
 - `ai/rules/common/skills/refactor-security-audit.md` - hardening after implementation

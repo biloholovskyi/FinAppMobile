@@ -83,6 +83,13 @@
       from { opacity: 0; transform: scale(0.85); }
       to   { opacity: 1; transform: scale(1); }
     }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    @keyframes dotBreathe {
+      0%, 100% { opacity: 0.3; transform: scale(0.75); }
+      50%       { opacity: 1;   transform: scale(1.25); }
+    }
 
     .phone {
       width: 375px;
@@ -463,6 +470,147 @@
       align-items: center;
       justify-content: center;
     }
+
+    /* Infinite scroll — loader */
+    .load-more-zone {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      padding: 18px 20px 8px;
+    }
+    .load-more-zone.visible { display: flex; }
+
+    .loader-ring-wrap {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-full);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--glow-blue);
+    }
+
+    .loader-ring {
+      width: 34px;
+      height: 34px;
+      border-radius: var(--radius-full);
+      background: conic-gradient(from 0deg, transparent 0deg, var(--accent-blue) 320deg, transparent 360deg);
+      animation: spin 850ms linear infinite;
+      position: relative;
+    }
+    .loader-ring::before {
+      content: '';
+      position: absolute;
+      inset: 4px;
+      border-radius: var(--radius-full);
+      background: var(--bg-base);
+    }
+
+    .loader-dots {
+      display: flex;
+      gap: 6px;
+    }
+    .loader-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: var(--radius-full);
+      background: var(--accent-blue);
+      animation: dotBreathe 1200ms ease-in-out infinite;
+    }
+    .loader-dot:nth-child(1) { animation-delay: 0ms; }
+    .loader-dot:nth-child(2) { animation-delay: 150ms; }
+    .loader-dot:nth-child(3) { animation-delay: 300ms; }
+
+    .loader-label {
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      letter-spacing: 0.2px;
+      animation: glowPulse 1800ms ease-in-out infinite;
+    }
+
+    .skeleton-list {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      margin-top: 6px;
+    }
+
+    .skeleton-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+    }
+
+    .skeleton-shimmer {
+      background: linear-gradient(90deg, var(--bg-elevated) 25%, var(--bg-overlay) 50%, var(--bg-elevated) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1600ms linear infinite;
+    }
+
+    .skeleton-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: var(--radius-md);
+      flex-shrink: 0;
+    }
+
+    .skeleton-body {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .skeleton-line {
+      height: 9px;
+      border-radius: var(--radius-sm);
+    }
+    .skeleton-line.w-60 { width: 60%; }
+    .skeleton-line.w-40 { width: 40%; }
+
+    .skeleton-amount {
+      width: 46px;
+      height: 12px;
+      border-radius: var(--radius-sm);
+      flex-shrink: 0;
+    }
+
+    .sentinel {
+      height: 1px;
+      width: 100%;
+    }
+
+    .end-of-list {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      padding: 20px 20px 26px;
+      animation: fadeUp var(--t-slow) var(--ease-out) both;
+    }
+    .end-of-list.visible { display: flex; }
+
+    .end-line {
+      width: 60px;
+      height: 1px;
+      background: var(--border-default);
+    }
+
+    .end-content {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-muted);
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      font-weight: 500;
+    }
   </style>
 </head>
 <body>
@@ -729,6 +877,55 @@
           </div>
         </div>
 
+        <div class="load-more-zone" id="loadMoreZone">
+          <div class="loader-ring-wrap">
+            <div class="loader-ring"></div>
+          </div>
+          <div class="loader-dots">
+            <span class="loader-dot"></span>
+            <span class="loader-dot"></span>
+            <span class="loader-dot"></span>
+          </div>
+          <span class="loader-label">Загружаем ещё…</span>
+
+          <div class="skeleton-list">
+            <div class="skeleton-item">
+              <div class="skeleton-icon skeleton-shimmer"></div>
+              <div class="skeleton-body">
+                <div class="skeleton-line w-60 skeleton-shimmer"></div>
+                <div class="skeleton-line w-40 skeleton-shimmer"></div>
+              </div>
+              <div class="skeleton-amount skeleton-shimmer"></div>
+            </div>
+            <div class="skeleton-item">
+              <div class="skeleton-icon skeleton-shimmer"></div>
+              <div class="skeleton-body">
+                <div class="skeleton-line w-60 skeleton-shimmer"></div>
+                <div class="skeleton-line w-40 skeleton-shimmer"></div>
+              </div>
+              <div class="skeleton-amount skeleton-shimmer"></div>
+            </div>
+            <div class="skeleton-item">
+              <div class="skeleton-icon skeleton-shimmer"></div>
+              <div class="skeleton-body">
+                <div class="skeleton-line w-60 skeleton-shimmer"></div>
+                <div class="skeleton-line w-40 skeleton-shimmer"></div>
+              </div>
+              <div class="skeleton-amount skeleton-shimmer"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sentinel" id="scrollSentinel"></div>
+
+        <div class="end-of-list" id="endOfList">
+          <div class="end-line"></div>
+          <div class="end-content">
+            <i data-lucide="check-circle-2" width="15" height="15"></i>
+            <span>Это все транзакции</span>
+          </div>
+        </div>
+
       </div>
 
       <div class="tab-bar">
@@ -765,6 +962,163 @@
         pill.classList.add('active');
       });
     });
+
+    (function initInfiniteScroll() {
+      const MAX_PAGES = 4;
+      const LOAD_DELAY_MS = 950;
+      const ITEM_STAGGER_MS = 60;
+      const MONTH_NAMES = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
+
+      const CATEGORY_POOL = [
+        { cls: 'food', icon: 'utensils', badge: 'Еда', descs: ['Обед', 'Ужин в ресторане', 'Кофе с собой'], wallet: 'Monobank', min: 60, max: 900 },
+        { cls: 'transport', icon: 'car', badge: 'Транспорт', descs: ['Такси', 'Метро', 'Заправка'], wallet: 'Monobank', min: 80, max: 1200 },
+        { cls: 'grocery', icon: 'shopping-cart', badge: 'Продукты', descs: ['Продукты', 'Супермаркет'], wallet: 'Visa *4141', min: 300, max: 2200 },
+        { cls: 'sub', icon: 'tv', badge: 'Подписки', descs: ['Spotify', 'iCloud+', 'YouTube Premium'], wallet: 'Visa *4141', min: 99, max: 399 },
+        { cls: 'health', icon: 'heart', badge: 'Здоровье', descs: ['Аптека', 'Приём врача'], wallet: 'Наличные', min: 200, max: 1800 },
+        { cls: 'work', icon: 'briefcase', badge: 'Работа', descs: ['Фриланс-проект', 'Консультация'], wallet: 'Monobank', min: 2000, max: 15000, income: true },
+        { cls: 'transfer', icon: 'arrow-right-left', badge: 'Перевод', descs: ['Перевод другу', 'Перевод маме'], wallet: 'Monobank → Наличные', min: 300, max: 3000 },
+      ];
+
+      const screenContent = document.querySelector('.screen-content');
+      const loadMoreZone = document.getElementById('loadMoreZone');
+      const sentinel = document.getElementById('scrollSentinel');
+      const endOfList = document.getElementById('endOfList');
+
+      let loadedPages = 0;
+      let isLoading = false;
+      let nextDay = 6; // last existing section is "7 апреля 2026" — continue backwards
+
+      function randomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+
+      function formatAmount(value) {
+        return Math.abs(value).toLocaleString('ru-RU').replace(/\s/g, ' ');
+      }
+
+      function buildTxItem(delayMs) {
+        const category = CATEGORY_POOL[randomInt(0, CATEGORY_POOL.length - 1)];
+        const desc = category.descs[randomInt(0, category.descs.length - 1)];
+        const isIncome = Boolean(category.income) && Math.random() > 0.3;
+        const rawAmount = randomInt(category.min, category.max);
+        const signedAmount = isIncome ? rawAmount : -rawAmount;
+        const sign = isIncome ? 'pos' : 'neg';
+        const prefix = isIncome ? '+' : '−';
+        const hh = String(randomInt(7, 22)).padStart(2, '0');
+        const mm = String(randomInt(0, 59)).padStart(2, '0');
+
+        const item = document.createElement('div');
+        item.className = 'tx-item';
+        item.style.animationDelay = delayMs + 'ms';
+        item.innerHTML =
+          '<div class="tx-icon ' + category.cls + '">' +
+            '<i data-lucide="' + category.icon + '" width="16" height="16"></i>' +
+          '</div>' +
+          '<div class="tx-body">' +
+            '<span class="tx-desc">' + desc + '</span>' +
+            '<div class="tx-meta">' +
+              '<span class="tx-badge ' + category.cls + '">' + category.badge + '</span>' +
+            '</div>' +
+            '<span class="tx-wallet">' + category.wallet + '</span>' +
+          '</div>' +
+          '<div class="tx-end">' +
+            '<div class="tx-right">' +
+              '<span class="tx-amount ' + sign + '">' + prefix + formatAmount(rawAmount) + ' ₽</span>' +
+              '<span class="tx-time">' + hh + ':' + mm + '</span>' +
+            '</div>' +
+            '<div class="tx-actions">' +
+              '<div class="tx-action-btn edit"><i data-lucide="pencil" width="13" height="13"></i></div>' +
+              '<div class="tx-action-btn delete"><i data-lucide="trash-2" width="13" height="13"></i></div>' +
+            '</div>' +
+          '</div>';
+
+        return { el: item, amount: signedAmount };
+      }
+
+      function buildDaySection() {
+        const date = new Date(2026, 3, nextDay); // April 2026
+        nextDay -= 1;
+        const label = date.getDate() + ' ' + MONTH_NAMES[date.getMonth()] + ' ' + date.getFullYear();
+
+        const section = document.createElement('div');
+        section.className = 'day-section';
+        section.style.animationDelay = '0ms';
+
+        const header = document.createElement('div');
+        header.className = 'day-header';
+        const divider = document.createElement('div');
+        divider.className = 'day-divider';
+
+        const itemCount = randomInt(2, 4);
+        const fragment = document.createDocumentFragment();
+        let total = 0;
+
+        for (let i = 0; i < itemCount; i += 1) {
+          const { el, amount } = buildTxItem(i * ITEM_STAGGER_MS);
+          total += amount;
+          fragment.appendChild(el);
+        }
+
+        const totalCls = total >= 0 ? 'pos' : 'neg';
+        const totalPrefix = total >= 0 ? '+' : '−';
+        header.innerHTML =
+          '<span class="day-label">' + label + '</span>' +
+          '<span class="day-total ' + totalCls + '">' + totalPrefix + formatAmount(total) + ' ₽</span>';
+
+        section.appendChild(header);
+        section.appendChild(divider);
+        section.appendChild(fragment);
+
+        return section;
+      }
+
+      function showEndOfList() {
+        loadMoreZone.classList.remove('visible');
+        sentinel.style.display = 'none';
+        endOfList.classList.add('visible');
+        lucide.createIcons();
+      }
+
+      function loadNextPage() {
+        if (isLoading || loadedPages >= MAX_PAGES) return;
+        isLoading = true;
+        loadMoreZone.classList.add('visible');
+
+        window.setTimeout(() => {
+          const section = buildDaySection();
+          screenContent.insertBefore(section, loadMoreZone);
+          lucide.createIcons();
+
+          loadedPages += 1;
+          isLoading = false;
+          loadMoreZone.classList.remove('visible');
+
+          if (loadedPages >= MAX_PAGES) {
+            showEndOfList();
+            return;
+          }
+
+          // sentinel может остаться в зоне rootMargin — перезапускаем наблюдение,
+          // иначе следующая страница не подгрузится без ручного скролла
+          observer.unobserve(sentinel);
+          observer.observe(sentinel);
+        }, LOAD_DELAY_MS + randomInt(-100, 250));
+      }
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            loadNextPage();
+          }
+        });
+      }, {
+        root: screenContent,
+        rootMargin: '100px',
+        threshold: 0,
+      });
+
+      observer.observe(sentinel);
+    })();
   </script>
 </body>
 </html>

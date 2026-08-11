@@ -1,12 +1,107 @@
 {
   "permissions": {
     "allow": [
-      "PowerShell(rtk yarn lint)",
-      "PowerShell(yarn lint)",
-      "PowerShell(yarn api:generate)",
-      "PowerShell(npm run lint 2>&1)",
-      "PowerShell(npx tsc --noEmit 2>&1)",
-      "PowerShell(yarn eslint src/features/dashboard/DashboardScreen/useWalletsCard.ts 2>&1)"
+      "Bash(rtk yarn:*)",
+      "Bash(rtk npx:*)",
+      "Bash(rtk grep:*)",
+      "Bash(rtk ls:*)",
+      "Bash(rtk read:*)",
+      "Bash(rtk find:*)",
+      "Bash(rtk err:*)",
+      "Bash(rtk diff:*)",
+      "Bash(rtk git status:*)",
+      "Bash(rtk git diff:*)",
+      "Bash(rtk git log:*)",
+      "Bash(rtk git show:*)",
+      "Bash(rtk git branch:*)",
+      "Bash(rtk git ls-files:*)",
+      "Bash(yarn lint:*)",
+      "Bash(yarn tsc:*)",
+      "Bash(yarn api:generate)",
+      "Bash(npx expo:*)",
+      "Bash(npx eslint:*)",
+      "Bash(npx tsc:*)",
+      "Bash(node_modules/.bin/eslint:*)",
+      "PowerShell(rtk yarn *)",
+      "PowerShell(yarn lint *)",
+      "PowerShell(yarn tsc *)",
+      "PowerShell(yarn api:generate)"
+    ],
+    "deny": [
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(git add:*)",
+      "Bash(git checkout:*)",
+      "Bash(git reset:*)",
+      "Bash(git rebase:*)",
+      "Bash(git merge:*)",
+      "Bash(git revert:*)",
+      "Bash(git cherry-pick:*)",
+      "Bash(git stash:*)",
+      "Bash(git clean:*)",
+      "Bash(git restore:*)",
+      "Bash(git rm:*)",
+      "Bash(git mv:*)",
+      "Bash(git tag:*)",
+      "Bash(rtk git commit:*)",
+      "Bash(rtk git push:*)",
+      "Bash(rtk git add:*)",
+      "Bash(rtk git checkout:*)",
+      "Bash(rtk git reset:*)",
+      "Bash(rtk git rebase:*)",
+      "Bash(rtk git merge:*)",
+      "Bash(rtk git revert:*)",
+      "Bash(rtk git cherry-pick:*)",
+      "Bash(rtk git stash:*)",
+      "Bash(rtk git clean:*)",
+      "Bash(rtk git restore:*)",
+      "Bash(rtk git rm:*)",
+      "Bash(rtk git mv:*)",
+      "Bash(rtk git tag:*)",
+      "PowerShell(git commit *)",
+      "PowerShell(git push *)",
+      "PowerShell(git add *)",
+      "PowerShell(rtk git commit *)",
+      "PowerShell(rtk git push *)",
+      "PowerShell(rtk git add *)"
+    ]
+  },
+  "enabledPlugins": {
+    "superpowers@claude-plugins-official": true,
+    "context7@claude-plugins-official": true,
+    "skill-creator@claude-plugins-official": true
+  },
+  "extraKnownMarketplaces": {
+    "claude-plugins-official": {
+      "source": {
+        "source": "github",
+        "repo": "anthropics/claude-plugins-official"
+      }
+    }
+  },
+  "enabledMcpjsonServers": ["context7"],
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '[post-edit] Code changed — run /post-code before committing (rtk yarn lint && rtk yarn tsc --noEmit)'"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '[session-end] Remember: run /post-code if any code was changed this session'"
+          }
+        ]
+      }
     ]
   }
 }

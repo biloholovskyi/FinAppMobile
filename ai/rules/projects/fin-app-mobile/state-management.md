@@ -144,7 +144,7 @@ const createMutation = useMutation({
 
 Optimistic updates: only where UX strongly demands it, not by default.
 
-## Zustand v4 Stores
+## Zustand v5 Stores
 
 ### When to Use Zustand
 
@@ -192,6 +192,12 @@ Rules:
 - Keep stores flat — avoid deep nesting
 - Persist with `expo-secure-store` for sensitive data, `AsyncStorage` for preferences
 - Never put API response data directly into Zustand
+- No Zustand store exists yet — the first one creates `src/shared/stores/`
+
+v5 selector rules (breaking vs v4):
+- The equality-function second argument is removed — use `useShallow` from `zustand/react/shallow` for object/array selectors
+- Prefer one field per call: `useStore((s) => s.dateFrom)` — returning a fresh object every render causes infinite re-renders
+- Always `import { create } from 'zustand'` — the default export is gone
 
 ## Error Handling
 

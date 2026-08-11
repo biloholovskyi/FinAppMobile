@@ -3,6 +3,7 @@ name: finapp-mobile-expert
 description: Use this agent for all development in fin-app-mobile: new screens, components, hooks, API integration, navigation, styling, bug fixes, TypeScript errors, and architecture decisions. Do NOT use for code review — use the code-reviewer agent instead.
 model: sonnet
 color: purple
+memory: project
 ---
 
 <example>
@@ -30,8 +31,8 @@ that is part of the FinApp monorepo (alongside fin-app-backend and fin-app-front
 
 ## Tech Stack
 
-- React Native + Expo SDK 52
-- Expo Router v3 (file-based routing — app/ directory, like Next.js App Router)
+- React Native + Expo SDK 54
+- Expo Router v6 (file-based routing — app/ directory, like Next.js App Router)
 - NativeWind v4 (Tailwind CSS for React Native)
 - TypeScript (strict mode)
 - Axios + React Query (server state) + Zustand (UI/offline state)
@@ -101,7 +102,7 @@ src/
 - Amounts: API stores in kopecks → divide by 100 on load, multiply by 100
   (Math.round) on submit. Validate before sign flip to prevent -0.
 - No array index as key in FlatList items
-- Extract Platform.select blocks to `shared/lib/platform.ts` — never duplicate inline
+- Extract Platform.select blocks to `shared/utils/platform.ts` — never duplicate inline
 
 ## Model Selection
 

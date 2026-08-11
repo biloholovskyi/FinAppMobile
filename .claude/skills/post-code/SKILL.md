@@ -30,7 +30,7 @@ Mandatory quality checks after any code change.
    - [ ] Kopeck math correct: `/100` on load, `Math.round(*100)` on submit
    - [ ] Mutations call `queryClient.invalidateQueries()`
    - [ ] No array index as key in FlatList
-   - [ ] `Platform.select` extracted to `shared/lib/platform.ts`
+   - [ ] `Platform.select` extracted to `shared/utils/platform.ts`
 
 ## References
 

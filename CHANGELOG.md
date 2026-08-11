@@ -1,3 +1,7 @@
+[1.8.0] 05.08.2026
+
+- Claude config consolidation: rules synced with the real stack, EAS release contour, new agents and skills
+
 [1.7.0] 21.06.2026
 
 - [FAM](https://ticktick.com/webapp/#p/683eff21ebb75c000000031c/tasks/6a29d76febb75c0000000522): Delete transaction confirm
