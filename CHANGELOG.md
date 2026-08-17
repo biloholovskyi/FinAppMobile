@@ -1,6 +1,7 @@
-[1.8.0] 05.08.2026
+[1.8.0] 12.08.2026
 
-- Claude config consolidation: rules synced with the real stack, EAS release contour, new agents and skills
+- Transactions infinite scroll
+- Claude config consolidation
 
 [1.7.0] 21.06.2026
 

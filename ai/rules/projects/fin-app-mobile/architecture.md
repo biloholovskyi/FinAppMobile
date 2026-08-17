@@ -61,7 +61,7 @@ src/
 │   ├── ui/           # Reusable UI components
 │   ├── lib/          # Infrastructure setup (queryClient)
 │   ├── utils/        # Pure helpers (currency, dates, colors, icons)
-│   └── constants/    # App-wide constants (queryKeys)
+│   └── constants/    # App-wide constants (queryKeys, pagination) + index.ts barrel
 ```
 
 `src/shared/stores/` does not exist yet — create it there when the first Zustand store is needed.

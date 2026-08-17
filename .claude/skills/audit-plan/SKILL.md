@@ -10,7 +10,7 @@ Review an implementation plan before or after implementation.
 
 ## Process
 
-1. Read the plan file (in `plans/` directory)
+1. Read the plan folder `plans/YYYY-MM-DD-<slug>/`: index, `research.md`, `design.md`, every `phase-XX-*.md`, `history.md` when present
 2. Load: `ai/rules/common/skills/plan-audit.md`
 3. Check against:
    - `ai/rules/projects/fin-app-mobile/architecture.md` — FSD structure, tech constraints
@@ -27,6 +27,7 @@ Review an implementation plan before or after implementation.
 - Kopeck math handled correctly
 - No expo-router in shared/, entities/, features/
 - Post-code steps (lint + tsc) included
+- Folder layout intact: index links one file per phase, no orphaned or missing phase file
 
 ## References
 

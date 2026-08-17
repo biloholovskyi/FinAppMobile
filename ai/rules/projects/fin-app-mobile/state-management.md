@@ -47,14 +47,16 @@ export const createTransaction = (dto: CreateTransactionDto): Promise<Transactio
 
 ## Generated API (Orval)
 
-`src/shared/api/generated/` — single source of hooks and types for new features. Generated from `../fin-app-backend/docs/openapi.json` via `npm run api:generate`.
+`src/shared/api/generated/` — single source of hooks and types for new features. Generated from `../fin-app-backend/docs/openapi.json` via `rtk yarn api:generate`.
 
 ### Rules
 
 - Use generated hooks for all new features — do NOT write manual API functions
 - Import models only from `src/shared/api/generated/models/` — never redeclare types manually
 - Manual files (`wallets.ts`, `transactions.ts`, `budgets.ts`, `categories.ts`) are legacy — read-only, do not extend
-- Run `npm run api:generate` when the backend OpenAPI contract changes
+- Run `rtk yarn api:generate` when the backend OpenAPI contract changes
+- Regeneration rewrites the whole generated tree, not just the touched tag — review the full diff and run `rtk yarn tsc --noEmit` before writing new code
+- `WalletTransactionModel` does not declare `wallet`, `category`, `subCategory` although the endpoint returns them — a backend contract gap. Keep the render type in `src/entities/transaction` and localise the cast in one adapter
 
 ### Usage Examples
 
@@ -143,6 +145,23 @@ const createMutation = useMutation({
 ```
 
 Optimistic updates: only where UX strongly demands it, not by default.
+
+## Windowed Infinite Loading
+
+Reference implementation: `src/features/operations/OperationsScreen/`.
+
+`GET /wallets/transactions` paginates only when `page` or `limit` is passed, and filters only when `dateFrom` or `dateTo` is passed. Both flags are independent.
+
+`pagination.total` is `count()` over the SAME filter as the query — it is the global number of records only when no date bounds are sent. Never read a date-filtered `total` as the size of the whole collection: fetch the global count with a separate `page=1&limit=1` request without dates.
+
+Rules:
+- `pageParam` carries both coordinates: `{ windowIndex, page }`. `getNextPageParam` walks pages inside the window while `page < totalPages`, then advances the window
+- Window math lives in `src/shared/utils/dateWindows.ts`. The first window has no upper bound so future-dated records still arrive; later windows end 1 ms before the previous window starts
+- The stop condition is `loadedCount < total`, not `hasNextPage` — date windows are infinite by construction
+- Back the counter with a fuse: a run of consecutive empty windows must stop the feed in case `total` disagrees with reality
+- Merge pages with de-duplication by `id`; a repeat both breaks list keys and pushes `loadedCount` past `total`
+- When a client-side filter hides whole windows, auto-load until the viewport is filled — a short list never fires `onEndReached`
+- Pull-to-refresh trims the cache to the first page and refetches; resetting the query returns `isLoading` and replaces the refresh control with a full-screen loader
 
 ## Zustand v5 Stores
 

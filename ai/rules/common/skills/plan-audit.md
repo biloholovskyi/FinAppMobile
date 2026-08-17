@@ -11,7 +11,7 @@ Triggers:
 
 ## Pre-Implementation Audit
 
-Run before any code is written. The plan must exist at `plans/YYYY-MM-DD-<slug>.md` (or `plans/<slug>/<slug>-implementation-plan.md` for folder-layout plans).
+Run before any code is written. The plan must exist as a folder `plans/YYYY-MM-DD-<slug>/` with the index `<slug>-implementation-plan.md`, `research.md`, `design.md`, and one `phase-XX-<slug>.md` per phase.
 
 ### Plan Completeness Checklist
 
@@ -19,10 +19,10 @@ Run before any code is written. The plan must exist at `plans/YYYY-MM-DD-<slug>.
 - [ ] Task profile is classified (feature / bugfix / hybrid) with signal counts
 - [ ] Pre-code artifacts section exists with crosslinks to research, design files, and prompt references
 - [ ] Rule coverage section lists all rules needed during implementation
-- [ ] Phase list is complete (Exploration through Reflect); folder-layout plans link a file per phase
+- [ ] Phase list is complete (Exploration through Reflect) and the index links one file per phase
 - [ ] Docs ownership map and cross-link direction follow `ai/rules/common/implementation-plans.md`
-- [ ] Research content exists (section or `research.md`) with facts-only discovery
-- [ ] Design content exists and matches research facts
+- [ ] `research.md` exists with facts-only discovery
+- [ ] `design.md` exists and matches research facts
 - [ ] Resolved questions section addresses all open decisions
 - [ ] No phase file is missing or has a broken crosslink
 
@@ -93,7 +93,7 @@ Run after all implementation phases are done but before final commit.
 
 ## Process
 
-1. **Identify plan path**: `plans/YYYY-MM-DD-<slug>.md`, or the index file for folder-layout plans
+1. **Identify plan path**: the folder `plans/YYYY-MM-DD-<slug>/` and its index `<slug>-implementation-plan.md`
 2. **Read all plan files**: index, all phase files, research, design artifacts, history
 3. **Choose audit type**: pre-implementation (plan not yet executed) or post-implementation (all phases done)
 4. **Run applicable checklists** from above, recording PASS/FAIL for each item

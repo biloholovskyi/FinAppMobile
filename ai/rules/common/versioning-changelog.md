@@ -11,7 +11,8 @@ Mission: keep the target version consistent across `package.json`, `app.json`, t
 - VERSION_FORMAT = `X.Y.Z`
 - CHANGELOG_VERSION_HEADER = `[X.Y.Z] DD.MM.YYYY`
 - CHANGELOG_DATE_FORMAT = `DD.MM.YYYY` (today's date)
-- CHANGELOG_ENTRY_FORMAT = `- <short task description>`
+- CHANGELOG_ENTRY_FORMAT = `- <task name>`
+- CHANGELOG_ENTRY_MAX_WORDS = 5
 - CHANGELOG_ENTRY_ORDER = newest completed task at the top of the version's bullet list
 - CHANGELOG_SECTION_ORDER = newest version section at the top of the file
 
@@ -26,14 +27,17 @@ Mission: keep the target version consistent across `package.json`, `app.json`, t
 ```
 [1.7.0] 05.08.2026
 
+- Transactions infinite scroll
 - Delete transaction
-- Some task
 ```
 
 Rules:
 - Header is a plain line: `[version] DD.MM.YYYY` — no `#`, no `###`
 - Blank line between the header and the bullet list
-- One bullet per completed task, short and self-explanatory (what changed, not how)
+- One bullet per completed task: the task name only, at most CHANGELOG_ENTRY_MAX_WORDS words
+- The bullet names WHAT was done, never how, why, or what it consists of
+- No colons, dashes, or commas introducing an explanation — if a bullet needs punctuation to fit, it is too long
+- Sub-details, mechanics, and rationale belong in the plan and `history.md`, not here
 - No ticket links in new entries — historical entries that contain them stay untouched
 - Newest task at the top of the version's list (CHANGELOG_ENTRY_ORDER)
 - Newest version section at the top of the file (CHANGELOG_SECTION_ORDER)
@@ -71,7 +75,7 @@ Run all four against the target version.
 
 - Do NOT bump runtimeVersion for JS-only changes — that would orphan installed builds from OTA updates
 - Bump it only when the change requires a new native build: new native module, Expo SDK upgrade, changed native config in `app.json`
-- When a change requires a native build, state that explicitly in the plan and the CHANGELOG task description
+- When a change requires a native build, state that explicitly in the plan — not in the CHANGELOG bullet, which stays a bare task name
 
 ## Anti-Patterns
 
@@ -84,6 +88,9 @@ Run all four against the target version.
 - Appending a new task bullet to the bottom instead of the top
 - Adding a `#`/`###` heading marker to the changelog version header
 - Bumping runtimeVersion for a JS-only change
+- Explaining a task in the bullet instead of naming it
+- Listing what a task consists of after a colon, dash, or comma
+- Writing a bullet longer than CHANGELOG_ENTRY_MAX_WORDS words
 
 ## Related Rules
 

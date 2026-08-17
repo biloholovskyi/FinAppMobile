@@ -33,16 +33,22 @@ Authoritative rules: `ai/rules/common/implementation-plans.md`, `ai/rules/common
 
 5. Plan needed:
    - Ask the user for the target version — never infer it (`ai/rules/common/versioning-changelog.md`)
-   - Create a single file `plans/YYYY-MM-DD-<slug>.md` with, in order:
+   - Create the plan folder `plans/YYYY-MM-DD-<slug>/` — never a single file
+   - `research.md` — facts-only discovery: affected files, contracts, constraints, open questions
+   - `design.md` — target state only
+   - `<slug>-implementation-plan.md` (index) with, in order:
      - Title + date
      - Goal (1-2 bullets)
      - Task profile with signal counts
      - Decisions taken (from the user)
      - Assumptions
-     - Phases (`## Фаза N — description`) with scope, checklist, verification commands
+     - Artifact links (`research.md`, `design.md`, `history.md`)
+     - Phase list: `Phase X (todo) - description [link]`
      - Model schedule
+     - Next actions
      - Out of scope
-   - Escalate to the folder layout `plans/<slug>/` only when the complexity check in `ai/rules/common/implementation-plans.md` trips
+   - One `phase-XX-<slug>.md` per phase with: status, model tier, required rules, goal, implementation notes, scope, checklist, verification commands, acceptance criteria
+   - `history.md` is created when the first phase completes
    - Include the mandatory lifecycle phases: post-code, audit/hardening, docs sync, CHANGELOG
    - Self-audit the plan using `ai/rules/common/skills/plan-audit.md`
    - Present the plan and wait for approval — do NOT start coding
@@ -50,9 +56,10 @@ Authoritative rules: `ai/rules/common/implementation-plans.md`, `ai/rules/common
 ## Hard Rules
 
 - Plans live in `plans/` at the project root — never `docs/plans/`
+- Every plan is a folder with an index and one file per phase — never one file for the whole plan
 - No git steps in a plan (no commit, branch, or push)
 - No test phases or coverage gates — this project has no test runner
-- No implementation code before the plan file exists and the user approves it
+- No implementation code before the plan folder exists and the user approves it
 
 ## Arguments
 

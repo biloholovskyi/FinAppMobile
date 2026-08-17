@@ -5,10 +5,9 @@ Mission: structure plans as target-state-only file artifacts; enforce plan-then-
 ## Constants
 
 - PLAN_ROOT = `plans/` (project root — NOT `docs/plans/`)
-- PLAN_FILE_NAMING = `YYYY-MM-DD-{slug}.md` (single file — the default)
-- PLAN_FOLDER_LAYOUT = `plans/{slug}/` (only when the complexity check below trips)
-- PLAN_INDEX_NAMING = `{slug}-implementation-plan.md` (folder layout only)
-- PLAN_PHASE_FILE_NAMING = `phase-XX-{slug}.md` (folder layout only)
+- PLAN_FOLDER_LAYOUT = `plans/YYYY-MM-DD-{slug}/` (the only layout for new plans)
+- PLAN_INDEX_NAMING = `{slug}-implementation-plan.md`
+- PLAN_PHASE_FILE_NAMING = `phase-XX-{slug}.md`
 - PLAN_MAX_LINES = 250
 - PLAN_STATUS_VALUES = todo | in_progress | done | deferred
 - PLAN_MAX_NEXT_ACTIONS = 5
@@ -18,16 +17,22 @@ Mission: structure plans as target-state-only file artifacts; enforce plan-then-
 - PLAN_FIVE_PHASE_FLOW = Research > Design > Plan > Implement > Reflect
 - PLAN_TASK_PROFILES = feature | bugfix | hybrid
 
-Artifact names (folder layout only):
-- research.md, design.md, history.md, adr-{slug}.md (optional)
+Folder contents:
+- `{slug}-implementation-plan.md` — index (required)
+- `research.md`, `design.md` — pre-code artifacts (required)
+- `history.md` — handoff notes per phase (required, created with the first completed phase)
+- `phase-XX-{slug}.md` — one file per phase (required)
+- `adr-{slug}.md` — optional, for high-risk decisions
+
+Plans created before this layout are single `plans/YYYY-MM-DD-{slug}.md` files. They stay as they are — historical record, not a template.
 
 ## Plan Content Rules
 
 - Target-state only: describe how it should be, not how it is now
 - No before/after comparisons, no migration diffs, no "current state" sections
 - No code examples (type defs in backticks OK, reference paths instead)
-- Research content: facts-only discovery — affected files, boundaries, constraints, open questions
-- Design and phase sections: describe the end state the model should build
+- `research.md`: facts-only discovery — affected files, boundaries, constraints, open questions
+- `design.md` and phase files: describe the end state the model should build
 - When existing code is far from target, note "write from scratch" as implementation hint
 - The model should verify existing code and decide: patch if close to target, rewrite if not
 - Tables over prose for decision matrices and field mappings
@@ -41,7 +46,7 @@ Behavior contracts (API shapes, money/locale handling, layer boundaries) must ha
 Ownership map:
 - `ai/rules/**` = rule and convention source of truth
 - `CLAUDE.md` + `.claude/**` = Claude entry point, agents, skills, path stubs
-- `plans/**` = implementation history, gates, and evidence
+- `plans/**` = implementation history, gates, and evidence (one folder per plan)
 - `designs/**` = HTML screen prototypes (design intent, not behavior contracts)
 
 Mandatory link direction:
@@ -67,9 +72,9 @@ Multi-phase tasks follow PLAN_FIVE_PHASE_FLOW:
 - Implement: one phase at a time with quality gates
 - Reflect: lessons learned, design alignment check, tech debt capture
 
-For a single-file plan these are sections, not separate files.
+Artifact mapping: Research -> `research.md`, Design -> `design.md`, Plan -> index + phase files, Implement -> phase files + `history.md`, Reflect -> its own phase file.
 
-No implementation code until the plan is written to a file and user-approved.
+No implementation code until the plan folder exists and is user-approved.
 
 ## Task Profile Classifier
 
@@ -84,46 +89,48 @@ Apply depth from `ai/rules/common/skills/feature-bug-phase-profiles.md`.
 
 ## Plan Structure
 
-Single-file plan (default) — sections in order:
+Every plan is a folder (PLAN_FOLDER_LAYOUT). Never collapse a plan into one file, regardless of phase count or size.
+
+Index (PLAN_INDEX_NAMING) — sections in order:
 - Title + date
 - Goal (1-2 bullets)
-- Task profile
+- Task profile with signal counts
 - Decisions taken (from the user)
 - Assumptions
-- Phases: `## Фаза N — description` with scope, checklist, verification
+- Artifact links: `research.md`, `design.md`, `history.md`
+- Phase list: `Phase X (status) - description [link]`
 - Model schedule (group phases by tier)
+- Next actions (up to PLAN_MAX_NEXT_ACTIONS)
 - Out of scope
 
-Folder layout index (PLAN_INDEX_NAMING):
-- Goal, task profile
-- Phase list: `Phase X (status) - description [link]`
-- Model schedule
-- Next actions (up to PLAN_MAX_NEXT_ACTIONS)
-
 Phase files (PLAN_PHASE_FILE_NAMING):
-- Status, model tier, required rules
+- Status (PLAN_STATUS_VALUES), model tier, required rules
 - Goal (1 sentence)
 - Implementation notes (write-from-scratch hints, patch hints)
-- Scope (target state only)
+- Scope (target state only, exact file paths)
 - Checklist
 - Verification commands
+- Acceptance criteria
+- Evidence note (filled when the phase is marked done)
+- Handoff note (max 7 bullets, mirrored into `history.md`)
 
-Complexity check — switch from single file to PLAN_FOLDER_LAYOUT when:
-- The plan would exceed PLAN_MAX_LINES
-- Phase count > PLAN_SIMPLE_MAX_PHASES
-- Work spans this project plus backend/frontend contracts
+Depth by phase count:
+- Phases <= PLAN_SIMPLE_MAX_PHASES — `research.md` and `design.md` may be short (facts and target state only), one phase file each
+- Phases > PLAN_SIMPLE_MAX_PHASES — split high-risk work into separate phase files, add `adr-{slug}.md` for one-way-door decisions
+- Bugfix profile — the folder still applies; research and design may be a few bullets each
 
 ## Plan Generation
 
-Step 1: Write the plan to a file
+Step 1: Write the plan to files
 - Exploration first: search the codebase, validate assumptions against `package.json` and `src/`
-- Confirm research and design content exists (section or file)
-- Create the plan file (or index + phase files)
+- Create the plan folder, then `research.md` and `design.md`
+- Create the index and one phase file per phase; every phase file is linked from the index
 
 Step 2: Self-audit
-- All required lifecycle phases present
-- Each phase has scope, model tier, verification, acceptance
-- Total plan within token-economy limits
+- All required lifecycle phases present, each with its own phase file
+- Each phase file has scope, model tier, verification, acceptance
+- Every index link resolves; no phase file is orphaned
+- Each file within PLAN_MAX_LINES and within token-economy limits
 - Target-state-only language verified (no comparison language)
 
 Step 3: User gate
@@ -133,10 +140,10 @@ Step 3: User gate
 
 For each phase (no step skipped):
 
-1. Implement: execute scope and checklist, load only the plan + active phase + required rules
+1. Implement: execute scope and checklist, load only the index + active phase file + required rules
 2. Self-audit: re-read scope, run verification commands, compare against acceptance criteria
-3. Update history: handoff note (max 7 bullets) in the plan (or `history.md` in folder layout)
-4. Mark done: update status with an evidence note
+3. Update history: handoff note (max 7 bullets) in `history.md`, dated
+4. Mark done: update status in the phase file and in the index phase list, with an evidence note
 5. User gate: present results, wait for approval before the next phase
 
 ## Model Protocol
@@ -176,13 +183,15 @@ The project has no test framework — PLAN_AUDIT_MIN_RECHECKS is `rtk yarn lint`
 
 ## Anti-Patterns
 
-- Do not implement before the plan is written to a file and user-approved
+- Do not implement before the plan folder is written and user-approved
+- Do not collapse a plan into a single file — every plan is a folder with an index and phase files
 - Do not skip Research or Design for multi-phase work
 - Do not write code during Research, Design, or Plan phases
 - Do not implement multiple phases in one cycle
 - Do not skip the user gate even when asked to "implement the whole plan"
 - Do not mark a phase done without verification evidence
 - Do not load all phase files — only the index + active phase
+- Do not leave a phase without its own `phase-XX-{slug}.md` file
 - Do not add comparison language (before/after, current vs target) to plan files
 - Do not embed code snippets; reference file paths
 - Do not persist state only in conversation; write to plan files
