@@ -1,5 +1,6 @@
-[1.8.0] 12.08.2026
+[1.8.0] 17.08.2026
 
+- Разделение платежа
 - Transactions infinite scroll
 - Claude config consolidation
 

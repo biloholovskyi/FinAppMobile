@@ -5,26 +5,31 @@ import { useWalletControllerCreateTransaction } from '@/shared/api/generated/wal
 import { updateTransaction, deleteTransaction } from '@/shared/api/transactions'
 import { getApiErrorMessage } from '@/shared/api/errors'
 import { QUERY_KEYS } from '@/shared/constants/queryKeys'
-import { WalletTransactionType } from '@/entities/transaction'
+import { TRANSACTION_SPLIT_MESSAGES } from '@/shared/constants/transactionSplit'
+import type { SavePayload } from './savePayloads'
 
 const SAVE_ERROR_FALLBACK = 'Не удалось сохранить. Попробуйте ещё раз'
 const DELETE_ERROR_FALLBACK = 'Не удалось удалить транзакцию. Попробуйте ещё раз'
 
-type SavePayload = {
-  walletId?: string
-  type: WalletTransactionType
-  amount: number
-  description: string
-  transactionTime: string
-  categoryId: string | null
-  subCategoryId: string | null
-  targetWalletId: string | null
-  targetAmount: number | null
+function toCreateData(p: SavePayload) {
+  return {
+    walletId: p.walletId,
+    type: p.type,
+    amount: p.amount,
+    description: p.description || undefined,
+    transactionTime: p.transactionTime,
+    categoryId: p.categoryId,
+    subCategoryId: p.subCategoryId,
+    targetWalletId: p.targetWalletId,
+    targetAmount: p.targetAmount ?? undefined,
+  }
 }
 
 export function useEditTransactionActions(transactionId: string | undefined) {
   const queryClient = useQueryClient()
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  /** Исходная транзакция уже уменьшена, а новый платёж ещё не создан — не вычитать повторно. */
+  const [isSourceUpdated, setIsSourceUpdated] = useState(false)
 
   const invalidateAndBack = () => {
     queryClient.invalidateQueries({ queryKey: QUERY_KEYS.transactions.all })
@@ -32,14 +37,9 @@ export function useEditTransactionActions(transactionId: string | undefined) {
     router.back()
   }
 
-  const onSaveError = (error: unknown) =>
-    setErrorMessage(getApiErrorMessage(error, SAVE_ERROR_FALLBACK))
+  const { mutateAsync: create, isPending: isCreating } = useWalletControllerCreateTransaction()
 
-  const { mutate: create, isPending: isCreating } = useWalletControllerCreateTransaction({
-    mutation: { onSuccess: invalidateAndBack, onError: onSaveError },
-  })
-
-  const { mutate: update, isPending: isUpdating } = useMutation({
+  const { mutateAsync: update, isPending: isUpdating } = useMutation({
     mutationFn: (p: SavePayload) =>
       updateTransaction(transactionId!, {
         type: p.type,
@@ -51,8 +51,6 @@ export function useEditTransactionActions(transactionId: string | undefined) {
         targetWalletId: p.targetWalletId,
         targetAmount: p.targetAmount ?? undefined,
       }),
-    onSuccess: invalidateAndBack,
-    onError: onSaveError,
   })
 
   const { mutate: remove, isPending: isDeleting } = useMutation({
@@ -62,24 +60,31 @@ export function useEditTransactionActions(transactionId: string | undefined) {
       setErrorMessage(getApiErrorMessage(error, DELETE_ERROR_FALLBACK)),
   })
 
-  const handleSave = (payload: SavePayload) => {
+  const handleSave = async (payload: SavePayload, splitPayload?: SavePayload) => {
     setErrorMessage(null)
-    if (transactionId) {
-      update(payload)
-    } else {
-      create({
-        data: {
-          walletId: payload.walletId,
-          type: payload.type,
-          amount: payload.amount,
-          description: payload.description || undefined,
-          transactionTime: payload.transactionTime,
-          categoryId: payload.categoryId,
-          subCategoryId: payload.subCategoryId,
-          targetWalletId: payload.targetWalletId,
-          targetAmount: payload.targetAmount ?? undefined,
-        },
-      })
+    // Локальный дубль признака: состояние React не обновится внутри этого же вызова.
+    let sourceUpdated = isSourceUpdated
+    try {
+      if (!transactionId) {
+        await create({ data: toCreateData(payload) })
+      } else if (!splitPayload) {
+        await update(payload)
+      } else {
+        if (!sourceUpdated) {
+          await update(payload)
+          sourceUpdated = true
+          setIsSourceUpdated(true)
+        }
+        await create({ data: toCreateData(splitPayload) })
+        setIsSourceUpdated(false)
+      }
+      invalidateAndBack()
+    } catch (error) {
+      setErrorMessage(
+        splitPayload && sourceUpdated
+          ? TRANSACTION_SPLIT_MESSAGES.partialSave
+          : getApiErrorMessage(error, SAVE_ERROR_FALLBACK),
+      )
     }
   }
 
@@ -88,17 +93,14 @@ export function useEditTransactionActions(transactionId: string | undefined) {
     remove()
   }
 
-  const clearError = () => setErrorMessage(null)
-
-  const setValidationError = (message: string) => setErrorMessage(message)
-
   return {
     handleSave,
     handleDelete,
-    setValidationError,
+    setValidationError: (message: string) => setErrorMessage(message),
+    resetSplitProgress: () => setIsSourceUpdated(false),
     isSaving: isCreating || isUpdating,
     isDeleting,
     errorMessage,
-    clearError,
+    clearError: () => setErrorMessage(null),
   }
 }

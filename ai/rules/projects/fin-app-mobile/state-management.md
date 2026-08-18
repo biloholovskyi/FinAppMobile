@@ -163,6 +163,23 @@ Rules:
 - When a client-side filter hides whole windows, auto-load until the viewport is filled — a short list never fires `onEndReached`
 - Pull-to-refresh trims the cache to the first page and refetches; resetting the query returns `isLoading` and replaces the refresh control with a full-screen loader
 
+## Разделение расходной транзакции
+
+Реализация: `src/features/operations/EditTransactionScreen/`. Прототип: `designs/screens/transaction-edit.html`.
+
+Расходную транзакцию можно разделить на две: часть суммы уходит в новый платёж с собственной категорией, остаток остаётся в исходной.
+
+Правила:
+- Разделение доступно только для типа `expense` и только при редактировании существующей транзакции
+- Одна дополнительная часть за раз; базовая сумма фиксируется в момент включения разделения
+- Поле «Сумма» на время разделения read-only и показывает остаток; ввод новой части клампится диапазоном от нуля до базовой суммы
+- Сохранение выполняет два запроса подряд: PATCH исходной транзакции с суммой-остатком, затем POST нового платежа
+- Новый платёж копирует из исходной `walletId`, `type`, `description`, `transactionTime`; собственными остаются `categoryId`, `subCategoryId`, `amount`
+- Кэш инвалидируется и экран закрывается только после успеха обоих запросов
+- Атомарности нет: если PATCH прошёл, а POST упал, признак `isSourceUpdated` не даёт повторному сохранению вычесть сумму второй раз. Признак сбрасывается при успехе, при отключении разделения и при смене типа
+- Суммы отправляются в единицах валюты, а не в копейках — этому контракту следует весь экран редактирования; в копейках приходят только ответы API
+- Копеечная математика разделения живёт в `amountStrToKopecks` / `kopecksToAmountStr` из `src/shared/utils/currency.ts`; `parseAmountInput` для неё не подходит, так как считает ноль ошибкой
+
 ## Zustand v5 Stores
 
 ### When to Use Zustand

@@ -1,3 +1,5 @@
+import { KOPECK_DIVISOR, KOPECK_MULTIPLIER } from '@/shared/constants/money'
+
 export function formatAmount(kopecks: number): string {
   return (Math.abs(kopecks) / 100).toLocaleString('uk-UA', {
     minimumFractionDigits: 0,
@@ -40,4 +42,20 @@ export function parseAmountInput(raw: string): number | null {
   const value = Number(normalized)
   if (!Number.isFinite(value) || value <= 0) return null
   return value
+}
+
+/**
+ * Строка суммы -> целые копейки. Пустая или некорректная строка считается нулём.
+ * В отличие от `parseAmountInput`, ноль здесь допустим — это валидное промежуточное значение ввода.
+ */
+export function amountStrToKopecks(value: string): number {
+  const normalized = value.trim().replace(',', '.')
+  const parsed = Number(normalized)
+  if (normalized === '' || !Number.isFinite(parsed) || parsed < 0) return 0
+  return Math.round(parsed * KOPECK_MULTIPLIER)
+}
+
+/** Целые копейки -> строка суммы в формате поля ввода. */
+export function kopecksToAmountStr(kopecks: number): string {
+  return String(kopecks / KOPECK_DIVISOR)
 }

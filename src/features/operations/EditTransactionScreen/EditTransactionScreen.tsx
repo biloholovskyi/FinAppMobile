@@ -1,10 +1,7 @@
-import { View, Text, TextInput, ScrollView, TouchableOpacity, KeyboardAvoidingView, Platform, ActivityIndicator } from 'react-native'
+import { View, Text, ScrollView, TouchableOpacity, KeyboardAvoidingView, Platform, ActivityIndicator } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Stack, router } from 'expo-router'
 import * as icons from 'lucide-react-native'
-import { WalletTransactionType } from '@/entities/transaction'
-import { hexToRgba } from '@/shared/utils/colors'
-import { getCurrencySymbol } from '@/shared/utils/currency'
 import { useEditTransactionScreen } from './useEditTransactionScreen'
 import { CategoryPickerModal } from './CategoryPickerModal/CategoryPickerModal'
 import { WalletPickerModal } from './WalletPickerModal/WalletPickerModal'
@@ -13,6 +10,12 @@ import { DateTimePickerModal } from './DateTimePickerModal/DateTimePickerModal'
 import { FormRow } from './FormRow'
 import { CreditedAmountRow } from './CreditedAmountRow'
 import { ErrorBanner } from './ErrorBanner'
+import { TypeSegment, TYPE_COLOR, TYPE_SIGN } from './TypeSegment'
+import { AmountField } from './AmountField'
+import { DescriptionRow } from './DescriptionRow'
+import { ActionButtons } from './ActionButtons'
+import { SplitButton } from './SplitPaymentCard/SplitButton'
+import { SplitPaymentCard } from './SplitPaymentCard/SplitPaymentCard'
 
 function formatTransactionTime(isoString: string): string {
   if (!isoString) return '—'
@@ -24,28 +27,12 @@ function formatTransactionTime(isoString: string): string {
   return `${date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' })}, ${timeStr}`
 }
 
-const TYPE_COLOR: Record<WalletTransactionType, string> = {
-  [WalletTransactionType.expense]: '#FF4B6B',
-  [WalletTransactionType.income]: '#00E089',
-  [WalletTransactionType.transfer]: '#4F9EFF',
-}
-const TYPE_SIGN: Record<WalletTransactionType, string> = {
-  [WalletTransactionType.expense]: '−',
-  [WalletTransactionType.income]: '+',
-  [WalletTransactionType.transfer]: '',
-}
-const TYPE_LABEL: Record<WalletTransactionType, string> = {
-  [WalletTransactionType.expense]: 'Расход',
-  [WalletTransactionType.income]: 'Доход',
-  [WalletTransactionType.transfer]: 'Перевод',
-}
-const TYPES = [WalletTransactionType.expense, WalletTransactionType.income, WalletTransactionType.transfer] as const
-
 export function EditTransactionScreen() {
   const {
     isLoading, isSaving, isDeleting, isCreateMode,
     sourceWalletName, walletId,
-    type, setType, amountStr, setAmountStr, description, setDescription, transactionTime, setTransactionTime,
+    type, setType, setAmountStr, description, setDescription, transactionTime, setTransactionTime,
+    split, onRemoveSplit, amountValue, isAmountReadOnly, amountHint,
     sourceWalletId, setSourceWalletId,
     categoryId, setCategoryId, subCategoryId, setSubCategoryId,
     targetWalletId, setTargetWalletId,
@@ -88,30 +75,17 @@ export function EditTransactionScreen() {
 
       <KeyboardAvoidingView className="flex-1" behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <ScrollView className="flex-1" showsVerticalScrollIndicator={false} contentContainerClassName="pb-8">
-          <View className="px-5 pb-4">
-            <View className="flex-row bg-[#181828] border border-white/[0.08] rounded-2xl p-1 gap-0.5">
-              {TYPES.map(t => (
-                <TouchableOpacity key={t} className="flex-1 py-2 rounded-lg items-center"
-                  style={type === t ? { backgroundColor: hexToRgba(TYPE_COLOR[t], 0.2) } : undefined}
-                  onPress={() => setType(t)} activeOpacity={0.7}>
-                  <Text className="text-[13px] font-semibold" style={{ color: type === t ? TYPE_COLOR[t] : '#44445A' }}>
-                    {TYPE_LABEL[t]}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-          </View>
+          <TypeSegment type={type} onChange={setType} />
 
-          <View className="items-center px-5 pb-6 gap-1.5">
-            <Text className="text-[#8888AA] text-[11px] font-medium uppercase tracking-[0.6px]">Сумма</Text>
-            <View className="flex-row items-baseline justify-center w-full pb-2.5 border-b" style={{ borderBottomColor: accentColor }}>
-              {TYPE_SIGN[type] ? <Text style={{ color: accentColor, fontSize: 36, fontWeight: '700', marginRight: 2 }}>{TYPE_SIGN[type]}</Text> : null}
-              <TextInput className="text-[#F2F2FF] text-center min-w-[40px] max-w-[220px]"
-                style={{ fontSize: 42, fontWeight: '700', letterSpacing: -2 }}
-                value={amountStr} onChangeText={setAmountStr} keyboardType="decimal-pad" maxLength={10} selectTextOnFocus />
-              <Text className="text-[#8888AA]" style={{ fontSize: 24, fontWeight: '700' }}>{getCurrencySymbol(sourceCurrency)}</Text>
-            </View>
-          </View>
+          <AmountField
+            value={amountValue}
+            onChangeText={setAmountStr}
+            accentColor={accentColor}
+            sign={TYPE_SIGN[type]}
+            currency={sourceCurrency}
+            isReadOnly={isAmountReadOnly}
+            hint={amountHint}
+          />
 
           <View className="mx-5 bg-[#10101C] border border-white/[0.08] rounded-2xl overflow-hidden">
             <FormRow icon="building-2" label="Кошелёк"
@@ -137,35 +111,44 @@ export function EditTransactionScreen() {
                 categoryColor={selectedSubCategory?.color ?? undefined} isEmpty={!selectedSubCategory}
                 onPress={() => setIsSubCategoryModalOpen(true)} showChevron />
             )}
-            <View className="flex-row items-center gap-3 px-4 py-3.5 border-b border-white/[0.04]">
-              <View className="w-[30px] h-[30px] rounded-lg bg-[#181828] border border-white/[0.04] items-center justify-center flex-shrink-0">
-                <icons.PencilLine size={14} color="#8888AA" />
-              </View>
-              <View className="flex-1 gap-[1px]">
-                <Text className="text-[#8888AA] text-[11px] font-medium">Описание</Text>
-                <TextInput className="text-[#F2F2FF] text-sm" value={description} onChangeText={setDescription}
-                  placeholder="Добавить описание..." placeholderTextColor="#44445A" maxLength={512} />
-              </View>
-            </View>
+            <DescriptionRow value={description} onChangeText={setDescription} />
             <FormRow icon="calendar" label="Дата и время"
               value={formatTransactionTime(transactionTime)}
               onPress={() => setIsDatePickerOpen(true)} showChevron />
           </View>
 
+          {split.isSplitActive && (
+            <SplitPaymentCard
+              categories={categories}
+              part={{
+                categoryId: split.splitCategoryId,
+                subCategoryId: split.splitSubCategoryId,
+                amountStr: split.splitAmountStr,
+              }}
+              currency={sourceCurrency}
+              onSelectCategory={split.selectSplitCategory}
+              onSelectSubCategory={split.setSplitSubCategoryId}
+              onChangeAmount={split.changeSplitAmount}
+              onRemove={onRemoveSplit}
+            />
+          )}
+
+          {split.canSplit && (
+            <View className="px-5 pt-3">
+              <SplitButton onPress={split.enableSplit} />
+            </View>
+          )}
+
           <View className="px-5 pt-5 gap-2.5">
             {errorMessage && <ErrorBanner message={errorMessage} onClose={clearError} />}
-            <TouchableOpacity className="w-full py-4 rounded-2xl items-center" style={{ backgroundColor: accentColor }}
-              onPress={onSave} disabled={isSaving || isDeleting} activeOpacity={0.85}>
-              {isSaving ? <ActivityIndicator color="#080810" size="small" /> :
-                <Text style={{ color: '#080810', fontSize: 15, fontWeight: '600' }}>Сохранить</Text>}
-            </TouchableOpacity>
-            {!isCreateMode && (
-              <TouchableOpacity className="w-full py-3 items-center" onPress={() => handleDelete()}
-                disabled={isSaving || isDeleting} activeOpacity={0.7}>
-                {isDeleting ? <ActivityIndicator color="#FF4B6B" size="small" /> :
-                  <Text className="text-[#FF4B6B] text-sm font-medium">Удалить транзакцию</Text>}
-              </TouchableOpacity>
-            )}
+            <ActionButtons
+              accentColor={accentColor}
+              isSaving={isSaving}
+              isDeleting={isDeleting}
+              showDelete={!isCreateMode}
+              onSave={onSave}
+              onDelete={handleDelete}
+            />
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
