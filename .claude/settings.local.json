@@ -1,69 +1,27 @@
 {
   "permissions": {
     "allow": [
-      "Bash(mkdir -p \"C:\\\\Projects\\\\FinApp\\\\fin-app-mobile\\\\.claude\\\\agents\")",
-      "Bash(mkdir -p \"C:\\\\Projects\\\\FinApp\\\\fin-app-mobile\\\\.claude\\\\rules\")",
-      "Bash(mkdir -p \"C:\\\\Projects\\\\FinApp\\\\fin-app-mobile\\\\.claude\\\\commands\")",
-      "Bash(mkdir -p \"C:\\\\Projects\\\\FinApp\\\\fin-app-mobile\\\\.claude\\\\reviews\")",
       "Bash(node:*)",
-      "WebSearch",
-      "mcp__plugin_context7_context7__resolve-library-id",
-      "mcp__plugin_context7_context7__query-docs",
-      "Bash(rtk npx:*)",
+      "Bash(find:*)",
+      "Bash(ls:*)",
+      "Bash(cd:*)",
+      "Bash(command -v rtk)",
+      "Bash(yarn add:*)",
+      "Bash(yarn list:*)",
+      "Bash(rtk npm:*)",
       "Bash(/c/nvm4w/nodejs/npx expo:*)",
       "Bash(/c/nvm4w/nodejs/npm install:*)",
-      "Bash(rtk yarn:*)",
-      "Bash(yarn tsc:*)",
-      "Bash(command -v rtk)",
-      "Bash(yarn lint:*)",
-      "Bash(npx expo:*)",
-      "Bash(yarn add:*)",
-      "Bash(node_modules/.bin/eslint:*)",
       "Bash(python3:*)",
-      "Bash(find *)",
-      "Bash(echo \"EXIT: $?\")",
-      "Bash(python3.exe -c \"print\\('hello'\\)\")",
-      "Bash(ls \"C:\\\\Users\\\\biloh\\\\.claude\\\\usage-data\\\\session-meta\"/*.json)",
-      "Bash(C:/Users/biloh/AppData/Local/Microsoft/WindowsApps/python3.exe:*)",
-      "Bash(python .claude/skills/ui-ux-pro-max/scripts/search.py \"fintech mobile finance budget categories spending tracker dark\" --design-system -p \"FinApp Mobile\")",
+      "Bash(python:*)",
       "Bash(where python:*)",
       "Bash(where python3:*)",
-      "Bash(py --version)",
+      "Bash(C:/Users/biloh/AppData/Local/Microsoft/WindowsApps/python3.exe:*)",
       "Bash(/c/Users/biloh/AppData/Local/Microsoft/WindowsApps/python.exe:*)",
-      "Bash(python .claude/skills/ui-ux-pro-max/scripts/search.py \"fintech mobile form category management\" --design-system -p \"FinApp Category\")",
-      "Bash(rtk grep *)",
-      "Bash(rtk npm *)",
-      "Bash(yarn list *)",
-      "Bash(yarn api:generate)",
-      "Bash(rtk ls *)",
-      "Bash(npx eslint *)",
-      "Bash(npx tsc *)",
-      "PowerShell(yarn lint *)",
-      "PowerShell(yarn tsc *)"
-    ]
-  },
-  "hooks": {
-    "PostToolUse": [
-      {
-        "matcher": "Write|Edit|MultiEdit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "echo '[post-edit] Code changed — run /post-code before committing (rtk yarn lint && rtk yarn tsc --noEmit)'"
-          }
-        ]
-      }
-    ],
-    "Stop": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "echo '[session-end] Remember: run /post-code if any code was changed this session'"
-          }
-        ]
-      }
+      "Bash(python .claude/skills/ui-ux-pro-max/scripts/search.py:*)",
+      "Bash(python3 .claude/skills/ui-ux-pro-max/scripts/search.py:*)",
+      "WebSearch",
+      "mcp__plugin_context7_context7__resolve-library-id",
+      "mcp__plugin_context7_context7__query-docs"
     ]
   }
 }

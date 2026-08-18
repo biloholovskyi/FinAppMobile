@@ -11,7 +11,7 @@ Triggers:
 
 ## Pre-Implementation Audit
 
-Run before any code is written. The plan must exist at `docs/plans/<plan-name>/<plan-name>-implementation-plan.md`.
+Run before any code is written. The plan must exist as a folder `plans/YYYY-MM-DD-<slug>/` with the index `<slug>-implementation-plan.md`, `research.md`, `design.md`, and one `phase-XX-<slug>.md` per phase.
 
 ### Plan Completeness Checklist
 
@@ -19,41 +19,41 @@ Run before any code is written. The plan must exist at `docs/plans/<plan-name>/<
 - [ ] Task profile is classified (feature / bugfix / hybrid) with signal counts
 - [ ] Pre-code artifacts section exists with crosslinks to research, design files, and prompt references
 - [ ] Rule coverage section lists all rules needed during implementation
-- [ ] Phase list is complete (00-Exploration through Reflect), each with a linked phase file
+- [ ] Phase list is complete (Exploration through Reflect) and the index links one file per phase
 - [ ] Docs ownership map and cross-link direction follow `ai/rules/common/implementation-plans.md`
-- [ ] Research file (`research.md`) exists and contains facts-only current-state discovery
-- [ ] Design artifacts exist (C4, DFD, Sequence) and match research facts
+- [ ] `research.md` exists with facts-only discovery
+- [ ] `design.md` exists and matches research facts
 - [ ] Resolved questions section addresses all open decisions
 - [ ] No phase file is missing or has a broken crosslink
 
 ### Plan Quality Checklist
 
 - [ ] Every phase has: Goal, Model Tier, Scope, Checklist, Verification Commands, Acceptance Criteria
-- [ ] Required Rules are listed in phases that need them (tests, audit, docs, commit)
+- [ ] Required Rules are listed in phases that need them (audit, docs, changelog)
 - [ ] Scope sections specify exact file paths, not vague descriptions
 - [ ] Checklist items are atomic and verifiable (not "implement the feature")
-- [ ] Acceptance criteria are testable (grep scans, command outputs, test counts)
-- [ ] Mandatory lifecycle phases are present: Test, Post-code, Audit/Hardening, Docs, Commit-prep
+- [ ] Acceptance criteria are verifiable (grep scans, command outputs)
+- [ ] Mandatory lifecycle phases are present: Post-code, Audit/Hardening, Docs, CHANGELOG
 - [ ] Phase dependencies are explicit (handoff notes say what the next phase needs)
-- [ ] Docs phase checklist includes stale-doc prevention checks across `docs/system-overview`, `apps/*/docs`, and `docs/plans`
+- [ ] Docs phase checklist includes stale-doc prevention checks across `ai/rules/**`, `CLAUDE.md`, and `.claude/**`
 
 ### Risk Assessment Checklist
 
-- [ ] Breaking changes are identified (env var renames, API changes, schema migrations)
-- [ ] Deployment artifacts are in scope (K8s manifests, Docker files, CI configs, generated files)
-- [ ] Rollback strategy exists for destructive changes (DB migrations, config removals)
-- [ ] All affected consumers are identified (apps, packages, infra, docs, tests)
-- [ ] Security-sensitive paths are flagged (auth, tokens, secrets, network config)
+- [ ] Breaking changes are identified (env var renames, backend contract changes, route renames)
+- [ ] Release artifacts are in scope (`app.json`, `eas.json`, `CHANGELOG.md`, generated Orval output)
+- [ ] Native-vs-OTA impact is stated (does the change require a new build or is it OTA-safe?)
+- [ ] All affected consumers are identified (screens, features, entities, rules, designs)
+- [ ] Security-sensitive paths are flagged (auth, tokens, secure storage, deep links)
 - [ ] No implicit assumptions — every assumption is stated and validated in research
 
 ### Anti-Patterns to Flag
 
 - Vague scope: "update all files" without listing them
-- Missing infra: plan touches app code but skips K8s manifests, Docker, CI, monitoring
-- Deferred-and-forgotten: items deferred to later phases that have no phase file
-- Test-blind: no test phase or test coverage audit for changed modules
-- Docs-blind: no docs sync phase for user-facing behavior changes
-- One-way door: destructive changes (env var removal, schema drop) with no rollback plan
+- Missing release artifacts: plan touches app behavior but skips `app.json`, `eas.json`, or `CHANGELOG.md`
+- Deferred-and-forgotten: items deferred to later phases that have no phase entry
+- Docs-blind: no docs sync phase for user-facing behavior or rule changes
+- One-way door: destructive changes (env var removal, route removal) with no fallback
+- Git steps inside the plan (commit, branch, push)
 
 ## Post-Implementation Audit
 
@@ -72,30 +72,28 @@ Run after all implementation phases are done but before final commit.
 - [ ] All files listed in research "Affected Files" section were actually modified
 - [ ] No planned changes were silently skipped or deferred without documentation
 - [ ] Grep scan confirms zero stale references for removed/renamed identifiers
-- [ ] Generated files are fresh (`config:generate --check` or equivalent passes)
-- [ ] Deployment artifacts (K8s, Docker, compose, CI) match the new code behavior
-- [ ] Test suites pass for all affected packages
-- [ ] Documentation matches implemented behavior (no stale examples or port numbers)
-- [ ] Documentation cross-links follow direction: `system-overview -> app docs -> plan artifacts`
+- [ ] Generated Orval output is fresh when the backend contract changed (`rtk yarn api:generate`)
+- [ ] `rtk yarn lint` and `rtk yarn tsc --noEmit` pass
+- [ ] Documentation matches implemented behavior (no stale examples or versions)
+- [ ] Documentation cross-links follow direction: `CLAUDE.md -> ai/rules/** -> plan artifacts`
 
 ### Stale Artifact Sweep
 
-- [ ] No old env var names, port numbers, or paths in: source code, tests, Docker files, K8s manifests, compose files, CI configs, monitoring configs, docs
-- [ ] Generated `.env` / `.env.example` files are current
+- [ ] No old env var names (`EXPO_PUBLIC_*`), route paths, or query keys left in: `src/`, `ai/rules/`, `.claude/`, `CLAUDE.md`
+- [ ] No stale package versions claimed in rules — they must match `package.json`
 - [ ] No TODO/FIXME comments from the plan remain unresolved
 - [ ] No "deferred to Phase X" items left unaddressed
 
-### Deployment Readiness
+### Release Readiness
 
-- [ ] All Dockerfiles use correct env vars, ports, and healthcheck URLs
-- [ ] K8s manifests (deployments, services, ingress) match new container ports
-- [ ] Docker compose port mappings are correct
-- [ ] Monitoring/observability configs (scrape targets, dashboards) use new ports
-- [ ] CI pipeline configs reference correct ports and env vars
+- [ ] `version` matches across `package.json` and `app.json`
+- [ ] `CHANGELOG.md` has an entry for the target version
+- [ ] `app.json` `runtimeVersion` is correct for the change (native change vs OTA-safe)
+- [ ] `eas.json` profiles and channels are consistent with the release intent
 
 ## Process
 
-1. **Identify plan path**: `docs/plans/<plan-name>/<plan-name>-implementation-plan.md`
+1. **Identify plan path**: the folder `plans/YYYY-MM-DD-<slug>/` and its index `<slug>-implementation-plan.md`
 2. **Read all plan files**: index, all phase files, research, design artifacts, history
 3. **Choose audit type**: pre-implementation (plan not yet executed) or post-implementation (all phases done)
 4. **Run applicable checklists** from above, recording PASS/FAIL for each item
@@ -114,8 +112,6 @@ Run after all implementation phases are done but before final commit.
 ## Related Rules
 
 - `ai/rules/common/implementation-plans.md` — plan lifecycle and phase structure
-- `ai/rules/common/post-code-workflow.md` — quality gate sequence (typecheck, lint, test)
+- `ai/rules/common/post-code-workflow.md` — quality gate sequence (lint, typecheck)
 - `ai/rules/common/skills/refactor-security-audit.md` — code-level audit checklist
-- `ai/rules/common/skills/test-coverage-audit.md` — test coverage gap analysis
-- `ai/rules/common/docs.md` — documentation sync expectations
 - `ai/rules/common/skills/agent-team-quality-gates.md` — agent-team execution quality gates

@@ -1,10 +1,11 @@
 {
   "name": "app-skeleton",
-  "version": "1.7.0",
+  "version": "1.8.0",
   "main": "expo-router/entry",
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
+    "android:emulator": "node scripts/start-android.mjs",
     "ios": "expo start --ios",
     "web": "expo start --web",
     "lint": "eslint src --fix",
@@ -33,7 +34,7 @@
     "react-native-safe-area-context": "~5.6.0",
     "react-native-screens": "~4.16.0",
     "react-native-svg": "15.12.1",
-    "react-native-worklets": "^0.8.1",
+    "react-native-worklets": "0.5.1",
     "zustand": "^5.0.12"
   },
   "devDependencies": {

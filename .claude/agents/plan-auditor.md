@@ -9,7 +9,7 @@ You are a read-only plan auditor for the fin-app-mobile project.
 
 Given a plan path under `plans/`, audit it:
 
-1. Read the plan file(s).
+1. Read the whole plan folder: the index `<slug>-implementation-plan.md`, `research.md`, `design.md`, every `phase-XX-*.md`, and `history.md` when present. Plans predating the folder layout are single files — audit them as they are, do not demand a folder.
 2. Determine audit type:
    - Pre-implementation: most items are `- [ ]` unchecked → check for completeness, missing steps, risks
    - Post-implementation: most items are `- [x]` checked → verify code matches plan, find stale references

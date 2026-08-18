@@ -1,10 +1,11 @@
 import { useEditTransactionData } from './useEditTransactionData'
 import { useEditTransactionForm } from './useEditTransactionForm'
 import { useEditTransactionActions } from './useEditTransactionActions'
-import type { CategoryModel } from '@/entities/category'
-import type { Wallet } from '@/entities/wallet'
+import { useEditTransactionSelection } from './useEditTransactionSelection'
+import { useSaveTransaction } from './useSaveTransaction'
+import { useTransactionSplit } from './useTransactionSplit'
 import { WalletTransactionType, useTransferTargetAmount } from '@/entities/transaction'
-import { parseAmountInput } from '@/shared/utils/currency'
+import { TRANSACTION_SPLIT_MESSAGES } from '@/shared/constants/transactionSplit'
 
 export function useEditTransactionScreen() {
   const { transaction, categories, wallets, isLoading, isCreateMode } = useEditTransactionData()
@@ -14,6 +15,21 @@ export function useEditTransactionScreen() {
   const isTransfer = form.type === WalletTransactionType.transfer
   const walletId = isCreateMode ? (form.sourceWalletId ?? '') : (transaction?.walletId ?? '')
 
+  const split = useTransactionSplit({
+    amountStr: form.amountStr,
+    isAvailable: !isCreateMode && form.type === WalletTransactionType.expense,
+  })
+
+  const resetSplit = () => {
+    split.resetSplit()
+    actions.resetSplitProgress()
+  }
+
+  const changeType = (next: WalletTransactionType) => {
+    if (next !== WalletTransactionType.expense) resetSplit()
+    form.setType(next)
+  }
+
   const transfer = useTransferTargetAmount({
     isTransfer,
     amount: form.amountStr,
@@ -22,64 +38,37 @@ export function useEditTransactionScreen() {
     wallets,
   })
 
-  const selectedCategory: CategoryModel | null = categories.find((c) => c.id === form.categoryId) ?? null
-  const selectedSubCategory: CategoryModel | null =
-    selectedCategory?.subCategory?.find((sc) => sc.id === form.subCategoryId) ?? null
-  const selectedSourceWallet: Wallet | null = wallets.find((w) => w.id === form.sourceWalletId) ?? null
-  const selectedTargetWallet: Wallet | null = wallets.find((w) => w.id === form.targetWalletId) ?? null
-  const hasSubCategories = (selectedCategory?.subCategory?.length ?? 0) > 0
+  const selection = useEditTransactionSelection({
+    categories,
+    wallets,
+    categoryId: form.categoryId,
+    subCategoryId: form.subCategoryId,
+    sourceWalletId: form.sourceWalletId,
+    targetWalletId: form.targetWalletId,
+  })
 
-  const sourceWalletName = isCreateMode ? (selectedSourceWallet?.name ?? '') : (transaction?.wallet?.name ?? '')
-
-  const onSave = () => {
-    if (!isCreateMode && !transaction) return
-    if (isCreateMode && !form.sourceWalletId) return
-
-    const amount = parseAmountInput(form.amountStr)
-    if (amount === null) {
-      actions.setValidationError('Введите корректную сумму')
-      return
-    }
-    const signedAmount = form.type === WalletTransactionType.expense ? -amount : amount
-
-    if (isTransfer) {
-      if (!form.targetWalletId) {
-        actions.setValidationError('Выберите кошелёк-получатель')
-        return
-      }
-      if (!(transfer.targetAmountNumber > 0)) {
-        actions.setValidationError('Укажите сумму зачисления')
-        return
-      }
-    }
-
-    actions.handleSave({
-      walletId: form.sourceWalletId ?? undefined,
-      type: form.type,
-      amount: signedAmount,
-      description: form.description,
-      transactionTime: form.transactionTime,
-      categoryId: form.categoryId,
-      subCategoryId: form.subCategoryId,
-      targetWalletId: isTransfer ? form.targetWalletId : null,
-      targetAmount: isTransfer ? transfer.targetAmountNumber : null,
-    })
-  }
+  const { onSave } = useSaveTransaction({
+    form,
+    split,
+    transfer,
+    actions,
+    canSave: isCreateMode ? !!form.sourceWalletId : !!transaction,
+    isTransfer,
+    walletId,
+  })
 
   return {
     isLoading,
     isSaving: actions.isSaving,
     isDeleting: actions.isDeleting,
     isCreateMode,
-    sourceWalletName,
+    sourceWalletName: isCreateMode
+      ? (selection.selectedSourceWallet?.name ?? '')
+      : (transaction?.wallet?.name ?? ''),
     walletId,
-    selectedCategory,
-    selectedSubCategory,
-    selectedSourceWallet,
-    selectedTargetWallet,
-    hasSubCategories,
     categories,
     wallets,
+    ...selection,
     showCreditedRow: isTransfer && transfer.isCrossCurrency,
     creditedValue: transfer.targetAmountValue,
     onCreditedChange: transfer.handleTargetAmountChange,
@@ -87,6 +76,12 @@ export function useEditTransactionScreen() {
     targetCurrency: transfer.targetCurrency,
     conversionRate: transfer.conversionRate,
     ...form,
+    setType: changeType,
+    split,
+    onRemoveSplit: resetSplit,
+    amountValue: split.isSplitActive ? split.remainderStr : form.amountStr,
+    isAmountReadOnly: split.isSplitActive,
+    amountHint: split.isSplitActive ? TRANSACTION_SPLIT_MESSAGES.remainderHint : null,
     onSave,
     handleDelete: actions.handleDelete,
     errorMessage: actions.errorMessage,

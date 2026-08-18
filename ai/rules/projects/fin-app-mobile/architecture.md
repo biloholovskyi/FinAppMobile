@@ -8,29 +8,34 @@ These are PINNED versions — do NOT use APIs from other major versions:
 
 | Package | Version | Notes |
 |---------|---------|-------|
-| Expo SDK | 52.x | Ecosystem anchor — all packages must be compatible |
-| React Native | 0.76.x | New Architecture enabled |
-| React | 18.3.x | NOT React 19 |
-| Expo Router | 3.x | File-based routing — NOT v2 API |
+| Expo SDK | 54.x | Ecosystem anchor — all packages must be compatible |
+| React Native | 0.81.x | New Architecture (default in SDK 54) |
+| React | 19.1.x | NOT React 18 — Actions, `use`, ref as a prop are available |
+| Expo Router | 6.x | File-based routing — NOT v3/v4 API |
 | NativeWind | 4.x | NOT v2/v3 API (`className` prop, not `style`) |
 | TanStack Query | 5.x | NOT v4 API (no `onSuccess` in useQuery, `invalidateQueries({ queryKey })`) |
-| Zustand | 4.x | |
-| TypeScript | 5.x | Strict mode required |
+| Zustand | 5.x | NOT v4 — selectors must return stable references |
+| Reanimated | 4.x | Requires `react-native-worklets`; NOT v3 API |
+| TypeScript | 5.9.x | Strict mode required |
 | Axios | 1.x | |
 
-Before adding any new dependency: check Expo SDK 52 compatibility at https://docs.expo.dev/versions/v52.0.0/
+Before adding any new dependency: check Expo SDK 54 compatibility at https://docs.expo.dev/versions/v54.0.0/
+Prefer `rtk npx expo install <pkg>` over `yarn add` — it resolves the SDK-compatible version.
 
 ## Tech Stack
 
-- **Runtime**: React Native + Expo SDK 52 (managed workflow)
-- **Routing**: Expo Router v3 (file-based, `src/app/`)
+- **Runtime**: React Native + Expo SDK 54 (managed workflow)
+- **Routing**: Expo Router v6 (file-based, `src/app/`)
 - **Styling**: NativeWind v4 (Tailwind CSS for RN) — `className` prop everywhere
 - **Server state**: TanStack Query v5 (React Query)
-- **UI state**: Zustand v4
+- **UI state**: Zustand v5
 - **HTTP**: Axios v1 via `src/shared/api/base.ts`
-- **Language**: TypeScript 5.x strict
+- **Animation**: Reanimated v4 + `react-native-worklets`
+- **Charts**: `react-native-gifted-charts`
+- **Icons**: `lucide-react-native`
+- **Language**: TypeScript 5.9 strict
 - **Architecture**: FSD (Feature-Sliced Design)
-- **Build**: EAS Build (Expo Application Services)
+- **Build / OTA**: EAS Build + `expo-updates`
 
 ## FSD Layer Structure
 
@@ -38,21 +43,28 @@ Before adding any new dependency: check Expo SDK 52 compatibility at https://doc
 src/
 ├── app/          # Expo Router routes — ONLY layer that imports expo-router
 │   ├── _layout.tsx
+│   ├── +not-found.tsx
 │   ├── (tabs)/
 │   │   ├── _layout.tsx
-│   │   ├── index.tsx       # Transactions tab
-│   │   └── wallets.tsx     # Wallets tab
+│   │   ├── index.tsx        # Dashboard tab
+│   │   ├── operations.tsx   # Transactions tab
+│   │   ├── categories.tsx   # Categories tab
+│   │   └── statistics.tsx   # Statistics tab
 │   ├── transaction/[id].tsx
-│   └── wallet/[id].tsx
+│   ├── transaction/create.tsx
+│   ├── category/[id].tsx
+│   └── category/create.tsx
 ├── features/     # Feature slices (UI + logic for one feature)
 ├── entities/     # Business entities (models, API calls per entity)
 ├── shared/       # Shared across all layers
-│   ├── api/      # Axios instance, API functions
-│   ├── ui/       # Reusable UI components
-│   ├── lib/      # Utilities, helpers
-│   ├── constants/# App-wide constants
-│   └── stores/   # Zustand stores
+│   ├── api/          # Axios instance + generated Orval hooks
+│   ├── ui/           # Reusable UI components
+│   ├── lib/          # Infrastructure setup (queryClient)
+│   ├── utils/        # Pure helpers (currency, dates, colors, icons)
+│   └── constants/    # App-wide constants (queryKeys, pagination) + index.ts barrel
 ```
+
+`src/shared/stores/` does not exist yet — create it there when the first Zustand store is needed.
 
 ### Import Direction (STRICT)
 
@@ -82,12 +94,12 @@ Rules:
 - Props: max 7 (use object param if more)
 - Never put business logic directly in JSX
 
-## Expo Router v3 Conventions
+## Expo Router v6 Conventions
 
 ```typescript
 // Typed navigation
 import { router } from 'expo-router';
-router.push('/wallets'); // typed Href
+router.push('/operations'); // typed Href
 
 // Route params
 import { useLocalSearchParams } from 'expo-router';
@@ -95,13 +107,13 @@ const { id } = useLocalSearchParams<{ id: string }>();
 
 // Declarative navigation
 import { Link } from 'expo-router';
-<Link href="/wallets">Go to Wallets</Link>
+<Link href="/transaction/create">New transaction</Link>
 ```
 
 Stack screen options (inside screen component):
 ```tsx
 import { Stack } from 'expo-router';
-<Stack.Screen options={{ title: 'Wallets' }} />
+<Stack.Screen options={{ title: 'Operations' }} />
 ```
 
 Auth guard: placed in root `src/app/_layout.tsx` using `useSegments` + `useRouter`. Never in individual screens.
@@ -203,10 +215,10 @@ Always use FlatList for dynamic lists (never ScrollView + .map):
 ## Platform Differences
 
 ```typescript
-// Extract ALL Platform.select to src/shared/lib/platform.ts
+// Extract ALL Platform.select to src/shared/utils/platform.ts
 // NEVER inline Platform.select in multiple files
 
-// src/shared/lib/platform.ts
+// src/shared/utils/platform.ts
 export const isIOS = Platform.OS === 'ios';
 export const isAndroid = Platform.OS === 'android';
 ```
@@ -232,7 +244,7 @@ const mutation = useMutation({
 // NO queryKey as first arg (v5 uses object syntax only)
 ```
 
-## Zustand v4 Stores
+## Zustand v5 Stores
 
 ```typescript
 // One store per feature domain
@@ -249,5 +261,10 @@ export const useTransactionFiltersStore = create<TransactionFiltersState>((set) 
   setDateFrom: (date) => set({ dateFrom: date }),
 }));
 ```
+
+v5 breaking changes to respect:
+- The equality-function second argument is removed — for object/array selectors use `useShallow` from `zustand/react/shallow`
+- Select one field per call (`useStore((s) => s.dateFrom)`) instead of returning a new object every render
+- No default export from `zustand` — always `import { create } from 'zustand'`
 
 Never put API response data in Zustand — that's React Query's job.

@@ -34,3 +34,5 @@ export type Transaction = {
 }
 
 export { useTransferTargetAmount } from './lib/useTransferTargetAmount'
+export { normalizeTransactionsPage } from './lib/normalizeTransactionsPage'
+export type { TransactionsPage } from './lib/normalizeTransactionsPage'

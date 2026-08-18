@@ -24,7 +24,7 @@ Never commit code that fails lint.
 - [ ] kopeck math: divide by 100 on load, multiply by 100 (Math.round) on submit
 - [ ] Cache invalidation: all mutations call queryClient.invalidateQueries()
 - [ ] No array index as key in FlatList items
-- [ ] Platform.select not duplicated inline — extracted to shared/lib/platform.ts
+- [ ] Platform.select not duplicated inline — extracted to shared/utils/platform.ts
 
 ## Performance
 

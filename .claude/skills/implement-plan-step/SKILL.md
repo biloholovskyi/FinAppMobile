@@ -11,8 +11,10 @@ Execute a single phase from an implementation plan.
 ## Process
 
 1. Read the plan:
-   - Location: `plans/YYYY-MM-DD-feature-name.md`
-   - Find the next unchecked `- [ ]` step
+   - Location: `plans/YYYY-MM-DD-<slug>/`
+   - Read the index `<slug>-implementation-plan.md` and pick the first phase whose status is not `done`
+   - Load only that phase file plus the rules it lists — never all phase files
+   - Find the next unchecked `- [ ]` step in it
 
 2. Load relevant rules for the task type:
    - Screen/component: `ai/rules/projects/fin-app-mobile/architecture.md`
@@ -27,9 +29,14 @@ Execute a single phase from an implementation plan.
    rtk yarn tsc --noEmit
    ```
 
-5. Mark step as complete (`- [x]`) in the plan
+5. Mark step as complete (`- [x]`) in the phase file
 
-6. Report: what was done, any deviations from plan, next step
+6. When the whole phase is done:
+   - Add the evidence note to the phase file and set its status to `done`
+   - Mirror the status in the index phase list
+   - Append a dated handoff note (max 7 bullets) to `history.md`
+
+7. Report: what was done, any deviations from plan, next step
 
 ## Stop When
 

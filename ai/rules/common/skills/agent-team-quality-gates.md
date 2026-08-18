@@ -83,7 +83,6 @@ Anti-Patterns:
 Related Rules:
 - `ai/rules/common/implementation-plans.md` - phase lifecycle and user gates
 - `ai/rules/common/ai-models.md` - model tier choice per phase
-- `ai/rules/projects/non-restrict-proxy/architecture.md` - C4 and architecture boundaries
+- `ai/rules/projects/fin-app-mobile/architecture.md` - FSD layers and architecture boundaries
 - `ai/rules/common/post-code-workflow.md` - full verification sequence
 - `ai/rules/common/skills/refactor-security-audit.md` - hardening and security audit patterns
-- `ai/rules/common/skills/test-coverage-audit.md` - test coverage gap checks

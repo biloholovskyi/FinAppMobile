@@ -30,6 +30,8 @@ import type {
   SetWalletMonobankTokenDto,
   UpdateWalletDto,
   UpdateWalletTransactionDto,
+  WalletControllerGetAllTransactions200,
+  WalletControllerGetAllTransactionsParams,
   WalletModel,
   WalletTransactionModel
 } from '.././models';
@@ -179,33 +181,34 @@ const {mutation: mutationOptions} = options ?
       return useMutation(mutationOptions , queryClient);
     }
     export const walletControllerGetAllTransactions = (
-    
+    params?: WalletControllerGetAllTransactionsParams,
  signal?: AbortSignal
 ) => {
       
       
-      return axiosInstance<WalletTransactionModel[]>(
-      {url: `/wallets/transactions`, method: 'GET', signal
+      return axiosInstance<WalletControllerGetAllTransactions200>(
+      {url: `/wallets/transactions`, method: 'GET',
+        params, signal
     },
       );
     }
   
 
-export const getWalletControllerGetAllTransactionsQueryKey = () => {
-    return [`/wallets/transactions`] as const;
+export const getWalletControllerGetAllTransactionsQueryKey = (params?: WalletControllerGetAllTransactionsParams,) => {
+    return [`/wallets/transactions`, ...(params ? [params]: [])] as const;
     }
 
     
-export const getWalletControllerGetAllTransactionsQueryOptions = <TData = Awaited<ReturnType<typeof walletControllerGetAllTransactions>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof walletControllerGetAllTransactions>>, TError, TData>>, }
+export const getWalletControllerGetAllTransactionsQueryOptions = <TData = Awaited<ReturnType<typeof walletControllerGetAllTransactions>>, TError = void>(params?: WalletControllerGetAllTransactionsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof walletControllerGetAllTransactions>>, TError, TData>>, }
 ) => {
 
 const {query: queryOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getWalletControllerGetAllTransactionsQueryKey();
+  const queryKey =  queryOptions?.queryKey ?? getWalletControllerGetAllTransactionsQueryKey(params);
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof walletControllerGetAllTransactions>>> = ({ signal }) => walletControllerGetAllTransactions(signal);
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof walletControllerGetAllTransactions>>> = ({ signal }) => walletControllerGetAllTransactions(params, signal);
 
       
 
@@ -215,11 +218,11 @@ const {query: queryOptions} = options ?? {};
 }
 
 export type WalletControllerGetAllTransactionsQueryResult = NonNullable<Awaited<ReturnType<typeof walletControllerGetAllTransactions>>>
-export type WalletControllerGetAllTransactionsQueryError = unknown
+export type WalletControllerGetAllTransactionsQueryError = void
 
 
-export function useWalletControllerGetAllTransactions<TData = Awaited<ReturnType<typeof walletControllerGetAllTransactions>>, TError = unknown>(
-  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof walletControllerGetAllTransactions>>, TError, TData>> & Pick<
+export function useWalletControllerGetAllTransactions<TData = Awaited<ReturnType<typeof walletControllerGetAllTransactions>>, TError = void>(
+ params: undefined |  WalletControllerGetAllTransactionsParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof walletControllerGetAllTransactions>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof walletControllerGetAllTransactions>>,
           TError,
@@ -228,8 +231,8 @@ export function useWalletControllerGetAllTransactions<TData = Awaited<ReturnType
       >, }
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useWalletControllerGetAllTransactions<TData = Awaited<ReturnType<typeof walletControllerGetAllTransactions>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof walletControllerGetAllTransactions>>, TError, TData>> & Pick<
+export function useWalletControllerGetAllTransactions<TData = Awaited<ReturnType<typeof walletControllerGetAllTransactions>>, TError = void>(
+ params?: WalletControllerGetAllTransactionsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof walletControllerGetAllTransactions>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof walletControllerGetAllTransactions>>,
           TError,
@@ -238,17 +241,17 @@ export function useWalletControllerGetAllTransactions<TData = Awaited<ReturnType
       >, }
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useWalletControllerGetAllTransactions<TData = Awaited<ReturnType<typeof walletControllerGetAllTransactions>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof walletControllerGetAllTransactions>>, TError, TData>>, }
+export function useWalletControllerGetAllTransactions<TData = Awaited<ReturnType<typeof walletControllerGetAllTransactions>>, TError = void>(
+ params?: WalletControllerGetAllTransactionsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof walletControllerGetAllTransactions>>, TError, TData>>, }
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 
-export function useWalletControllerGetAllTransactions<TData = Awaited<ReturnType<typeof walletControllerGetAllTransactions>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof walletControllerGetAllTransactions>>, TError, TData>>, }
+export function useWalletControllerGetAllTransactions<TData = Awaited<ReturnType<typeof walletControllerGetAllTransactions>>, TError = void>(
+ params?: WalletControllerGetAllTransactionsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof walletControllerGetAllTransactions>>, TError, TData>>, }
  , queryClient?: QueryClient 
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const queryOptions = getWalletControllerGetAllTransactionsQueryOptions(options)
+  const queryOptions = getWalletControllerGetAllTransactionsQueryOptions(params,options)
 
   const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 

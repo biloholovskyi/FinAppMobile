@@ -11,7 +11,7 @@ React Native and Expo performance optimization and component structure guide.
 
 ## Component Guidance
 
-- Follow `ai/rules/common/react.md` and `ai/rules/common/react-18.md`
+- Follow `ai/rules/common/react.md` and `ai/rules/common/react-19.md`
 - Prefer small, focused components and explicit props
 - Every screen in its own folder with co-located hook (`FooScreen/useFooScreen.ts`)
 - For variant-driven components, model props as discriminated unions keyed by required `variant`/`kind`

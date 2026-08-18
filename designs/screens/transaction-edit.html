@@ -531,6 +531,186 @@
     .btn-delete:hover { opacity: 0.7; }
 
     .row-hidden { display: none !important; }
+
+    /* --- Разделение платежа --- */
+    .amount-hint {
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      font-weight: 400;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    .amount-input-wrap.readonly {
+      border-color: var(--border-subtle);
+    }
+    .amount-value[readonly] {
+      color: var(--text-secondary);
+      caret-color: transparent;
+      cursor: default;
+    }
+
+    .btn-split {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin: 14px 20px 0;
+      padding: 13px 20px;
+      background: var(--bg-surface);
+      border: 1px dashed var(--border-strong);
+      border-radius: var(--radius-md);
+      color: var(--text-secondary);
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--t-fast) var(--ease-out);
+      animation: fadeUp var(--t-slow) var(--ease-out) both;
+      animation-delay: 210ms;
+    }
+    .btn-split:hover {
+      border-color: var(--accent-blue);
+      color: var(--accent-blue);
+      background: var(--bg-elevated);
+    }
+    .btn-split:active { transform: scale(0.98); }
+
+    .split-card {
+      margin: 14px 20px 0;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-card);
+      overflow: hidden;
+      animation: scaleIn var(--t-base) var(--ease-out) both;
+    }
+
+    .split-card-header {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      padding: 14px 16px 10px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .split-card-title {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--text-primary);
+    }
+
+    .split-card-subtitle {
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      font-weight: 400;
+      color: var(--text-secondary);
+    }
+
+    .split-part {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .split-part-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .split-part-title {
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+
+    .split-remove-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 26px;
+      height: 26px;
+      border-radius: var(--radius-sm);
+      background: var(--accent-red-glow);
+      border: none;
+      color: var(--accent-red);
+      cursor: pointer;
+      transition: all var(--t-fast) var(--ease-out);
+      flex-shrink: 0;
+    }
+    .split-remove-btn:hover { background: rgba(255,75,107,0.3); }
+
+    .split-cat-row {
+      padding: 10px 10px;
+      margin-bottom: 8px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .split-cat-row:hover { background: var(--bg-overlay); }
+
+    .split-subcat-value {
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      font-weight: 400;
+      color: var(--text-secondary);
+    }
+
+    .cat-badge-alt {
+      background: rgba(79,158,255,0.15);
+      color: var(--accent-blue);
+    }
+
+    .split-amount-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 2px;
+    }
+
+    .split-amount-label {
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--text-secondary);
+    }
+
+    .split-amount-input-wrap {
+      display: flex;
+      align-items: baseline;
+      gap: 3px;
+    }
+
+    .split-amount-input {
+      font-family: 'DM Mono', monospace;
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--accent-red);
+      background: none;
+      border: none;
+      outline: none;
+      text-align: right;
+      width: 90px;
+      letter-spacing: -0.3px;
+      caret-color: var(--accent-red);
+    }
+
+    .split-amount-currency {
+      font-family: 'DM Mono', monospace;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--accent-red);
+    }
+
   </style>
 </head>
 <body>
@@ -571,6 +751,7 @@
             <input class="amount-value" id="amountInput" type="text" value="320" inputmode="decimal" maxlength="10">
             <span class="amount-currency" id="amountCurrency">₽</span>
           </div>
+          <span class="amount-hint row-hidden" id="amountHint">Остаток после разделения платежа</span>
         </div>
 
         <div class="form-card">
@@ -666,6 +847,50 @@
           </div>
         </div>
 
+        <button class="btn-split" id="btnSplit" type="button">
+          <i data-lucide="split" width="18" height="18"></i>
+          Разделить платёж
+        </button>
+
+        <div class="split-card row-hidden" id="splitCard">
+          <div class="split-card-header">
+            <span class="split-card-title">
+              <i data-lucide="split" width="14" height="14"></i>
+              Разделение платежа
+            </span>
+            <span class="split-card-subtitle">Сумма ниже вычитается из общей суммы</span>
+          </div>
+
+          <div class="split-part" id="splitPart">
+            <div class="split-part-header">
+              <span class="split-part-title">Новый платёж</span>
+              <button class="split-remove-btn" id="btnRemoveSplit" type="button" aria-label="Удалить разделение">
+                <i data-lucide="trash-2" width="14" height="14"></i>
+              </button>
+            </div>
+            <div class="form-row split-cat-row" id="splitCatRow">
+              <div class="form-row-icon">
+                <i data-lucide="tag" width="14" height="14"></i>
+              </div>
+              <div class="form-row-content">
+                <span class="form-row-label">Категория</span>
+                <span class="split-subcat-value" id="splitSubcat">Такси</span>
+              </div>
+              <div class="form-row-right">
+                <span class="cat-badge cat-badge-alt" id="splitCat">Транспорт</span>
+                <i data-lucide="chevron-right" width="16" height="16" class="chevron"></i>
+              </div>
+            </div>
+            <div class="split-amount-row">
+              <span class="split-amount-label">Сумма</span>
+              <div class="split-amount-input-wrap">
+                <input class="split-amount-input" id="splitAmount" type="text" value="0,00" inputmode="decimal" maxlength="10">
+                <span class="split-amount-currency">₽</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div class="buttons-wrap">
           <button class="btn-save" id="btnSave">Сохранить</button>
           <button class="btn-delete">Удалить транзакцию</button>
@@ -697,7 +922,31 @@
     const demoCurrencyLabel = document.getElementById('demoCurrencyLabel');
     const btnSave = document.getElementById('btnSave');
 
+    const btnSplit = document.getElementById('btnSplit');
+    const splitCard = document.getElementById('splitCard');
+    const amountHint = document.getElementById('amountHint');
+    const splitAmount = document.getElementById('splitAmount');
+    const splitCatRow = document.getElementById('splitCatRow');
+    const splitCat = document.getElementById('splitCat');
+    const splitSubcat = document.getElementById('splitSubcat');
+    const btnRemoveSplit = document.getElementById('btnRemoveSplit');
+
     let currentType = 'expense';
+    let splitActive = false;
+    // Сумма транзакции на момент включения разделения (то, что было в верхнем поле,
+    // включая ручные правки пользователя до включения). Остаток = splitBaseAmount - splitAmount.
+    let splitBaseAmount = 0;
+
+    // Демо-список категорий/подкатегорий для циклического выбора в разделении
+    // (в реальном приложении — открытие пикера категорий).
+    const SPLIT_DEMO_CATEGORIES = [
+      { name: 'Еда', subcat: null },
+      { name: 'Транспорт', subcat: 'Такси' },
+      { name: 'Развлечения', subcat: 'Кино' },
+      { name: 'Покупки', subcat: 'Одежда' },
+      { name: 'Здоровье', subcat: 'Аптека' },
+    ];
+    let splitCatIndex = 1;
 
     // Демо: валюта кошелька-отправителя всегда ₽ (Monobank).
     // Переключаем валюту кошелька-получателя между "другой" (USD) и "такой же" (RUB),
@@ -805,6 +1054,82 @@
       recalcCreditedFromSent();
     }
 
+    // --- Разделение платежа (только для типа "Расход") ---
+
+    function renderSplitCategory() {
+      const cat = SPLIT_DEMO_CATEGORIES[splitCatIndex];
+      splitCat.textContent = cat.name;
+      splitSubcat.textContent = cat.subcat || 'Без подкатегории';
+    }
+
+    function cycleSplitCategory() {
+      splitCatIndex = (splitCatIndex + 1) % SPLIT_DEMO_CATEGORIES.length;
+      renderSplitCategory();
+    }
+
+    // Верхняя "Сумма" при активном разделении = остаток после вычета нового платежа
+    // из базовой суммы (splitBaseAmount), read-only. Ввод нового платежа клампится,
+    // чтобы остаток не уходил в минус.
+    function recalcSplitRemainder() {
+      let amount = parseRu(splitAmount.value);
+      if (amount < 0) amount = 0;
+      if (amount > splitBaseAmount) {
+        amount = splitBaseAmount;
+        splitAmount.value = formatAmountRu(amount);
+      }
+      const remainder = splitBaseAmount - amount;
+      amountInput.value = formatAmountRu(remainder);
+    }
+
+    function updateSplitButtonVisibility() {
+      if (currentType === 'expense' && !splitActive) {
+        btnSplit.classList.remove('row-hidden');
+      } else {
+        btnSplit.classList.add('row-hidden');
+      }
+    }
+
+    function enableSplit() {
+      if (currentType !== 'expense' || splitActive) return;
+      splitActive = true;
+
+      // Базой считается актуальное значение верхнего поля, включая ручные правки
+      // пользователя, сделанные до включения разделения.
+      splitBaseAmount = parseRu(amountInput.value);
+      splitAmount.value = formatAmountRu(0);
+      splitCatIndex = 1;
+      renderSplitCategory();
+
+      splitCard.classList.remove('row-hidden');
+      amountWrap.classList.add('readonly');
+      amountInput.readOnly = true;
+      amountHint.classList.remove('row-hidden');
+
+      updateSplitButtonVisibility();
+      recalcSplitRemainder();
+      lucide.createIcons();
+    }
+
+    // Сброс разделения: экран возвращается в обычное состояние,
+    // верхняя "Сумма" снова редактируемая и равна изначальной базовой сумме.
+    function disableSplit() {
+      if (!splitActive) return;
+      splitActive = false;
+
+      splitCard.classList.add('row-hidden');
+      amountWrap.classList.remove('readonly');
+      amountInput.readOnly = false;
+      amountHint.classList.add('row-hidden');
+      amountInput.value = formatAmountRu(splitBaseAmount);
+
+      updateSplitButtonVisibility();
+    }
+
+    btnSplit.addEventListener('click', enableSplit);
+    btnRemoveSplit.addEventListener('click', disableSplit);
+    splitCatRow.addEventListener('click', cycleSplitCategory);
+    splitAmount.addEventListener('input', () => { if (splitActive) recalcSplitRemainder(); });
+
     function setType(type) {
       currentType = type;
 
@@ -833,6 +1158,11 @@
         rowCredited.classList.add('row-hidden');
         rowDemoToggle.classList.add('row-hidden');
       }
+
+      if (type !== 'expense' && splitActive) {
+        disableSplit();
+      }
+      updateSplitButtonVisibility();
 
       btnSave.style.background = saveBgMap[type];
       btnSave.style.boxShadow = saveShadowMap[type];

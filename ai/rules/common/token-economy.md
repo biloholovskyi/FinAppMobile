@@ -20,16 +20,17 @@ Always Load (~200 tokens):
 - `ai/rules/common/core-rules.md` - Entry point with task map
 
 Load by Task:
-- TypeScript/Testing: `ai/rules/common/patterns.md` (~900 tokens)
-- Refactor/Security Audit: `ai/rules/common/skills/refactor-security-audit.md` first, then targeted sections from `ai/rules/common/patterns.md` and `ai/rules/projects/non-restrict-proxy/architecture.md`
-- Database: `ai/rules/projects/non-restrict-proxy/database.md` (~800 tokens)
-- API: `ai/rules/projects/non-restrict-proxy/architecture.md` (~700 tokens)
-- Infrastructure: `ai/rules/common/infrastructure.md` (~700 tokens)
-- New Package: `ai/rules/common/package.md` (~600 tokens)
+- TypeScript/async/errors: `ai/rules/common/patterns.md` (~900 tokens)
+- Screen / component / navigation / styling: `ai/rules/projects/fin-app-mobile/architecture.md` (~900 tokens)
+- API / React Query / Zustand: `ai/rules/projects/fin-app-mobile/state-management.md` (~800 tokens)
+- React patterns: `ai/rules/common/react.md` + `ai/rules/common/react-19.md` (~700 tokens)
+- Refactor/Security Audit: `ai/rules/common/skills/refactor-security-audit.md` first, then targeted sections from `ai/rules/common/patterns.md`
+- Performance: `ai/rules/common/performance/_index.md` first, then one symptom file
+- HTML screen design: `ai/rules/design/design-system.md` (+ `charts.md` when charts are involved)
 - AI Model Selection: `ai/rules/common/ai-models.md` (~300 tokens)
 
 Load Examples When Coding:
-- Reference implementations in `packages/` or `docs/new-architecture/`
+- Reference implementations in `src/features/**` and `designs/screens/*.html`
 - Load only when implementing, not when planning
 
 ## Rule File Structure

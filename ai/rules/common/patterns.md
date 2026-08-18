@@ -186,7 +186,9 @@ OK to use inline (no constant needed):
 - Logging: Always include context. Never passwords, tokens, API keys
 
 ### Testing
-- Framework: Jest (Expo default)
+- No test runner is installed — do NOT add tests, test scripts, or coverage gates unless explicitly asked
+- Quality gates are `rtk yarn lint` + `rtk yarn tsc --noEmit`
+- If a runner is ever added, it must be `jest-expo` + `@testing-library/react-native`; the rules below apply from that point on
 - Pattern: AAA (Arrange, Act, Assert)
 - Naming: inputX, mockX, actualX, expectedX
 - Types: Unit (business logic), Integration (API), Snapshot (stable outputs only)
@@ -202,14 +204,14 @@ OK to use inline (no constant needed):
 ### Dependency Hygiene
 - Prefer existing utilities; add deps only when justified
 - Modules side-effect free on import
-- Respect Expo SDK 52 dependency constraints — check compatibility before adding packages
+- Respect Expo SDK 54 dependency constraints — check compatibility before adding packages
 - Use `yarn add` not npm
 
 ### Security Audit
 - Validate and sanitize all untrusted input at boundaries (API responses, user input)
 - Prevent injection patterns
 - Logging hygiene: never log tokens, secrets, passwords
-- Supply-chain hygiene: audit dependencies, verify compatibility with Expo SDK 52
+- Supply-chain hygiene: audit dependencies, verify compatibility with Expo SDK 54
 
 ## Anti-Patterns
 

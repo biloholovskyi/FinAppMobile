@@ -1,54 +1,63 @@
 ---
 name: commit
-description: Create a git commit with proper conventional format for fin-app-mobile
+description: Prepare a commit for fin-app-mobile — quality gates, version sync, CHANGELOG entry. Never commits.
 model: haiku
 ---
 
-# Skill: Commit
+# Skill: Commit Prep
 
-Create a conventional commit for fin-app-mobile.
+Prepare the working tree so the user can commit. The user writes every commit message and runs every git command themselves.
+
+Authoritative rules: `ai/rules/common/versioning-changelog.md`, `ai/rules/common/post-code-workflow.md`.
+
+## Hard Rules
+
+- Never run `git commit`, `git push`, `git checkout -b`, or `git add`
+- Never write or suggest a commit message
+- Read-only git is fine for reporting: `rtk git status`, `rtk git diff`
 
 ## Process
 
-1. Check status:
+1. Report scope:
    ```bash
    rtk git status
-   rtk git diff --staged
+   rtk git diff --stat
    ```
 
-2. Verify post-code checks passed (run if not done):
+2. Quality gates (stop at the first failure):
    ```bash
    rtk yarn lint
+   rtk yarn tsc --noEmit
    ```
 
-3. Stage files (specific files, not `git add -A`):
-   ```bash
-   rtk git add src/path/to/changed/file.ts
+3. Ask the user for the target version if it was not stated in this session. Never infer or auto-bump it.
+
+4. Version sync — both must equal the target version:
+   - `version` in `package.json`
+   - `expo.version` in `app.json`
+
+   Do not touch `expo.runtimeVersion` unless the change requires a new native build.
+
+5. CHANGELOG entry in `CHANGELOG.md`:
    ```
+   [1.7.0] 05.08.2026
 
-4. Create commit:
-   ```bash
-   rtk git commit -m "type(scope): description"
+   - Delete transaction
+   - Some task
    ```
+   - Header is a plain line `[version] DD.MM.YYYY` with today's date — no `#`
+   - New bullet goes at the top of that version's list
+   - New version section goes at the top of the file
+   - Short task description, no ticket links
 
-## Commit Format
-
-`type(scope): short description` (max 72 chars, imperative mood, no period)
-
-Types: `feat`, `fix`, `refactor`, `perf`, `test`, `docs`, `chore`, `style`, `ci`, `build`, `revert`
-
-Examples:
-- `feat(transactions): add filter by category`
-- `fix(dashboard): correct kopeck division on balance`
-- `chore(deps): upgrade expo-router to 3.5`
-
-## Rules
-
-- Do NOT use `Co-authored-by:` trailers
-- One logical change per commit
-- Never commit: generated artifacts, secrets, `.env` files
-- Never use `git add -A` or `git add .` — stage specific files
+6. Report to the user:
+   - Gate results
+   - Files changed
+   - Branch vs expected `r-<version>` (report a mismatch, do not fix it)
+   - That the tree is ready to commit — then stop
 
 ## References
 
+- `ai/rules/common/versioning-changelog.md`
+- `ai/rules/common/post-code-workflow.md`
 - `ai/rules/common/commit-message-and-crosslinks.md`

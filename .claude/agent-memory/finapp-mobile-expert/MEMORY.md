@@ -1,8 +1,22 @@
 # Agent Memory Index — finapp-mobile-expert
 
-This file is auto-loaded each session. Keep entries concise (≤150 chars each).
-Memory files live in this directory alongside this index.
+This file is auto-loaded each session. Keep entries under 150 characters and link to the memory file.
+Guidance: `.claude/agent-memory/README.md`.
 
-## Memories
+Store implementation conventions confirmed with the user that are not already written in `ai/rules/**`.
 
-(empty — will be populated as the agent discovers project patterns)
+## User
+
+_(empty)_
+
+## Feedback
+
+_(empty)_
+
+## Project
+
+_(empty)_
+
+## Reference
+
+_(empty)_

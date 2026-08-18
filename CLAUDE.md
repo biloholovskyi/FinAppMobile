@@ -1,6 +1,6 @@
 # fin-app-mobile
 
-React Native + Expo SDK 52, Expo Router v3, React 18.3, NativeWind v4, TanStack Query v5, Zustand v4, Feature-Sliced Design.
+React Native + Expo SDK 54, Expo Router v6, React 19.1, NativeWind v4, TanStack Query v5, Zustand v5, Feature-Sliced Design.
 
 This project is configured for **Claude Code only**. `CLAUDE.md` is the single entry point.
 
@@ -43,14 +43,15 @@ Before writing any code, verify these pinned versions:
 
 | Package | Version | IMPORTANT |
 |---------|---------|-----------|
-| Expo SDK | **52.x** | Ecosystem anchor — all packages must be SDK 52 compatible |
-| React Native | **0.76.x** | New Architecture enabled |
-| React | **18.3.x** | NOT React 19 |
-| Expo Router | **3.x** | NOT v2 API |
+| Expo SDK | **54.x** | Ecosystem anchor — all packages must be SDK 54 compatible |
+| React Native | **0.81.x** | New Architecture (default in SDK 54) |
+| React | **19.1.x** | NOT React 18 — Actions, `use`, ref as a prop are available |
+| Expo Router | **6.x** | NOT v3/v4 API |
 | NativeWind | **4.x** | `className` prop — NOT v2/v3 `style={{}}` approach |
 | TanStack Query | **5.x** | `useQuery({ queryKey, queryFn })` — NOT v4 `useQuery(key, fn)` |
-| Zustand | **4.x** | |
-| TypeScript | **5.x** | strict: true required |
+| Zustand | **5.x** | NOT v4 — selectors must return stable references |
+| TypeScript | **5.9.x** | strict: true required |
+| Reanimated | **4.x** | Requires `react-native-worklets`; NOT v3 API |
 
 ## Load Rules By Task
 
@@ -60,13 +61,17 @@ Task-scoped rules also auto-apply via `.claude/rules` path stubs; this table lis
 |------|-----------|
 | New screen / component / hook | @ai/rules/projects/fin-app-mobile/architecture.md |
 | API integration / React Query / Zustand | @ai/rules/projects/fin-app-mobile/state-management.md |
-| React patterns | @ai/rules/common/react.md |
+| React patterns | @ai/rules/common/react.md + @ai/rules/common/react-19.md |
 | TypeScript / async / error patterns | @ai/rules/common/patterns.md |
 | React / RN performance | @ai/rules/common/performance/_index.md |
 | Planning / implementation plan | @ai/rules/common/implementation-plans.md |
 | Plan audit | @ai/rules/common/skills/plan-audit.md |
+| Refactor / security audit | @ai/rules/common/skills/refactor-security-audit.md |
 | UI / UX design rules | @ai/rules/design/design-system.md |
-| Git / commit messages | @ai/rules/common/commit-message-and-crosslinks.md |
+| Shell commands / package scripts | @ai/rules/common/tooling.md |
+| Version / CHANGELOG / release prep | @ai/rules/common/versioning-changelog.md |
+| EAS build / OTA update / CI | @ai/rules/common/deployment.md |
+| Crosslink style | @ai/rules/common/commit-message-and-crosslinks.md |
 | After any code change | @ai/rules/common/post-code-workflow.md |
 | Model selection | @ai/rules/common/ai-models.md |
 
@@ -91,11 +96,15 @@ Locale: `uk-UA` | Currency: `UAH`
 
 Invoke via `/skill-name`. Source definitions: `.claude/skills/<name>/SKILL.md`.
 
-- `/post-code` — post-edit QA workflow
-- `/commit` — conventional commit flow
+- `/start-task` — classify a brief, initialize an implementation plan
 - `/lint` — ESLint fix workflow
+- `/typecheck` — TypeScript check only
+- `/post-code` — post-edit QA workflow (lint + tsc)
+- `/commit` — commit prep: gates, version sync, CHANGELOG entry. Never commits
 - `/implement-plan-step` — execute one implementation plan step
 - `/audit-plan`, `/audit-security`, `/review-react-perf` — audits and performance review
+- `/deploy-preflight` — pre-merge gate before pushing to `main`
+- `/eas-build`, `/eas-submit`, `/eas-status` — EAS build, store submission, release status
 - `/ui-ux-pro-max` — UI/UX design intelligence
 
 ## Agents
@@ -108,8 +117,16 @@ Source definitions: `.claude/agents/<name>.md`.
 - `screen-designer` — standalone HTML screen design/prototyping
 - `plan-auditor` — implementation plan audit
 - `react-performance-reviewer` — React Native performance review
+- `command-runner` — runs rtk-prefixed scripts and reports output
+- `dependency-analyst` — Expo SDK 54 compatibility, version alignment, native-vs-OTA impact
+- `full-package-auditor` — broad read-only audit: config, FSD, quality, security, release readiness
+- `eas-deployer` — EAS release work: OTA-vs-build decision, artifacts, failure diagnosis
 
-Per-agent memory: `.claude/agent-memory/<agent>/MEMORY.md`.
+Per-agent memory: `.claude/agent-memory/<agent>/MEMORY.md`. Guidance: `.claude/agent-memory/README.md`.
+
+## Git
+
+The user writes every commit message and runs every git command. Mutating git commands are denied in `.claude/settings.json`. Never propose a commit format; release prep (version files, CHANGELOG) is covered by @ai/rules/common/versioning-changelog.md.
 
 ## Environment
 

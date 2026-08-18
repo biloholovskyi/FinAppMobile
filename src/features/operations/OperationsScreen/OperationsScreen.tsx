@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import {
   View,
   Text,
@@ -16,10 +16,12 @@ import type { LucideIcon } from 'lucide-react-native'
 import { WalletTransactionType, type Transaction } from '@/entities/transaction'
 import { FILTERS, useOperationsScreen, type DayGroup } from './useOperationsScreen'
 import { DeleteTransactionModal } from './DeleteTransactionModal/DeleteTransactionModal'
+import { OperationsFeedFooter } from './OperationsFeedFooter/OperationsFeedFooter'
 import { resolveIcon } from '@/shared/utils/icons'
 import { hexToRgba } from '@/shared/utils/colors'
 import { formatAmount, getCurrencySymbol } from '@/shared/utils/currency'
 import { formatDayTotal, formatTime } from '@/shared/utils/dateAndTime'
+import { TRANSACTIONS_END_REACHED_THRESHOLD } from '@/shared/constants'
 
 type TxItemProps = { tx: Transaction; onEdit: (id: string) => void; onDelete: (tx: Transaction) => void }
 
@@ -106,9 +108,12 @@ export function OperationsScreen() {
     filter,
     setFilter,
     grouped,
+    hasMore,
+    loadMore,
     isLoading,
-    refetch,
-    isRefetching,
+    isLoadingMore,
+    refresh,
+    isRefreshing,
     pendingDelete,
     requestDelete,
     confirmDelete,
@@ -125,6 +130,17 @@ export function OperationsScreen() {
   const renderItem = useCallback<SectionListRenderItem<Transaction, DayGroup>>(
     ({ item }) => <TxItem tx={item} onEdit={handleEdit} onDelete={requestDelete} />,
     [handleEdit, requestDelete],
+  )
+
+  const listFooter = useMemo(
+    () => (
+      <OperationsFeedFooter
+        isLoadingMore={isLoadingMore}
+        hasMore={hasMore}
+        isEmpty={grouped.length === 0}
+      />
+    ),
+    [isLoadingMore, hasMore, grouped.length],
   )
 
   const renderSectionHeader = useCallback(
@@ -190,7 +206,7 @@ export function OperationsScreen() {
         <View className="flex-1 items-center justify-center">
           <Text className="text-[#8888AA] text-sm">Загрузка...</Text>
         </View>
-      ) : grouped.length === 0 ? (
+      ) : grouped.length === 0 && !hasMore ? (
         <View className="flex-1 items-center justify-center">
           <Text className="text-[#8888AA] text-sm">Транзакций нет</Text>
         </View>
@@ -204,10 +220,13 @@ export function OperationsScreen() {
           renderSectionHeader={renderSectionHeader}
           stickySectionHeadersEnabled={false}
           showsVerticalScrollIndicator={false}
+          onEndReached={loadMore}
+          onEndReachedThreshold={TRANSACTIONS_END_REACHED_THRESHOLD}
+          ListFooterComponent={listFooter}
           refreshControl={
             <RefreshControl
-              refreshing={isRefetching}
-              onRefresh={refetch}
+              refreshing={isRefreshing}
+              onRefresh={refresh}
               tintColor="#4F9EFF"
               colors={['#4F9EFF']}
             />
