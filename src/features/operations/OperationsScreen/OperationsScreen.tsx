@@ -12,16 +12,16 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { router } from 'expo-router'
 import * as icons from 'lucide-react-native'
-import type { LucideIcon } from 'lucide-react-native'
 import { WalletTransactionType, type Transaction } from '@/entities/transaction'
+import { TRANSFER_ICON_NAME , TRANSACTIONS_END_REACHED_THRESHOLD } from '@/shared/constants'
 import { FILTERS, useOperationsScreen, type DayGroup } from './useOperationsScreen'
 import { DeleteTransactionModal } from './DeleteTransactionModal/DeleteTransactionModal'
 import { OperationsFeedFooter } from './OperationsFeedFooter/OperationsFeedFooter'
-import { resolveIcon } from '@/shared/utils/icons'
+import { Icon } from '@/shared/ui/Icon/Icon'
 import { hexToRgba } from '@/shared/utils/colors'
 import { formatAmount, getCurrencySymbol } from '@/shared/utils/currency'
 import { formatDayTotal, formatTime } from '@/shared/utils/dateAndTime'
-import { TRANSACTIONS_END_REACHED_THRESHOLD } from '@/shared/constants'
+
 
 type TxItemProps = { tx: Transaction; onEdit: (id: string) => void; onDelete: (tx: Transaction) => void }
 
@@ -33,9 +33,7 @@ function TxItem({ tx, onEdit, onDelete }: TxItemProps) {
   const color = isTransfer ? '#4F9EFF' : categoryInfo?.color ?? '#8888AA'
   const iconBg = hexToRgba(color, 0.15)
 
-  const IconComponent: LucideIcon = isTransfer
-    ? icons.ArrowRightLeft
-    : resolveIcon(categoryInfo?.icon ?? '')
+  const iconName = isTransfer ? TRANSFER_ICON_NAME : categoryInfo?.icon ?? ''
 
   const currencySymbol = getCurrencySymbol(tx.wallet?.currency)
   const amountStr = isIncome
@@ -47,7 +45,7 @@ function TxItem({ tx, onEdit, onDelete }: TxItemProps) {
     <View className="flex-row items-center gap-3 py-2.5 border-b border-white/[0.04]">
       <View className="w-[38px] h-[38px] rounded-xl items-center justify-center flex-shrink-0"
         style={{ backgroundColor: iconBg }}>
-        <IconComponent size={16} color={color} />
+        <Icon name={iconName} size={16} color={color} />
       </View>
 
       <View className="flex-1 min-w-0 gap-[3px]">

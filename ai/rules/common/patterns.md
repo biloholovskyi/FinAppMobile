@@ -150,7 +150,7 @@ OK to use inline (no constant needed):
 - Import: Use `import type` for type-only imports
 - Export: Use `export type` for type-only exports
 - Prefer const objects over enums
-- Path aliases: Use `baseUrl: "."` and `paths` in tsconfig.json with `@shared/*`, `@features/*`
+- Path aliases: declare `paths` in tsconfig.json relative to the config directory (`"@/*": ["./src/*"]`). Do NOT set `baseUrl` — TypeScript 6 deprecates it and errors with TS5101
 
 ### Magic Numbers
 - Extract 2+ (except 0,1,-1)
@@ -204,14 +204,14 @@ OK to use inline (no constant needed):
 ### Dependency Hygiene
 - Prefer existing utilities; add deps only when justified
 - Modules side-effect free on import
-- Respect Expo SDK 54 dependency constraints — check compatibility before adding packages
+- Respect Expo SDK 57 dependency constraints — check compatibility before adding packages
 - Use `yarn add` not npm
 
 ### Security Audit
 - Validate and sanitize all untrusted input at boundaries (API responses, user input)
 - Prevent injection patterns
 - Logging hygiene: never log tokens, secrets, passwords
-- Supply-chain hygiene: audit dependencies, verify compatibility with Expo SDK 54
+- Supply-chain hygiene: audit dependencies, verify compatibility with Expo SDK 57
 
 ## Anti-Patterns
 

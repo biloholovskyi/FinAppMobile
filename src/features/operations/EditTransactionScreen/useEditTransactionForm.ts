@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { WalletTransactionType, type Transaction } from '@/entities/transaction'
 
 export function useEditTransactionForm(transaction: Transaction | undefined) {
@@ -16,8 +16,13 @@ export function useEditTransactionForm(transaction: Transaction | undefined) {
   const [isWalletModalOpen, setIsWalletModalOpen] = useState(false)
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false)
 
-  useEffect(() => {
-    if (!transaction) return
+  // Seeds the form from the loaded transaction. Adjusting state during render is React's
+  // documented alternative to a syncing effect: it avoids the extra render pass and, unlike
+  // the previous effect keyed on object identity, a refetch of the same transaction no
+  // longer overwrites edits in progress.
+  const [seededTransactionId, setSeededTransactionId] = useState<string | null>(null)
+  if (transaction && transaction.id !== seededTransactionId) {
+    setSeededTransactionId(transaction.id)
     setType(transaction.type ?? WalletTransactionType.expense)
     setAmountStr(String(Math.abs(transaction.amount) / 100))
     setDescription(transaction.description ?? '')
@@ -25,7 +30,7 @@ export function useEditTransactionForm(transaction: Transaction | undefined) {
     setCategoryId(transaction.categoryId)
     setSubCategoryId(transaction.subCategoryId)
     setTargetWalletId(transaction.targetWalletId ?? null)
-  }, [transaction, transaction?.id])
+  }
 
   return {
     type, setType,

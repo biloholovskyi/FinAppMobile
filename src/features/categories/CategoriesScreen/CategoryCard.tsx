@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react'
 import { View, Text, TouchableOpacity } from 'react-native'
 import { Pencil, Trash2, ChevronDown, Plus } from 'lucide-react-native'
-import { resolveIcon } from '@/shared/utils/icons'
+import { Icon } from '@/shared/ui/Icon/Icon'
 import { hexToRgba } from '@/shared/utils/colors'
 import type { CategoryModel } from '@/entities/category'
 
@@ -26,7 +26,6 @@ type SubRowProps = {
 function SubRow({ sub, onEdit, onDelete }: SubRowProps) {
   const color = sub.color ?? '#8888AA'
   const priority = PRIORITY_MAP[sub.priority] ?? { label: sub.priority, color: '#8888AA' }
-  const IconComponent = resolveIcon(sub.icon ?? '')
   return (
     <View className="flex-row items-center gap-2 pl-8 pr-3.5 py-2.5 border-b border-white/[0.04]">
       <View className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: color }} />
@@ -34,7 +33,7 @@ function SubRow({ sub, onEdit, onDelete }: SubRowProps) {
         className="w-[26px] h-[26px] rounded-lg items-center justify-center flex-shrink-0"
         style={{ backgroundColor: hexToRgba(color, 0.12) }}
       >
-        <IconComponent size={12} color={color} />
+        <Icon name={sub.icon ?? ''} size={12} color={color} />
       </View>
       <Text className="flex-1 text-[#8888AA] text-[13px] font-medium" numberOfLines={1}>
         {sub.name}
@@ -69,7 +68,6 @@ export function CategoryCard({ category, onEdit, onDelete, onAddSubcategory }: P
   const hasSubs = (category.subCategory?.length ?? 0) > 0
   const color = category.color ?? '#8888AA'
   const priority = PRIORITY_MAP[category.priority] ?? { label: category.priority, color: '#8888AA' }
-  const IconComponent = resolveIcon(category.icon ?? '')
   const toggle = useCallback(() => { if (hasSubs) setExpanded(v => !v) }, [hasSubs])
 
   return (
@@ -85,7 +83,7 @@ export function CategoryCard({ category, onEdit, onDelete, onAddSubcategory }: P
             className="w-[34px] h-[34px] rounded-[10px] items-center justify-center flex-shrink-0"
             style={{ backgroundColor: hexToRgba(color, 0.12) }}
           >
-            <IconComponent size={16} color={color} />
+            <Icon name={category.icon ?? ''} size={16} color={color} />
           </View>
           <Text className="flex-1 text-[#F2F2FF] text-[14px] font-semibold" numberOfLines={1}>
             {category.name}

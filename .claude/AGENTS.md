@@ -13,7 +13,7 @@ Full context index of all agents, skills, and rules.
 | plan-auditor | `agents/plan-auditor.md` | Before/after implementation — verify plan completeness and alignment |
 | react-performance-reviewer | `agents/react-performance-reviewer.md` | After implementing screens/hooks — catch re-render issues, FlatList problems |
 | command-runner | `agents/command-runner.md` | Run rtk-prefixed scripts (lint, tsc, codegen) and report the output |
-| dependency-analyst | `agents/dependency-analyst.md` | Expo SDK 54 compatibility, version alignment, lockfile drift, native-vs-OTA impact |
+| dependency-analyst | `agents/dependency-analyst.md` | Expo SDK 57 compatibility, version alignment, lockfile drift, native-vs-OTA impact |
 | full-package-auditor | `agents/full-package-auditor.md` | Broad read-only audit: config, FSD, quality, security, release readiness |
 | eas-deployer | `agents/eas-deployer.md` | EAS release work: OTA-vs-build decision, artifacts, failure diagnosis |
 
@@ -42,7 +42,7 @@ Full context index of all agents, skills, and rules.
 
 | File | Covers |
 |------|--------|
-| `ai/rules/projects/fin-app-mobile/architecture.md` | Tech stack, FSD structure, Expo Router v6, NativeWind v4, kopeck math, commands |
+| `ai/rules/projects/fin-app-mobile/architecture.md` | Tech stack, FSD structure, Expo Router 57, NativeWind v4, kopeck math, commands |
 | `ai/rules/projects/fin-app-mobile/state-management.md` | Axios, React Query v5, Zustand v5, error handling |
 
 ### Common Rules

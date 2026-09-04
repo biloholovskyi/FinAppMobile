@@ -63,7 +63,7 @@ Network:
 
 Supply chain:
 - CI installs with `yarn install --frozen-lockfile`
-- New dependencies must be Expo SDK 54 compatible — prefer `rtk npx expo install`
+- New dependencies must be Expo SDK 57 compatible — prefer `rtk npx expo install`
 - Review `rtk yarn audit` findings before adding or upgrading packages
 
 ## Checklist

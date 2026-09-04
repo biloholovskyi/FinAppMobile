@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { View, Text, TouchableOpacity, Animated } from 'react-native'
 import { Wallet as WalletIcon, CreditCard, RefreshCw } from 'lucide-react-native'
 import type { Wallet } from '../../../entities/wallet'
@@ -12,7 +12,7 @@ type WalletRowProps = {
 
 export function WalletRow({ wallet, isLast, refreshingId, onRefresh }: WalletRowProps) {
   const isSpinning = refreshingId === wallet.id
-  const spinAnim = useRef(new Animated.Value(0)).current
+  const [spinAnim] = useState(() => new Animated.Value(0))
   const animRef = useRef<Animated.CompositeAnimation | null>(null)
 
   useEffect(() => {

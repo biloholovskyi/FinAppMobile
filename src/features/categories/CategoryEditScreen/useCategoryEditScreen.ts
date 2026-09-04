@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo, useEffect } from 'react'
+import { useState, useCallback, useMemo } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useRouter } from 'expo-router'
 import {
@@ -45,14 +45,17 @@ export function useCategoryEditScreen({ id, parentId, isSubcategory }: Params) {
     return categories.find(c => c.id === id) ?? null
   }, [categories, id, isEditMode, isSubMode])
 
-  useEffect(() => {
-    if (existing) {
-      setName(existing.name)
-      setPriority((existing.priority as CategoryPriorityValue) ?? CategoryPriority.low)
-      setColor(existing.color ?? '#4F9EFF')
-      setIcon(existing.icon ?? 'zap')
-    }
-  }, [existing?.id]) // eslint-disable-line react-hooks/exhaustive-deps
+  // Seeds the form from the loaded category. Adjusting state during render is React's
+  // documented alternative to a syncing effect: it avoids the extra render pass and
+  // keeps a refetch of the same category from overwriting edits in progress.
+  const [seededCategoryId, setSeededCategoryId] = useState<string | null>(null)
+  if (existing && existing.id !== seededCategoryId) {
+    setSeededCategoryId(existing.id)
+    setName(existing.name)
+    setPriority((existing.priority as CategoryPriorityValue) ?? CategoryPriority.low)
+    setColor(existing.color ?? '#4F9EFF')
+    setIcon(existing.icon ?? 'zap')
+  }
 
   const { mutate, isPending } = useMutation({
     mutationFn: () => {

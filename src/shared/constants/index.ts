@@ -11,3 +11,4 @@ export {
 export { QUERY_KEYS } from './queryKeys'
 export { KOPECK_DIVISOR, KOPECK_MULTIPLIER } from './money'
 export { TRANSACTION_SPLIT_MESSAGES } from './transactionSplit'
+export { TRANSFER_ICON_NAME } from './icons'
