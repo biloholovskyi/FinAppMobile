@@ -31,8 +31,8 @@ that is part of the FinApp monorepo (alongside fin-app-backend and fin-app-front
 
 ## Tech Stack
 
-- React Native + Expo SDK 54
-- Expo Router v6 (file-based routing — app/ directory, like Next.js App Router)
+- React Native + Expo SDK 57
+- Expo Router 57 (file-based routing — app/ directory, like Next.js App Router)
 - NativeWind v4 (Tailwind CSS for React Native)
 - TypeScript (strict mode)
 - Axios + React Query (server state) + Zustand (UI/offline state)

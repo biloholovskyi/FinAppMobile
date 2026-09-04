@@ -1,6 +1,6 @@
 import { View, Text, TouchableOpacity } from 'react-native'
 import * as icons from 'lucide-react-native'
-import { resolveIcon } from '@/shared/utils/icons'
+import { Icon } from '@/shared/ui/Icon/Icon'
 import { hexToRgba } from '@/shared/utils/colors'
 
 type FormRowProps = {
@@ -14,7 +14,6 @@ type FormRowProps = {
 }
 
 export function FormRow({ icon, label, value, categoryColor, isEmpty, onPress, showChevron }: FormRowProps) {
-  const IconComponent = resolveIcon(icon)
 
   return (
     <TouchableOpacity
@@ -24,7 +23,7 @@ export function FormRow({ icon, label, value, categoryColor, isEmpty, onPress, s
       disabled={!onPress}
     >
       <View className="w-[30px] h-[30px] rounded-lg bg-[#181828] border border-white/[0.04] items-center justify-center flex-shrink-0">
-        <IconComponent size={14} color="#8888AA" />
+        <Icon name={icon} size={14} color="#8888AA" />
       </View>
       <View className="flex-1 min-w-0 gap-[1px]">
         <Text className="text-[#8888AA] text-[11px] font-medium">{label}</Text>

@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useState } from 'react'
 import { View, Text, TouchableOpacity, Animated } from 'react-native'
 import * as icons from 'lucide-react-native'
 
@@ -8,9 +8,9 @@ type Props = {
 }
 
 export function ErrorBanner({ message, onClose }: Props) {
-  const opacity = useRef(new Animated.Value(0)).current
-  const translateY = useRef(new Animated.Value(12)).current
-  const shakeX = useRef(new Animated.Value(0)).current
+  const [opacity] = useState(() => new Animated.Value(0))
+  const [translateY] = useState(() => new Animated.Value(12))
+  const [shakeX] = useState(() => new Animated.Value(0))
 
   useEffect(() => {
     const shakeStep = (toValue: number) =>

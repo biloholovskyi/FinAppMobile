@@ -9,7 +9,7 @@ Mission: define shell behavior, package scripts, and the Claude-native configura
 - LOCKFILE = `yarn.lock`
 - SHELL = `PowerShell`
 - SHELL_PREFIX = `rtk`
-- NODE_VERSION_CI = 20
+- NODE_VERSION_CI = 22
 
 ## Package Manager
 
@@ -17,7 +17,7 @@ Mission: define shell behavior, package scripts, and the Claude-native configura
 
 - `package-lock.json` is stale and must not be updated or committed — it is scheduled for removal
 - Never run `npm install` / `pnpm install` here — they desync `yarn.lock`
-- For Expo-ecosystem packages prefer `rtk npx expo install <pkg>` over `yarn add` — it resolves the SDK 54 compatible version
+- For Expo-ecosystem packages prefer `rtk npx expo install <pkg>` over `yarn add` — it resolves the SDK 57 compatible version
 
 ## Claude Layout
 
@@ -57,7 +57,7 @@ No test runner is installed — there is no `test` script, and none should be ad
 
 EAS:
 - `rtk npx eas build --profile production --platform all` — native build
-- `rtk npx eas update --branch production` — OTA update
+- `rtk npx eas update --branch production --environment production` — OTA update; `--environment` is required from SDK 55 onward
 - `rtk npx eas build:list --limit 5` — recent builds
 - `rtk npx eas submit --platform ios|android` — store submission
 

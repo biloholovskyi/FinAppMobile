@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Modal, View, Text, TouchableOpacity, Pressable, Platform } from 'react-native'
 import DateTimePicker from '@react-native-community/datetimepicker'
 import type { DateTimePickerEvent } from '@react-native-community/datetimepicker'
@@ -15,12 +15,17 @@ export function DateTimePickerModal({ visible, value, onChange, onClose }: Props
   const [androidStep, setAndroidStep] = useState<'date' | 'time'>('date')
   const [pendingDate, setPendingDate] = useState<Date>(value)
 
-  useEffect(() => {
+  // Resets the draft each time the modal opens. Adjusting state during render replaces the
+  // syncing effect; the reset is now tied to the open transition alone, so a `value` change
+  // arriving while the picker is open no longer throws the user back to the date step.
+  const [wasVisible, setWasVisible] = useState(visible)
+  if (visible !== wasVisible) {
+    setWasVisible(visible)
     if (visible) {
       setPendingDate(value)
       setAndroidStep('date')
     }
-  }, [visible, value])
+  }
 
   if (Platform.OS === 'android') {
     return (

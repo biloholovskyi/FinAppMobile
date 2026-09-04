@@ -14,7 +14,7 @@ Preferred commands:
 - `rtk yarn format` — Prettier over `src`
 - `rtk yarn api:generate` — Orval codegen from the backend OpenAPI contract
 - `rtk npx expo start` / `rtk npx expo start --clear` — dev server (only when explicitly requested)
-- `rtk npx expo install <pkg>` — add an SDK 54 compatible package (only on explicit request)
+- `rtk npx expo install <pkg>` — add an SDK 57 compatible package (only on explicit request)
 - `rtk npx eas build:list --limit 5` — recent EAS builds (read-only)
 
 Rules:

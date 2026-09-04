@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { createElement, useState, useCallback } from 'react'
 import { View, Text, TouchableOpacity } from 'react-native'
 import {
   ShoppingCart,
@@ -60,6 +60,18 @@ const ICON_MAP: Record<string, LucideIcon> = {
 function resolveIcon(name: string | null): LucideIcon {
   if (!name) return Tag
   return ICON_MAP[name] ?? Tag
+}
+
+type CategoryIconProps = { name: string | null; size: number; color: string }
+
+/**
+ * Renders a category icon from ICON_MAP.
+ *
+ * Declared at module level on purpose: resolving the component inside a caller's
+ * render reads to `react-hooks/static-components` as a component created during render.
+ */
+function CategoryIcon({ name, size, color }: CategoryIconProps) {
+  return createElement(resolveIcon(name), { size, color })
 }
 
 // ── Progress helpers ─────────────────────────────────────────────────────────
@@ -206,7 +218,6 @@ export function CategoryCard({ row, totalExpenses }: Props) {
   const isExceeded = pct > 100
   const fillColor = getProgressColor(pct)
 
-  const IconComponent = resolveIcon(row.categoryIcon)
   const iconColor = row.categoryColor ?? '#44445A'
   const iconBg = iconColor + '26'
 
@@ -230,7 +241,7 @@ export function CategoryCard({ row, totalExpenses }: Props) {
             className="h-9 w-9 items-center justify-center rounded-lg"
             style={{ backgroundColor: iconBg }}
           >
-            <IconComponent size={18} color={iconColor} />
+            <CategoryIcon name={row.categoryIcon} size={18} color={iconColor} />
           </View>
 
           <View className="min-w-0 flex-1">

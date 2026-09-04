@@ -7,11 +7,12 @@ Mission: SSoT for the release pipeline, OTA updates, environment/secrets, and ro
 - PUBLISH_TRIGGER_BRANCH = `main`
 - CI_WORKFLOW = `.github/workflows/deploy-expo.yml`
 - CI_JOB = `publish`
-- NODE_VERSION_CI = 20
+- NODE_VERSION_CI = 22
 - INSTALL_COMMAND_CI = `yarn install --frozen-lockfile`
 - EAS_CONFIG_FILE = `eas.json`
 - EAS_BUILD_PROFILE = `production`
 - EAS_CHANNEL = `production`
+- EAS_UPDATE_ENVIRONMENT = `production` (the `--environment` flag; required from SDK 55 onward)
 - OTA_BRANCH = `production`
 - APP_CONFIG_FILE = `app.json`
 - EAS_PROJECT_ID = `expo.extra.eas.projectId` in APP_CONFIG_FILE
@@ -38,7 +39,7 @@ Decision rule:
 | 3 | GitHub Actions | Setup EAS CLI via `expo/expo-github-action` with `EXPO_TOKEN` |
 | 4 | GitHub Actions | INSTALL_COMMAND_CI |
 | 5 | GitHub Actions | `yarn tsc --noEmit` — a type error fails the job and blocks publishing |
-| 6 | GitHub Actions | `eas update --branch OTA_BRANCH --message "<commit message> (<sha>)"` |
+| 6 | GitHub Actions | `eas update --branch OTA_BRANCH --environment production --message "<commit message> (<sha>)"` |
 | 7 | Expo | Update published; clients on a matching RUNTIME_VERSION pick it up on next launch |
 
 CI does NOT run ESLint — only the type check. Lint is a local gate (`rtk yarn lint`) and part of `/deploy-preflight`.
@@ -108,6 +109,7 @@ One-time setup outside the codebase; the pipeline assumes it exists.
 - Pushing to PUBLISH_TRIGGER_BRANCH without running the pre-release gates — CI only type-checks
 - Logging `EXPO_TOKEN` or any EAS API response containing credentials
 - Running EAS commands unprefixed instead of `rtk npx eas ...`
+- Calling `eas update` without `--environment` — SDK 55 and later reject the command
 
 ## Related Rules
 

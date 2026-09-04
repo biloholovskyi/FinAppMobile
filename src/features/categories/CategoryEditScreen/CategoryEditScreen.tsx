@@ -3,6 +3,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { ChevronLeft, Check, Tag, Layers } from 'lucide-react-native'
 import { useRouter } from 'expo-router'
 import { resolveIcon } from '@/shared/utils/icons'
+import { Icon } from '@/shared/ui/Icon/Icon'
 import { hexToRgba } from '@/shared/utils/colors'
 import { CategoryPriority } from '@/entities/category'
 import type { CategoryPriorityValue } from '@/entities/category'
@@ -44,7 +45,6 @@ export function CategoryEditScreen({ id, parentId, isSubcategory }: Props) {
     isPending,
   } = useCategoryEditScreen({ id, parentId, isSubcategory })
 
-  const IconComponent = resolveIcon(icon)
 
   return (
     <SafeAreaView className="flex-1 bg-[#0A0A12]">
@@ -60,7 +60,7 @@ export function CategoryEditScreen({ id, parentId, isSubcategory }: Props) {
       <ScrollView className="flex-1" contentContainerClassName="pb-6" showsVerticalScrollIndicator={false}>
         <View className="items-center py-4 gap-2">
           <View className="w-[68px] h-[68px] rounded-[20px] items-center justify-center" style={{ backgroundColor: hexToRgba(color, 0.14) }}>
-            <IconComponent size={32} color={color} />
+            <Icon name={icon} size={32} color={color} />
           </View>
           <Text className="text-[#F2F2FF] text-[22px] font-bold tracking-[-0.5px]">{name || 'Новая'}</Text>
           <View className="flex-row items-center gap-1 px-2.5 py-1 rounded-full bg-[#181828] border border-white/[0.08]">

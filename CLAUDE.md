@@ -1,6 +1,6 @@
 # fin-app-mobile
 
-React Native + Expo SDK 54, Expo Router v6, React 19.1, NativeWind v4, TanStack Query v5, Zustand v5, Feature-Sliced Design.
+React Native + Expo SDK 57, Expo Router v57, React 19.2, NativeWind v4, TanStack Query v5, Zustand v5, Feature-Sliced Design.
 
 This project is configured for **Claude Code only**. `CLAUDE.md` is the single entry point.
 
@@ -43,14 +43,14 @@ Before writing any code, verify these pinned versions:
 
 | Package | Version | IMPORTANT |
 |---------|---------|-----------|
-| Expo SDK | **54.x** | Ecosystem anchor — all packages must be SDK 54 compatible |
-| React Native | **0.81.x** | New Architecture (default in SDK 54) |
-| React | **19.1.x** | NOT React 18 — Actions, `use`, ref as a prop are available |
-| Expo Router | **6.x** | NOT v3/v4 API |
+| Expo SDK | **57.x** | Ecosystem anchor — all packages must be SDK 57 compatible |
+| React Native | **0.86.x** | New Architecture only — the Legacy Architecture was removed in SDK 55 |
+| React | **19.2.x** | NOT React 18 — Actions, `use`, ref as a prop are available |
+| Expo Router | **57.x** | Versioned with the SDK since 55 — NOT the old 6.x numbering |
 | NativeWind | **4.x** | `className` prop — NOT v2/v3 `style={{}}` approach |
 | TanStack Query | **5.x** | `useQuery({ queryKey, queryFn })` — NOT v4 `useQuery(key, fn)` |
 | Zustand | **5.x** | NOT v4 — selectors must return stable references |
-| TypeScript | **5.9.x** | strict: true required |
+| TypeScript | **6.0.x** | strict: true required; `baseUrl` is deprecated, `paths` resolve from the config directory |
 | Reanimated | **4.x** | Requires `react-native-worklets`; NOT v3 API |
 
 ## Load Rules By Task
@@ -118,7 +118,7 @@ Source definitions: `.claude/agents/<name>.md`.
 - `plan-auditor` — implementation plan audit
 - `react-performance-reviewer` — React Native performance review
 - `command-runner` — runs rtk-prefixed scripts and reports output
-- `dependency-analyst` — Expo SDK 54 compatibility, version alignment, native-vs-OTA impact
+- `dependency-analyst` — Expo SDK 57 compatibility, version alignment, native-vs-OTA impact
 - `full-package-auditor` — broad read-only audit: config, FSD, quality, security, release readiness
 - `eas-deployer` — EAS release work: OTA-vs-build decision, artifacts, failure diagnosis
 

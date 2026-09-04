@@ -20,6 +20,13 @@ const BOOT_POLL_INTERVAL_MS = 2_000
 /** Value reported by `sys.boot_completed` once Android is ready. */
 const BOOT_COMPLETED_FLAG = '1'
 
+/**
+ * Forces Node to resolve `localhost` to IPv4. Without it Metro binds `::1` only,
+ * while `adb reverse` forwards the device to the host IPv4 loopback, and Expo Go
+ * fails with `java.io.IOException: Failed to download remote update`.
+ */
+const IPV4_FIRST_NODE_OPTION = '--dns-result-order=ipv4first'
+
 const isWindows = platform() === 'win32'
 const exe = (name) => (isWindows ? `${name}.exe` : name)
 
@@ -87,7 +94,12 @@ async function waitForBoot() {
 function startExpo(extraArgs) {
   const args = ['expo', 'start', '--android', '--localhost', ...extraArgs]
   console.log(`> npx ${args.join(' ')}`)
-  const child = spawn('npx', args, { stdio: 'inherit', shell: isWindows })
+  const nodeOptions = `${process.env['NODE_OPTIONS'] ?? ''} ${IPV4_FIRST_NODE_OPTION}`.trim()
+  const child = spawn('npx', args, {
+    stdio: 'inherit',
+    shell: isWindows,
+    env: { ...process.env, NODE_OPTIONS: nodeOptions },
+  })
   child.on('exit', (code) => process.exit(code ?? 0))
 }
 
