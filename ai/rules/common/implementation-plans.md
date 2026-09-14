@@ -144,7 +144,7 @@ For each phase (no step skipped):
 2. Self-audit: re-read scope, run verification commands, compare against acceptance criteria
 3. Update history: handoff note (max 7 bullets) in `history.md`, dated
 4. Mark done: update status in the phase file and in the index phase list, with an evidence note
-5. User gate: present results, wait for approval before the next phase
+5. User gate: present results, wait for approval before the next phase. The user shortcut `np` is that approval and also authorises continuing into the following phase without a new gate (`ai/rules/common/response-rules.md`)
 
 ## Model Protocol
 
@@ -188,7 +188,7 @@ The project has no test framework — PLAN_AUDIT_MIN_RECHECKS is `rtk yarn lint`
 - Do not skip Research or Design for multi-phase work
 - Do not write code during Research, Design, or Plan phases
 - Do not implement multiple phases in one cycle
-- Do not skip the user gate even when asked to "implement the whole plan"
+- Do not skip the user gate even when asked to "implement the whole plan" — the `np` shortcut is the only standing exception
 - Do not mark a phase done without verification evidence
 - Do not load all phase files — only the index + active phase
 - Do not leave a phase without its own `phase-XX-{slug}.md` file

@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { fetchTransactions } from '@/shared/api/transactions'
 import { QUERY_KEYS } from '@/shared/constants/queryKeys'
+import { PERCENT_MULTIPLIER } from '@/shared/constants'
 import { aggregateExpenses } from '../lib/aggregateExpenses'
 
 const MONTH_NAMES = [
@@ -28,7 +29,8 @@ export function useDashboardScreen() {
     aggregateExpenses(transactions, today)
 
   const diff = totalCurrent - totalPrev
-  const percentChange = totalPrev > 0 ? (diff / totalPrev) * 100 : 0
+  const percentChange =
+    totalPrev > 0 ? (diff / totalPrev) * PERCENT_MULTIPLIER : 0
 
   return {
     isLoading,

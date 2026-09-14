@@ -1,7 +1,7 @@
 import { KOPECK_DIVISOR, KOPECK_MULTIPLIER } from '@/shared/constants/money'
 
 export function formatAmount(kopecks: number): string {
-  return (Math.abs(kopecks) / 100).toLocaleString('uk-UA', {
+  return (Math.abs(kopecks) / KOPECK_DIVISOR).toLocaleString('uk-UA', {
     minimumFractionDigits: 0,
     maximumFractionDigits: 2,
   })
@@ -15,7 +15,7 @@ export function formatUah(value: number, kopecks?: boolean): string {
       maximumFractionDigits: 0,
     })
   }
-  return (value / 100).toLocaleString('uk-UA', {
+  return (value / KOPECK_DIVISOR).toLocaleString('uk-UA', {
     style: 'currency',
     currency: 'UAH',
     maximumFractionDigits: 0,
