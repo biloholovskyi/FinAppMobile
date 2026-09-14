@@ -10,5 +10,13 @@ export {
 } from './pagination'
 export { QUERY_KEYS } from './queryKeys'
 export { KOPECK_DIVISOR, KOPECK_MULTIPLIER } from './money'
+export { PERCENT_MULTIPLIER, FULL_PERCENT } from './percent'
 export { TRANSACTION_SPLIT_MESSAGES } from './transactionSplit'
 export { TRANSFER_ICON_NAME } from './icons'
+export {
+  SPENDING_VIEW_MODE,
+  SPENDING_VIEW_MODE_LABEL,
+  SPENDING_SECTION_LABEL,
+  UNCATEGORIZED_SUB_LABEL,
+} from './spendingViewMode'
+export type { SpendingViewMode } from './spendingViewMode'

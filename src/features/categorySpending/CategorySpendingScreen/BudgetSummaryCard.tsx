@@ -1,19 +1,8 @@
 import { View, Text } from 'react-native'
+import { PERCENT_MULTIPLIER } from '@/shared/constants'
+import { BudgetProgress, BUDGET_PROGRESS_HEIGHT } from './BudgetProgress'
+import { formatKopecksUah, formatPct } from './lib/spendingFormat'
 import type { BudgetSummary } from './lib/aggregateCategorySpending'
-
-function formatUah(value: number): string {
-  return (value / 100).toLocaleString('uk-UA', {
-    style: 'currency',
-    currency: 'UAH',
-    maximumFractionDigits: 0,
-  })
-}
-
-function getProgressColor(pct: number): string {
-  if (pct > 100) return 'rgba(79,158,255,0.35)'
-  if (pct >= 80) return '#FFB020'
-  return '#4F9EFF'
-}
 
 type Props = {
   summary: BudgetSummary
@@ -25,10 +14,7 @@ export function BudgetSummaryCard({ summary }: Props) {
   if (totalBudget === 0) return null
 
   const remaining = totalBudget - totalSpent
-  const pct = (totalSpent / totalBudget) * 100
-  const fillPct = Math.min(pct, 100)
-  const overflowPct = pct > 100 ? Math.min((pct - 100) / 100, 1) * 100 : 0
-  const fillColor = getProgressColor(pct)
+  const pct = (totalSpent / totalBudget) * PERCENT_MULTIPLIER
 
   return (
     <View className="gap-3 rounded-2xl border border-white/[0.08] bg-[#10101C] p-3.5">
@@ -43,7 +29,7 @@ export function BudgetSummaryCard({ summary }: Props) {
             className="text-[14px] font-bold text-[#F2F2FF]"
             style={{ fontFamily: 'SpaceMono_700Bold' }}
           >
-            {formatUah(totalBudget)}
+            {formatKopecksUah(totalBudget)}
           </Text>
         </View>
         <View className="items-center gap-0.5">
@@ -52,9 +38,9 @@ export function BudgetSummaryCard({ summary }: Props) {
             className="text-[14px] font-bold text-[#F2F2FF]"
             style={{ fontFamily: 'SpaceMono_700Bold' }}
           >
-            {formatUah(totalSpent)}
+            {formatKopecksUah(totalSpent)}
           </Text>
-          <Text className="text-[11px] text-[#8888AA]">{pct.toFixed(1)}%</Text>
+          <Text className="text-[11px] text-[#8888AA]">{formatPct(pct)}</Text>
         </View>
         <View className="items-end gap-0.5">
           <Text className="text-[11px] text-[#8888AA]">Остаток</Text>
@@ -65,45 +51,24 @@ export function BudgetSummaryCard({ summary }: Props) {
               color: remaining >= 0 ? '#00E089' : '#FF4B6B',
             }}
           >
-            {formatUah(Math.abs(remaining))}
+            {formatKopecksUah(Math.abs(remaining))}
           </Text>
         </View>
       </View>
 
       <View className="gap-1">
-        <View className="h-[7px] overflow-hidden rounded-full bg-[#181828]">
-          <View
-            style={{
-              position: 'absolute',
-              left: 0,
-              top: 0,
-              bottom: 0,
-              width: `${fillPct}%`,
-              backgroundColor: fillColor,
-              borderRadius: 99,
-            }}
-          />
-          {overflowPct > 0 && (
-            <View
-              style={{
-                position: 'absolute',
-                left: 0,
-                top: 0,
-                bottom: 0,
-                width: `${overflowPct}%`,
-                backgroundColor: '#FF4B6B',
-                borderRadius: 99,
-              }}
-            />
-          )}
-        </View>
+        <BudgetProgress
+          totalSpent={totalSpent}
+          budget={totalBudget}
+          height={BUDGET_PROGRESS_HEIGHT.row}
+        />
         <View className="flex-row justify-between">
           <Text className="text-[10px] text-[#44445A]">₴0</Text>
           <Text className="text-[10px] text-[#44445A]">
-            {pct.toFixed(1)}% использовано
+            {formatPct(pct)} использовано
           </Text>
           <Text className="text-[10px] text-[#44445A]">
-            {formatUah(totalBudget)}
+            {formatKopecksUah(totalBudget)}
           </Text>
         </View>
       </View>

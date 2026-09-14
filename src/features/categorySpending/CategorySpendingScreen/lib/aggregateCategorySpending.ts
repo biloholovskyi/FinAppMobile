@@ -1,3 +1,4 @@
+import { KOPECK_MULTIPLIER, PERCENT_MULTIPLIER } from '@/shared/constants'
 import type { Transaction } from '@/entities/transaction'
 import { WalletTransactionType } from '@/entities/transaction'
 import type { MonthBudgetRow } from '@/shared/api/budgets'
@@ -48,7 +49,7 @@ export function aggregateCategorySpending(
 
   const totalBudget =
     budgetRows.reduce((sum, r) => sum + r.baseBudget + r.additionalBudget, 0) *
-    100
+    KOPECK_MULTIPLIER
 
   if (expenses.length === 0) {
     return { rows: [], summary: { totalBudget, totalSpent: 0 } }
@@ -70,27 +71,23 @@ export function aggregateCategorySpending(
   for (const t of expenses) {
     const catKey = t.categoryId ?? null
 
-    if (!categoryMap.has(catKey)) {
-      categoryMap.set(catKey, {
-        name: t.category?.name ?? 'Без категории',
-        icon: t.category?.icon ?? null,
-        color: t.category?.color ?? null,
-        total: 0,
-        subMap: new Map(),
-      })
+    const catEntry = categoryMap.get(catKey) ?? {
+      name: t.category?.name ?? 'Без категории',
+      icon: t.category?.icon ?? null,
+      color: t.category?.color ?? null,
+      total: 0,
+      subMap: new Map<string, SubAccum>(),
     }
-
-    const catEntry = categoryMap.get(catKey)!
     catEntry.total += Math.abs(t.amount)
+    categoryMap.set(catKey, catEntry)
 
     if (t.subCategoryId) {
-      if (!catEntry.subMap.has(t.subCategoryId)) {
-        catEntry.subMap.set(t.subCategoryId, {
-          name: t.subCategory?.name ?? t.subCategoryId,
-          total: 0,
-        })
+      const subEntry = catEntry.subMap.get(t.subCategoryId) ?? {
+        name: t.subCategory?.name ?? t.subCategoryId,
+        total: 0,
       }
-      catEntry.subMap.get(t.subCategoryId)!.total += Math.abs(t.amount)
+      subEntry.total += Math.abs(t.amount)
+      catEntry.subMap.set(t.subCategoryId, subEntry)
     }
   }
 
@@ -104,7 +101,8 @@ export function aggregateCategorySpending(
       const subBudgetRow = budgetRows.find((r) => r.subCategory?.id === subId)
       // Budgets from API are in hryvnias → convert to kopecks
       const subBudget = subBudgetRow
-        ? (subBudgetRow.baseBudget + subBudgetRow.additionalBudget) * 100
+        ? (subBudgetRow.baseBudget + subBudgetRow.additionalBudget) *
+          KOPECK_MULTIPLIER
         : null
 
       subCategories.push({
@@ -112,7 +110,7 @@ export function aggregateCategorySpending(
         subCategoryName: subData.name,
         totalSpent: subData.total,
         budget: subBudget,
-        percentOfTotal: (subData.total / totalSpentAll) * 100,
+        percentOfTotal: (subData.total / totalSpentAll) * PERCENT_MULTIPLIER,
       })
     }
 
@@ -131,14 +129,14 @@ export function aggregateCategorySpending(
         (sum, r) => sum + r.baseBudget + r.additionalBudget,
         0,
       )
-      catBudget = totalUah > 0 ? totalUah * 100 : null
+      catBudget = totalUah > 0 ? totalUah * KOPECK_MULTIPLIER : null
     } else if (catId) {
       const catBudgetRow = budgetRows.find(
         (r) => r.category?.id === catId && r.subCategory === null,
       )
       catBudget = catBudgetRow
-        ? (catBudgetRow.baseBudget + catBudgetRow.additionalBudget) * 100 ||
-          null
+        ? (catBudgetRow.baseBudget + catBudgetRow.additionalBudget) *
+            KOPECK_MULTIPLIER || null
         : null
     } else {
       catBudget = null
@@ -151,7 +149,7 @@ export function aggregateCategorySpending(
       categoryColor: catData.color,
       totalSpent: catData.total,
       budget: catBudget,
-      percentOfTotal: (catData.total / totalSpentAll) * 100,
+      percentOfTotal: (catData.total / totalSpentAll) * PERCENT_MULTIPLIER,
       subCategories,
     })
   }
