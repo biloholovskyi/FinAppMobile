@@ -1,7 +1,7 @@
-# AI Model Selection (Mar 2026)
+# AI Model Selection
 
 Mission
-- Pick the cheapest and fastest model that still produces correct, secure code.
+- Pick the cheapest and fastest model tier that still produces correct, secure code.
 
 ## Constants
 
@@ -10,53 +10,48 @@ Mission
 - ESCALATE_AFTER_FAILED_ATTEMPTS = 2
 - SMALL_CHANGE_MAX_FILES = 2
 - LARGE_CHANGE_MIN_FILES = 9
-- MODEL_CATALOG_VERIFIED_AT = 2026-03-02
-- MODEL_CATALOG_REVIEW_DAYS = 30
 
 ## Model Tiers (Capability First)
 
-Tier meanings (Claude Code aliases):
+- FAST: low latency and low cost for small edits, extraction, and mechanical updates.
+- BALANCED: default for most coding tasks, moderate multi-file changes, and fixes.
+- DEEP: highest reasoning reliability for architecture, risky refactors, and hard debugging.
+- LONG_CONTEXT: use only when task quality depends on a very large context window.
 
-- FAST: low latency and low cost for small edits, extraction, and mechanical updates. Maps to `haiku`.
-- BALANCED: default for most coding tasks, moderate multi-file changes, and test fixes. Maps to `sonnet`.
-- DEEP: highest reasoning reliability for architecture, risky refactors, and hard debugging. Maps to `opus`.
-- LONG_CONTEXT: use only when task quality depends on very large context windows. Maps to `sonnet[1m]` or `opus` with extended context.
-
-## Platform Mapping (Feb 2026)
-
-Claude Code (alias-first workflow):
-- Use aliases instead of pinned versions for day-to-day work: `default`, `sonnet`, `opus`, `haiku`, `sonnet[1m]`, `opusplan`.
-- As of verification date: `sonnet` maps to Sonnet 4.6, `opus` maps to Opus 4.8, `haiku` maps to Haiku 4.5.
-- Opus 4.8 supports adaptive thinking (auto-scales reasoning depth) and extended context. Prefer `opus` for DEEP tier when extended reasoning or large context is needed.
-- Use pinned model names only when reproducibility is required (for example, regression triage).
+Tier-to-model mapping is client-specific and lives in the client entry points, not here. Writing a tier into a plan does not switch the model: switching is a user action or a subagent adapter setting.
 
 ## Decision Matrix
 
-| Task | Default Tier | Escalate To | Claude Code Guidance |
-|------|--------------|-------------|-------------------------------|
-| Rename across a few files | FAST | BALANCED | `haiku` or `sonnet` |
-| Small bugfix in one module | FAST | BALANCED | `sonnet` |
-| Medium feature (3-8 files) | BALANCED | DEEP | `sonnet` |
-| Large refactor (>= LARGE_CHANGE_MIN_FILES) | DEEP | LONG_CONTEXT | `opus` |
-| Architecture trade-offs | DEEP | LONG_CONTEXT | prefer `opusplan` for plan-heavy tasks |
-| Flaky/race debugging | DEEP | LONG_CONTEXT | Require repro, logs, and failing test before escalating context |
-| Docs cleanup | FAST | BALANCED | Prefer mechanical edits and verification searches |
-| Large logs/stack traces | FAST | LONG_CONTEXT | Chunk logs first, escalate context only if chunking fails |
+| Task | Default Tier | Escalate To |
+|------|--------------|-------------|
+| Rename across a few files | FAST | BALANCED |
+| Small bugfix in one module | FAST | BALANCED |
+| Medium feature (3-8 files) | BALANCED | DEEP |
+| Large refactor (>= LARGE_CHANGE_MIN_FILES) | DEEP | LONG_CONTEXT |
+| Architecture trade-offs | DEEP | LONG_CONTEXT |
+| Flaky/race debugging | DEEP | LONG_CONTEXT |
+| Docs cleanup | FAST | BALANCED |
+| Large logs/stack traces | FAST | LONG_CONTEXT |
+
+Notes:
+- Flaky/race debugging: require a repro and logs before escalating context
+- Docs cleanup: prefer mechanical edits and verification searches
+- Large logs: chunk logs first; escalate context only if chunking fails
 
 ## Canonical Multi-Phase Mapping
 
-For tasks split into `Research -> Design -> Plan -> Implement -> Reflect`, use these default tiers:
+For tasks split into `Research -> Design -> Plan -> Implement -> Reflect`:
 
 - Research: FAST (or BALANCED when repo/domain is unfamiliar)
 - Design: DEEP (architecture trade-offs, boundaries, and risk analysis)
 - Plan: BALANCED (escalate to DEEP if phase decomposition is unstable)
 - Implement: BALANCED for coding; DEEP reviewer for architecture/security-sensitive phases
-- Reflect: FAST (lightweight retrospective; BALANCED for complex feature profiles)
+- Reflect: FAST (BALANCED for complex feature profiles)
 
 Rules:
 - Do not skip phases by jumping from Research directly to Implement.
 - Record tier choice per phase in plan artifacts.
-- Escalate one tier at a time using the standard escalation protocol.
+- Escalate one tier at a time using the escalation protocol.
 
 ## Requirements
 
@@ -66,13 +61,6 @@ Selection:
 - Use DEEP for concurrency, architecture, security, and high-risk refactors.
 - Use LONG_CONTEXT only for genuinely large-context tasks.
 
-Claude Code usage:
-- Default to `sonnet` for implementation phases.
-- Use `opus` for complex planning/debugging when `sonnet` stalls.
-- Use `opusplan` for plan-heavy sessions that need strong reasoning plus efficient execution.
-- Use `haiku` for simple extraction, summarization, and low-risk housekeeping.
-- Use `[1m]` variants only for long-context phases with documented need.
-
 Escalation protocol:
 - Start with FAST or BALANCED.
 - Escalate after ESCALATE_AFTER_FAILED_ATTEMPTS unsuccessful attempts.
@@ -81,88 +69,62 @@ Escalation protocol:
 
 Context discipline:
 - Prefer targeted search and selective reads over broad file loading.
-- Load only file sections needed to decide and implement.
+- Load only the file sections needed to decide and implement.
 - Keep planning output under PLAN_MAX_TOKENS.
 - Keep total loaded rule budget under RULES_BUDGET_TOKENS.
-
-Governance:
-- Review this rule at least every MODEL_CATALOG_REVIEW_DAYS days.
-- Update model examples when official docs change aliases, defaults, or availability.
-- Treat alias-to-model mappings as snapshots, not hard guarantees across plans/regions.
 
 Safety:
 - Never paste secrets (tokens, keys, cookies) into prompts.
 - Redact secrets and PII in logs, configs, and traces.
 - Treat production traffic captures as sensitive by default.
 
-## Thinking Mode (Extended Reasoning)
+## Extended Reasoning
 
-When to enable:
+Enable (through the client's own mechanism) for:
 - Design phase: architecture trade-offs, boundary decisions, risk analysis.
-- Security audit: OWASP checks, injection analysis, authz review.
+- Security audit: injection analysis, authz review.
 - Complex debugging: concurrency, race conditions, state machine issues.
 - Plan generation: multi-domain decomposition, dependency ordering.
 
-When not to enable:
-- Mechanical edits: renames, formatting, docs sync.
-- Command execution: running tests, linting, building.
-- Simple extraction: reading files, searching codebase.
-- Commit-prep: message generation, push notes.
+Do not enable for renames, formatting, docs sync, running commands, simple extraction, or commit prep. Extended reasoning roughly doubles output cost.
 
-Platform activation:
-- Claude Code: include "ultrathink" in skill/phase prompt content. Thinking depth auto-scales with Opus 4.8.
+## Role and Skill Tier Assignments
 
-Cost impact:
-- Thinking mode uses ~2x output tokens (thinking tokens count toward output billing).
-- Use only when reasoning quality justifies the cost.
+Adapters declare the tier through their client's model setting so they do not inherit a more expensive session model.
 
-## Subagent and Skill Model Assignments
-
-Agents and skills should specify `model:` in frontmatter to avoid inheriting the main session model (which may be opus) for tasks that only need haiku or sonnet.
-
-Selection criteria for assigning model tiers:
-
-| Criterion | haiku | sonnet | opus | inherit |
-|-----------|-------|--------|------|---------|
+| Criterion | FAST | BALANCED | DEEP | Session tier |
+|-----------|------|----------|------|--------------|
 | Task complexity | Single command / extraction | Multi-step workflow | Architecture / security reasoning | Depends on parent context |
 | File scope | 0-1 files | 1-8 files | 9+ files or cross-cutting | Varies |
-| Reasoning depth | None (mechanical) | Moderate (pattern matching) | Deep (trade-offs, risk) | Parent decides |
-| Cost sensitivity | Lowest priority | Default choice | Use only when quality requires it | N/A |
-| Examples | lint, typecheck, EAS status | commit, screen implementation, fix | plan audit, security audit, perf review | implement-plan-step |
+| Reasoning depth | None (mechanical) | Moderate | Deep (trade-offs, risk) | Parent decides |
 
-Agent tier assignments:
-- haiku: codebase-researcher, command-runner.
-- sonnet: finapp-mobile-expert, code-reviewer, screen-designer, dependency-analyst, eas-deployer.
-- opus: plan-auditor, react-performance-reviewer, full-package-auditor.
+Roles (10):
+- FAST: `command-runner`
+- BALANCED: `codebase-researcher`, `finapp-mobile-expert`, `code-reviewer`, `screen-designer`, `dependency-analyst`, `eas-deployer`
+- DEEP: `plan-auditor`, `react-performance-reviewer`, `full-package-auditor`
 
-Skill tier assignments (must match the `model:` field in each `.claude/skills/<name>/SKILL.md`):
-- haiku: lint, typecheck, post-code, commit, eas-status.
-- sonnet: start-task, deploy-preflight, eas-build, eas-submit, implement-plan-step, audit-plan, audit-security, review-react-perf.
-- no declared model (inherits the session model): ui-ux-pro-max.
+Skills (14):
+- FAST: `lint`, `typecheck`, `post-code`, `commit`, `eas-status`
+- BALANCED: `start-task`, `deploy-preflight`, `eas-build`, `eas-submit`, `implement-plan-step`, `audit-plan`, `audit-security`, `review-react-perf`
+- Session tier (no declared model): `ui-ux-pro-max`
 
-Open question: `review-react-perf` is a deep-reasoning audit and the criteria above argue for opus, but the skill declares sonnet. Escalate deliberately rather than drifting.
+Open question: `review-react-perf` is a deep-reasoning audit and the criteria argue for DEEP, but it is assigned BALANCED. Escalate deliberately rather than drifting.
 
-Review and update assignments when agent/skill responsibilities change.
+Review assignments when role or skill responsibilities change.
 
 ## Anti-Patterns
 
-- Pinning stale model versions in everyday workflows.
-- Assuming model availability is identical across all plans and regions.
 - Using DEEP or LONG_CONTEXT for trivial edits.
 - Escalating tiers without writing a state summary.
 - Stuffing full files/logs into prompts when targeted excerpts are enough.
-- Treating aliases as permanently mapped to one exact snapshot.
-- Running all subagents and skills on the main session model (opus) when haiku or sonnet suffices.
-- Enabling thinking mode for mechanical or command-execution tasks.
-
-## Validation Sources (Checked 2026-02-10)
-
-- Claude Code model config and aliases: `https://docs.anthropic.com/en/docs/claude-code/model-config`
-- Anthropic models overview: `https://docs.anthropic.com/en/docs/about-claude/models/overview`
+- Writing client model names into shared rules instead of tiers.
+- Assuming model availability is identical across clients, plans, and regions.
+- Running every subagent and skill on the session model when FAST or BALANCED suffices.
+- Enabling extended reasoning for mechanical or command-execution tasks.
 
 ## Related Rules
 
-- See `ai/rules/common/token-economy.md` for file loading strategy and token budget.
-- See `ai/rules/common/post-code-workflow.md` for required verification steps.
-- See `ai/rules/common/implementation-plans.md` for phase-level model tier usage.
-- See `ai/rules/common/core-rules.md` for task-to-rule mapping.
+- `ai/rules/common/token-economy.md` — file loading strategy and token budget
+- `ai/rules/common/post-code-workflow.md` — required verification steps
+- `ai/rules/common/implementation-plans.md` — phase-level tier usage
+- `AGENTS.md` — task-to-rule table

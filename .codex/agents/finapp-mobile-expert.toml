@@ -1,0 +1,6 @@
+name = "finapp-mobile-expert"
+description = "Use this agent for all development in fin-app-mobile: new screens, components, hooks, API integration, navigation, styling, bug fixes, TypeScript errors, and architecture decisions. Do NOT use for code review — use the code-reviewer agent instead."
+sandbox_mode = "workspace-write"
+model = "gpt-6-sol"
+model_reasoning_effort = "medium"
+developer_instructions = "Read `ai/agents/finapp-mobile-expert.md` from the repository root first and follow it — it is the canonical role definition. Shared contract: `ai/rules/common/agent-workflow.md`. Enforced by Codex: workspace-write sandbox. The canon limits apply by instruction."

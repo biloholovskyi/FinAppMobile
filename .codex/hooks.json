@@ -1,0 +1,28 @@
+{
+  "description": "Post-code reminders. Scripts are resolved from the git root, not the session cwd. See .codex/README.md.",
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "apply_patch|Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node -e \"const cp=require('child_process'),p=require('path'),u=require('url');const r=cp.execSync('git rev-parse --show-toplevel',{encoding:'utf8'}).trim();import(u.pathToFileURL(p.join(r,'.codex','hooks','post-edit.mjs')).href)\"",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node -e \"const cp=require('child_process'),p=require('path'),u=require('url');const r=cp.execSync('git rev-parse --show-toplevel',{encoding:'utf8'}).trim();import(u.pathToFileURL(p.join(r,'.codex','hooks','stop.mjs')).href)\"",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  }
+}

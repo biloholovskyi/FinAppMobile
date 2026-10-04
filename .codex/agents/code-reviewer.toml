@@ -1,0 +1,6 @@
+name = "code-reviewer"
+description = "Code review agent for fin-app-mobile. Read-only — never modifies source files. Use after implementation is complete to detect bugs, enforce conventions, and find improvements."
+sandbox_mode = "read-only"
+model = "gpt-6-sol"
+model_reasoning_effort = "medium"
+developer_instructions = "Read `ai/agents/code-reviewer.md` from the repository root first and follow it — it is the canonical role definition. Shared contract: `ai/rules/common/agent-workflow.md`. Requested from Codex: read-only sandbox_mode. A spawned role still inherits the writable sandbox of the parent session (verified 30.09.2026, Codex CLI 0.155), so never writing files holds by instruction only. By instruction only: shell limited to the read-only checks of the canon."

@@ -4,7 +4,7 @@ Cross-reference policy for rules, plans, and docs.
 
 ## Commit Messages — Not Your Scope
 
-Commit messages are written by the user, who makes all commits in this project. Do not propose a commit-message format, do not write commit text, and do not run git commands without an explicit request. Release preparation (version files, CHANGELOG) is covered by `ai/rules/common/versioning-changelog.md`.
+Commit messages are written by the user, who makes all commits in this project. Do not propose a commit-message format and do not write commit text. Git operations follow `ai/rules/common/git-policy.md`. Release preparation (version files, CHANGELOG) is covered by `ai/rules/common/versioning-changelog.md`.
 
 ## Constants
 
@@ -19,10 +19,9 @@ Commit messages are written by the user, who makes all commits in this project. 
 - Link plans with `plans/...` paths
 - Keep references current when files move/rename; remove stale links
 - When adding a new rule file, add a discoverable link from:
-  - `ai/rules/common/core-rules.md`
-  - `ai/rules/AGENTS.md`
-  - `CLAUDE.md` when applicable
-  - `.claude/AGENTS.md`
+  - `AGENTS.md` (Task → Rule table) when the rule is task-scoped
+  - `ai/rules/INDEX.md`
+  - the client layer index when a client path stub points to it (`ai/rules/common/tooling.md`, Agent Layout)
 
 ## Anti-Patterns
 
@@ -34,5 +33,5 @@ Commit messages are written by the user, who makes all commits in this project. 
 
 ## Related Rules
 
-- `ai/rules/common/core-rules.md`
+- `AGENTS.md`
 - `ai/rules/common/versioning-changelog.md`

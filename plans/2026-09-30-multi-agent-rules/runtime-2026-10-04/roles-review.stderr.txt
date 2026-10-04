@@ -1,0 +1,3 @@
+[rtk] /!\ No hook installed — run `rtk init -g` for automatic token savings
+2026-10-04T12:36:47.489561Z  WARN codex_core::shell_snapshot: Failed to create shell snapshot for powershell: Shell snapshot not supported yet for PowerShell
+2026-10-04T12:37:38.220404Z  WARN codex_core::hook_runtime: failed to resolve parent transcript path for subagent hook parent_thread_id=01a106ea-b4d8-7530-ac20-f6913a39c8d3 error=invalid thread-store request: no rollout found for thread id 01a106ea-b4d8-7530-ac20-f6913a39c8d3

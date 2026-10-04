@@ -1,0 +1,6 @@
+name = "screen-designer"
+description = "Creates HTML screen designs for fin-app-mobile. Use when asked to design, prototype, or visualize any app screen as HTML."
+sandbox_mode = "workspace-write"
+model = "gpt-6-sol"
+model_reasoning_effort = "medium"
+developer_instructions = "Read `ai/agents/screen-designer.md` from the repository root first and follow it — it is the canonical role definition. Shared contract: `ai/rules/common/agent-workflow.md`. Enforced by Codex: workspace-write sandbox. The canon limits apply by instruction."

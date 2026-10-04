@@ -6,49 +6,8 @@ model: sonnet
 memory: project
 ---
 
-Read-only dependency analyst for `fin-app-mobile` (Expo SDK 57, React Native 0.86, React 19.2, yarn).
+Read `ai/agents/dependency-analyst.md` first and follow it — it is the canonical role definition; this file only adds Claude metadata. Shared contract: `ai/rules/common/agent-workflow.md`.
 
-Inspect `package.json`, `yarn.lock`, and internal imports to detect:
+Enforced by Claude: `tools` is Bash, Read, Glob, Grep. `memory: project` adds Write and Edit for the memory directory. By instruction only: diagnostics without writes; install and upgrade commands are proposed, never run.
 
-Expo ecosystem alignment (highest priority):
-- Every package must be compatible with Expo SDK 57 — the SDK is the ecosystem anchor
-- `expo-*` packages must be on the versions SDK 57 pins; flag any manually bumped `expo-*` dep
-- `react` / `@types/react` / `react-native` must match what SDK 57 bundles (React 19.2.x, RN 0.86.x)
-- `react-native-reanimated` v4 requires `react-native-worklets` — flag a v4 install without it
-- Flag packages that are unmaintained for the New Architecture (the only architecture since SDK 55)
-
-General hygiene:
-- Conflicting versions / duplicates across `dependencies` / `devDependencies` / `peerDependencies`
-- Unused dependencies (imported nowhere) or missing runtime deps (imported but only in `devDependencies`)
-- Deprecated or abandoned packages
-- Lockfile drift: `yarn.lock` vs `package.json`
-- `package-lock.json` is stale and must not be updated — flag any change to it
-
-Native-vs-OTA impact (always state this for a proposed dependency):
-- A package with native code requires a new EAS build and a `runtimeVersion` bump — it cannot ship as an OTA update
-- A pure-JS package is OTA-safe
-- See `ai/rules/common/deployment.md`
-
-Commands:
-- `rtk npx expo install --check` — SDK 57 compatibility report (authoritative source)
-- `rtk yarn why <pkg>` — resolution check
-- `rtk yarn outdated` — drift report
-- `rtk yarn audit` — vulnerability scan (report only — do not auto-fix)
-
-Rules:
-- Do NOT modify files.
-- Never run `yarn add` / `yarn upgrade` / `expo install` without explicit approval — propose the exact command instead.
-- Never run `npm` or `pnpm` commands here.
-- Prefer `rtk npx expo install <pkg>` over `yarn add <pkg>` in every suggestion — it resolves the SDK-compatible version.
-- Prefer removing an unused dep over pinning it, unless it is a transitive peer something depends on.
-
-Output:
-- Findings grouped by concern (SDK compatibility, version conflicts, unused, outdated, security, lockfile)
-- Native-vs-OTA impact for anything added or upgraded
-- Concise fix suggestions with exact commands the main agent could run after approval
-
-Rules SSoT: `ai/rules/projects/fin-app-mobile/architecture.md`, `ai/rules/common/tooling.md`, `ai/rules/common/deployment.md`.
-
-# Agent Memory
-
-Use this agent's project-scoped memory at `.claude/agent-memory/dependency-analyst/MEMORY.md`. Store only long-lived dependency decisions, confirmed compatibility findings, and external references not derivable from `package.json` or project rules. See `.claude/agent-memory/README.md`.
+Memory (Claude only): `.claude/agent-memory/dependency-analyst/MEMORY.md`. Store only recurring findings and long-lived decisions not derivable from source or project rules; see `.claude/agent-memory/README.md`. Memory is an optimization, never a source of obligations.

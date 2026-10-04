@@ -1,0 +1,3 @@
+[rtk] /!\ No hook installed — run `rtk init -g` for automatic token savings
+2026-10-04T12:46:18.022760Z  WARN codex_core::shell_snapshot: Failed to create shell snapshot for powershell: Shell snapshot not supported yet for PowerShell
+2026-10-04T12:46:39.380012Z ERROR codex_core::tools::router: error=options must contain at least one non-empty answer
