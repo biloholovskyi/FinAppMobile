@@ -15,6 +15,15 @@ export const pickSellRate = (rate: CurrencyRateModel | undefined): number | null
   return rate.rateSell ?? rate.rateCross ?? rate.rateBuy ?? null
 }
 
+/**
+ * Rate the backend uses when creating a transaction: mirrors backend `resolveRate`
+ * (`rateSell ?? rateCross ?? null`).
+ */
+export const pickBackendRate = (rate: CurrencyRateModel | undefined): number | null => {
+  if (!rate) return null
+  return rate.rateSell ?? rate.rateCross ?? null
+}
+
 /** Round a monetary value to AMOUNT_DECIMALS decimals. */
 export const roundAmount = (value: number): number => {
   const factor = 10 ** AMOUNT_DECIMALS

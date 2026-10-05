@@ -20,3 +20,4 @@ export {
   UNCATEGORIZED_SUB_LABEL,
 } from './spendingViewMode'
 export type { SpendingViewMode } from './spendingViewMode'
+export { RATE_STALE_TIME_MS } from './currencyRate'

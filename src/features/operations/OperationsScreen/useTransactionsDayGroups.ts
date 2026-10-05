@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { WalletTransactionType, type Transaction } from '@/entities/transaction'
+import { WalletTransactionType, getSignedUahAmount, type Transaction } from '@/entities/transaction'
 
 /** Длина части `YYYY-MM-DD` в ISO-строке даты. */
 const ISO_DATE_LENGTH = 10
@@ -10,6 +10,7 @@ export type DayGroup = {
   label: string
   date: string
   total: number
+  hasTotal: boolean
   data: Transaction[]
 }
 
@@ -47,10 +48,14 @@ export function useTransactionsDayGroups(transactions: Transaction[], filter: Fi
     for (const tx of filtered) {
       const date = tx.transactionTime.slice(0, ISO_DATE_LENGTH)
       if (!map[date]) {
-        map[date] = { label: formatDayLabel(date), date, total: 0, data: [] }
+        map[date] = { label: formatDayLabel(date), date, total: 0, hasTotal: false, data: [] }
       }
       map[date].data.push(tx)
-      map[date].total += tx.amount
+      const signedUah = getSignedUahAmount(tx)
+      if (signedUah !== null) {
+        map[date].total += signedUah
+        map[date].hasTotal = true
+      }
     }
 
     return {

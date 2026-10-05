@@ -396,6 +396,15 @@
     .tx-amount.pos { color: var(--accent-green); }
     .tx-amount.neg { color: var(--accent-red); }
 
+    .tx-amount-uah {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: -0.2px;
+      line-height: 1.1;
+      color: var(--text-secondary);
+    }
+
     .tx-time {
       font-family: 'Inter', sans-serif;
       font-size: 10px;
@@ -650,7 +659,7 @@
         <div class="day-section">
           <div class="day-header">
             <span class="day-label">Сегодня</span>
-            <span class="day-total neg">−1 450 ₽</span>
+            <span class="day-total pos">+23 543 ₴</span>
           </div>
           <div class="day-divider"></div>
 
@@ -667,7 +676,7 @@
             </div>
             <div class="tx-end">
               <div class="tx-right">
-                <span class="tx-amount neg">−320 ₽</span>
+                <span class="tx-amount neg">−320 ₴</span>
                 <span class="tx-time">13:45</span>
               </div>
               <div class="tx-actions">
@@ -686,11 +695,12 @@
               <div class="tx-meta">
                 <span class="tx-badge transport">Транспорт</span>
               </div>
-              <span class="tx-wallet">Monobank</span>
+              <span class="tx-wallet">Валютный счёт (EUR)</span>
             </div>
             <div class="tx-end">
               <div class="tx-right">
-                <span class="tx-amount neg">−180 ₽</span>
+                <span class="tx-amount neg">−€4,20</span>
+                <span class="tx-amount-uah">≈ −187 ₴</span>
                 <span class="tx-time">11:20</span>
               </div>
               <div class="tx-actions">
@@ -712,7 +722,7 @@
             </div>
             <div class="tx-end">
               <div class="tx-right">
-                <span class="tx-amount pos">+25 000 ₽</span>
+                <span class="tx-amount pos">+25 000 ₴</span>
                 <span class="tx-time">09:00</span>
               </div>
               <div class="tx-actions">
@@ -735,7 +745,7 @@
             </div>
             <div class="tx-end">
               <div class="tx-right">
-                <span class="tx-amount neg">−950 ₽</span>
+                <span class="tx-amount neg">−950 ₴</span>
                 <span class="tx-time">08:30</span>
               </div>
               <div class="tx-actions">
@@ -749,7 +759,7 @@
         <div class="day-section">
           <div class="day-header">
             <span class="day-label">Вчера</span>
-            <span class="day-total neg">−2 299 ₽</span>
+            <span class="day-total neg">−2 608 ₴</span>
           </div>
           <div class="day-divider"></div>
 
@@ -762,11 +772,12 @@
               <div class="tx-meta">
                 <span class="tx-badge sub">Подписки</span>
               </div>
-              <span class="tx-wallet">Visa *4141</span>
+              <span class="tx-wallet">Валютный счёт (USD)</span>
             </div>
             <div class="tx-end">
               <div class="tx-right">
-                <span class="tx-amount neg">−199 ₽</span>
+                <span class="tx-amount neg">−$12,50</span>
+                <span class="tx-amount-uah">≈ −514 ₴</span>
                 <span class="tx-time">22:00</span>
               </div>
               <div class="tx-actions">
@@ -789,7 +800,7 @@
             </div>
             <div class="tx-end">
               <div class="tx-right">
-                <span class="tx-amount neg">−450 ₽</span>
+                <span class="tx-amount neg">−450 ₴</span>
                 <span class="tx-time">16:30</span>
               </div>
               <div class="tx-actions">
@@ -808,11 +819,12 @@
               <div class="tx-meta">
                 <span class="tx-badge transfer">Перевод</span>
               </div>
-              <span class="tx-wallet">Monobank → Наличные</span>
+              <span class="tx-wallet">Валютный счёт (USD) → Наличные</span>
             </div>
             <div class="tx-end">
               <div class="tx-right">
-                <span class="tx-amount neg">−1 650 ₽</span>
+                <span class="tx-amount neg">−$40,00</span>
+                <span class="tx-amount-uah">≈ −1 644 ₴</span>
                 <span class="tx-time">14:00</span>
               </div>
               <div class="tx-actions">
@@ -826,7 +838,7 @@
         <div class="day-section">
           <div class="day-header">
             <span class="day-label">7 апреля 2026</span>
-            <span class="day-total pos">+5 000 ₽</span>
+            <span class="day-total pos">+4 847 ₴</span>
           </div>
           <div class="day-divider"></div>
 
@@ -839,11 +851,12 @@
               <div class="tx-meta">
                 <span class="tx-badge work">Работа</span>
               </div>
-              <span class="tx-wallet">Monobank</span>
+              <span class="tx-wallet">Валютный счёт (USD)</span>
             </div>
             <div class="tx-end">
               <div class="tx-right">
-                <span class="tx-amount pos">+5 000 ₽</span>
+                <span class="tx-amount pos">+$120,00</span>
+                <span class="tx-amount-uah">≈ +4 932 ₴</span>
                 <span class="tx-time">18:00</span>
               </div>
               <div class="tx-actions">
@@ -866,7 +879,7 @@
             </div>
             <div class="tx-end">
               <div class="tx-right">
-                <span class="tx-amount neg">−85 ₽</span>
+                <span class="tx-amount neg">−85 ₴</span>
                 <span class="tx-time">09:15</span>
               </div>
               <div class="tx-actions">
@@ -969,14 +982,17 @@
       const ITEM_STAGGER_MS = 60;
       const MONTH_NAMES = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
 
+      const DEMO_RATES_TO_UAH = { USD: 41.1, EUR: 44.5 };
+      const CURRENCY_SYMBOLS = { UAH: '₴', USD: '$', EUR: '€' };
+
       const CATEGORY_POOL = [
         { cls: 'food', icon: 'utensils', badge: 'Еда', descs: ['Обед', 'Ужин в ресторане', 'Кофе с собой'], wallet: 'Monobank', min: 60, max: 900 },
-        { cls: 'transport', icon: 'car', badge: 'Транспорт', descs: ['Такси', 'Метро', 'Заправка'], wallet: 'Monobank', min: 80, max: 1200 },
+        { cls: 'transport', icon: 'car', badge: 'Транспорт', descs: ['Такси', 'Метро', 'Заправка'], wallet: 'Валютный счёт (EUR)', currency: 'EUR', min: 5, max: 60 },
         { cls: 'grocery', icon: 'shopping-cart', badge: 'Продукты', descs: ['Продукты', 'Супермаркет'], wallet: 'Visa *4141', min: 300, max: 2200 },
-        { cls: 'sub', icon: 'tv', badge: 'Подписки', descs: ['Spotify', 'iCloud+', 'YouTube Premium'], wallet: 'Visa *4141', min: 99, max: 399 },
+        { cls: 'sub', icon: 'tv', badge: 'Подписки', descs: ['Spotify', 'iCloud+', 'YouTube Premium'], wallet: 'Валютный счёт (USD)', currency: 'USD', min: 3, max: 15 },
         { cls: 'health', icon: 'heart', badge: 'Здоровье', descs: ['Аптека', 'Приём врача'], wallet: 'Наличные', min: 200, max: 1800 },
-        { cls: 'work', icon: 'briefcase', badge: 'Работа', descs: ['Фриланс-проект', 'Консультация'], wallet: 'Monobank', min: 2000, max: 15000, income: true },
-        { cls: 'transfer', icon: 'arrow-right-left', badge: 'Перевод', descs: ['Перевод другу', 'Перевод маме'], wallet: 'Monobank → Наличные', min: 300, max: 3000 },
+        { cls: 'work', icon: 'briefcase', badge: 'Работа', descs: ['Фриланс-проект', 'Консультация'], wallet: 'Валютный счёт (USD)', currency: 'USD', min: 50, max: 400, income: true },
+        { cls: 'transfer', icon: 'arrow-right-left', badge: 'Перевод', descs: ['Перевод другу', 'Перевод маме'], wallet: 'Валютный счёт (USD) → Наличные', currency: 'USD', min: 10, max: 80 },
       ];
 
       const screenContent = document.querySelector('.screen-content');
@@ -1001,9 +1017,18 @@
         const desc = category.descs[randomInt(0, category.descs.length - 1)];
         const isIncome = Boolean(category.income) && Math.random() > 0.3;
         const rawAmount = randomInt(category.min, category.max);
-        const signedAmount = isIncome ? rawAmount : -rawAmount;
+        
         const sign = isIncome ? 'pos' : 'neg';
         const prefix = isIncome ? '+' : '−';
+        const currency = category.currency || 'UAH';
+        const isForeign = currency !== 'UAH';
+        const uahAmount = isForeign ? Math.round(rawAmount * DEMO_RATES_TO_UAH[currency]) : rawAmount;
+        const mainText = isForeign
+          ? prefix + CURRENCY_SYMBOLS[currency] + formatAmount(rawAmount)
+          : prefix + formatAmount(rawAmount) + ' ₴';
+        const uahLine = isForeign
+          ? '<span class="tx-amount-uah">≈ ' + prefix + formatAmount(uahAmount) + ' ₴</span>'
+          : '';
         const hh = String(randomInt(7, 22)).padStart(2, '0');
         const mm = String(randomInt(0, 59)).padStart(2, '0');
 
@@ -1023,7 +1048,8 @@
           '</div>' +
           '<div class="tx-end">' +
             '<div class="tx-right">' +
-              '<span class="tx-amount ' + sign + '">' + prefix + formatAmount(rawAmount) + ' ₽</span>' +
+              '<span class="tx-amount ' + sign + '">' + mainText + '</span>' +
+              uahLine +
               '<span class="tx-time">' + hh + ':' + mm + '</span>' +
             '</div>' +
             '<div class="tx-actions">' +
@@ -1032,7 +1058,7 @@
             '</div>' +
           '</div>';
 
-        return { el: item, amount: signedAmount };
+        return { el: item, amount: isIncome ? uahAmount : -uahAmount };
       }
 
       function buildDaySection() {
@@ -1063,7 +1089,7 @@
         const totalPrefix = total >= 0 ? '+' : '−';
         header.innerHTML =
           '<span class="day-label">' + label + '</span>' +
-          '<span class="day-total ' + totalCls + '">' + totalPrefix + formatAmount(total) + ' ₽</span>';
+          '<span class="day-total ' + totalCls + '">' + totalPrefix + formatAmount(total) + ' ₴</span>';
 
         section.appendChild(header);
         section.appendChild(divider);

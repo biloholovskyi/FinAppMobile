@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import type { Wallet } from '@/entities/wallet'
+import { RATE_STALE_TIME_MS } from '@/shared/constants/currencyRate'
 import { useCurrencyRateControllerGetRate } from '@/shared/api/generated/currency-rate/currency-rate'
 import {
   UAH_CURRENCY_CODE,
@@ -7,8 +8,6 @@ import {
   pickSellRate,
   roundAmount,
 } from '@/shared/utils/currencyConversion'
-
-const RATE_STALE_TIME_MS = 5 * 60 * 1000
 
 type UseTransferTargetAmountParams = {
   isTransfer: boolean

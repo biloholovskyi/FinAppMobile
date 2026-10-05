@@ -1,5 +1,5 @@
 import type { WalletControllerGetAllTransactions200 } from '@/shared/api/generated/models'
-import type { Transaction } from '../index'
+import type { Transaction } from '../model/types'
 
 export type TransactionsPage = {
   items: Transaction[]

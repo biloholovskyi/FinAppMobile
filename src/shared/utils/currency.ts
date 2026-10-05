@@ -7,6 +7,14 @@ export function formatAmount(kopecks: number): string {
   })
 }
 
+/** Kopecks -> fixed two-decimal uk-UA string (e.g. `13 150,00`), sign dropped. */
+export function formatAmountFixed(kopecks: number): string {
+  return (Math.abs(kopecks) / KOPECK_DIVISOR).toLocaleString('uk-UA', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })
+}
+
 export function formatUah(value: number, kopecks?: boolean): string {
   if (!kopecks) {
     return value.toLocaleString('uk-UA', {

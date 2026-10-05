@@ -12,9 +12,10 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { router } from 'expo-router'
 import * as icons from 'lucide-react-native'
-import { WalletTransactionType, type Transaction } from '@/entities/transaction'
+import { WalletTransactionType, getTransactionCurrency, type Transaction } from '@/entities/transaction'
 import { TRANSFER_ICON_NAME , TRANSACTIONS_END_REACHED_THRESHOLD } from '@/shared/constants'
 import { FILTERS, useOperationsScreen, type DayGroup } from './useOperationsScreen'
+import { TransactionAmountUah } from './TransactionAmountUah/TransactionAmountUah'
 import { DeleteTransactionModal } from './DeleteTransactionModal/DeleteTransactionModal'
 import { OperationsFeedFooter } from './OperationsFeedFooter/OperationsFeedFooter'
 import { Icon } from '@/shared/ui/Icon/Icon'
@@ -35,7 +36,7 @@ function TxItem({ tx, onEdit, onDelete }: TxItemProps) {
 
   const iconName = isTransfer ? TRANSFER_ICON_NAME : categoryInfo?.icon ?? ''
 
-  const currencySymbol = getCurrencySymbol(tx.wallet?.currency)
+  const currencySymbol = getCurrencySymbol(getTransactionCurrency(tx))
   const amountStr = isIncome
     ? `+${formatAmount(tx.amount)} ${currencySymbol}`
     : `−${formatAmount(tx.amount)} ${currencySymbol}`
@@ -76,6 +77,7 @@ function TxItem({ tx, onEdit, onDelete }: TxItemProps) {
           <Text style={{ color: amountColor, fontFamily: 'monospace', fontSize: 13, fontWeight: '700' }}>
             {amountStr}
           </Text>
+          <TransactionAmountUah tx={tx} />
           <Text className="text-[#44445A] text-[10px]">{formatTime(tx.transactionTime)}</Text>
         </View>
         <View className="flex-row gap-[6px]">
@@ -150,9 +152,11 @@ export function OperationsScreen() {
             <Text className="text-[#8888AA] text-[12px] font-semibold uppercase tracking-[0.3px]">
               {section.label}
             </Text>
-            <Text style={{ color: isPositive ? '#00E089' : '#FF4B6B', fontSize: 12, fontWeight: '700' }}>
-              {formatDayTotal(section.total)}
-            </Text>
+            {section.hasTotal && (
+              <Text style={{ color: isPositive ? '#00E089' : '#FF4B6B', fontSize: 12, fontWeight: '700' }}>
+                {formatDayTotal(section.total)}
+              </Text>
+            )}
           </View>
           <View className="h-px bg-white/[0.04] mb-1.5" />
         </View>
