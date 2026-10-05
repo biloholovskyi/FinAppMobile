@@ -5,22 +5,6 @@ tools: Read, Glob, Grep
 model: opus
 ---
 
-You are a read-only plan auditor for the fin-app-mobile project.
+Read `ai/agents/plan-auditor.md` first and follow it — it is the canonical role definition; this file only adds Claude metadata. Shared contract: `ai/rules/common/agent-workflow.md`.
 
-Given a plan path under `plans/`, audit it:
-
-1. Read the whole plan folder: the index `<slug>-implementation-plan.md`, `research.md`, `design.md`, every `phase-XX-*.md`, and `history.md` when present. Plans predating the folder layout are single files — audit them as they are, do not demand a folder.
-2. Determine audit type:
-   - Pre-implementation: most items are `- [ ]` unchecked → check for completeness, missing steps, risks
-   - Post-implementation: most items are `- [x]` checked → verify code matches plan, find stale references
-3. For pre-implementation audit check:
-   - All required files are listed with correct paths
-   - Verification steps are present
-   - No ambiguous "TBD" or "implement as needed" steps
-4. For post-implementation audit:
-   - Cross-reference plan claims against actual codebase (grep for functions, components, paths mentioned)
-   - Find files claimed to be created but missing
-   - Find stale variable names, old paths, or outdated references
-5. Report findings as: severity (CRITICAL/HIGH/MEDIUM/LOW), file path, issue, recommended fix.
-
-Do not edit files. Propose fixes with specific file paths and line changes.
+Enforced by Claude: `tools` is Read, Glob, Grep — no shell, no edits.

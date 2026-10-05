@@ -1,0 +1,91 @@
+# Git policy for Codex — source: ai/rules/common/git-policy.md
+# Only `forbidden` rules: agents may read the repository, never change it.
+# There are deliberately no `allow` rules: `allow` would run a command outside
+# the sandbox without asking. Limits of prefix matching: .codex/README.md.
+
+GIT_MUTATIONS = [
+    "commit",
+    "push",
+    "add",
+    "checkout",
+    "switch",
+    "reset",
+    "rebase",
+    "merge",
+    "revert",
+    "cherry-pick",
+    "stash",
+    "clean",
+    "restore",
+    "rm",
+    "mv",
+    "tag",
+]
+
+BRANCH_MUTATION_FLAGS = [
+    "-d",
+    "-D",
+    "--delete",
+    "-m",
+    "-M",
+    "--move",
+    "-c",
+    "-C",
+    "--copy",
+    "-f",
+    "--force",
+    "-u",
+    "--set-upstream-to",
+    "--unset-upstream",
+]
+
+MUTATION_REASON = "Git mutations belong to the user (ai/rules/common/git-policy.md). Report the needed change and stop."
+BRANCH_REASON = "Creating, renaming or deleting branches is a user action (ai/rules/common/git-policy.md). Report the expected branch name and stop."
+
+prefix_rule(
+    pattern = ["git", GIT_MUTATIONS],
+    decision = "forbidden",
+    justification = MUTATION_REASON,
+    match = ["git commit -m x", "git switch main", "git push origin main", "git reset --hard", "git stash"],
+    not_match = ["git status", "git diff", "git log --oneline", "git show HEAD", "git branch"],
+)
+
+prefix_rule(
+    pattern = ["rtk", "git", GIT_MUTATIONS],
+    decision = "forbidden",
+    justification = MUTATION_REASON,
+    match = ["rtk git commit -m x", "rtk git switch main", "rtk git add ."],
+    not_match = ["rtk git status", "rtk git diff", "rtk git log"],
+)
+
+prefix_rule(
+    pattern = ["git", "branch", BRANCH_MUTATION_FLAGS],
+    decision = "forbidden",
+    justification = BRANCH_REASON,
+    match = ["git branch -D x", "git branch -m old new", "git branch --delete x"],
+    not_match = ["git branch", "git branch --list", "git branch -a"],
+)
+
+prefix_rule(
+    pattern = ["rtk", "git", "branch", BRANCH_MUTATION_FLAGS],
+    decision = "forbidden",
+    justification = BRANCH_REASON,
+    match = ["rtk git branch -D x", "rtk git branch -m old new"],
+    not_match = ["rtk git branch", "rtk git branch --list"],
+)
+
+prefix_rule(
+    pattern = ["rtk", "proxy", "git", GIT_MUTATIONS],
+    decision = "forbidden",
+    justification = MUTATION_REASON,
+    match = ["rtk proxy git commit -m x", "rtk proxy git push"],
+    not_match = ["rtk proxy git status", "rtk proxy yarn.cmd lint"],
+)
+
+prefix_rule(
+    pattern = ["rtk", "proxy", "git", "branch", BRANCH_MUTATION_FLAGS],
+    decision = "forbidden",
+    justification = BRANCH_REASON,
+    match = ["rtk proxy git branch -D x"],
+    not_match = ["rtk proxy git branch"],
+)

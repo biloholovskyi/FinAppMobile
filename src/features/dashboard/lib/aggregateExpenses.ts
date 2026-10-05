@@ -1,5 +1,9 @@
 import type { Transaction } from '@/entities/transaction'
-import { WalletTransactionType } from '@/entities/transaction'
+import {
+  getTransactionAmountUah,
+  WalletTransactionType,
+} from '@/entities/transaction'
+import { KOPECK_DIVISOR } from '@/shared/constants/money'
 
 export type DailyPoint = { value: number }
 
@@ -38,7 +42,9 @@ export function aggregateExpenses(
     const month = date.getMonth()
     const year = date.getFullYear()
     const day = date.getDate()
-    const amountUah = Math.abs(t.amount / 100)
+    const uah = getTransactionAmountUah(t)
+    if (uah === null) continue
+    const amountUah = Math.abs(uah) / KOPECK_DIVISOR
 
     if (year === currentYear && month === currentMonth) {
       currentDailyAmounts[day - 1] += amountUah

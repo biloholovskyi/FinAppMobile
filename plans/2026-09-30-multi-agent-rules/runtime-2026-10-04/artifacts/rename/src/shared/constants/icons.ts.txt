@@ -1,0 +1,2 @@
+/** Lucide icon name used for wallet-to-wallet transfers. */
+export const TRANSFER_ICON_ID = 'arrow-right-left'

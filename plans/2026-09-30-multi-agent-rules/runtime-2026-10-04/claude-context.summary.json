@@ -1,0 +1,92 @@
+{
+  "id": "claude-context",
+  "cwd": "C:\\Projects\\FinApp\\fin-app-mobile",
+  "client": "claude",
+  "args": [
+    "proxy",
+    "claude.exe",
+    "-p",
+    "--output-format",
+    "stream-json",
+    "--verbose",
+    "--model",
+    "sonnet",
+    "--allowedTools",
+    "Read,Glob,Grep,Write,Edit,Agent,Bash(rtk:*)"
+  ],
+  "code": 0,
+  "durationMs": 4090,
+  "changed": [],
+  "commands": [],
+  "messages": [
+    "## Context Usage\n\n**Model:** claude-sonnet-5-5  \n**Tokens:** 34.4k / 1m (3%)\n\n### Estimated usage by category\n\n| Category | Tokens | Percentage |\n|----------|--------|------------|\n| System prompt | 2.3k | 0.2% |\n| System tools | 8.4k | 0.8% |\n| MCP tools | 615 | 0.1% |\n| MCP server instructions | 922 | 0.1% |\n| MCP tools (deferred) | 3.1k | 0.3% |\n| System tools (deferred) | 13.3k | 1.3% |\n| Custom agents | 1.6k | 0.2% |\n| Memory files | 15.9k | 1.6% |\n| Skills | 4.8k | 0.5% |\n| Messages | 10 | 0.0% |\n| Free space | 932.6k | 93.3% |\n| Autocompact buffer | 33k | 3.3% |\n\n### MCP Tools\n\n| Tool | Server | Tokens |\n|------|--------|--------|\n| mcp__claude_ai_Claude_Docs__batch | claude_ai_Claude_Docs | 151 |\n| mcp__claude_ai_Claude_Docs__create | claude_ai_Claude_Docs | 235 |\n| mcp__claude_ai_Claude_Docs__delete | claude_ai_Claude_Docs | 315 |\n| mcp__claude_ai_Claude_Docs__export | claude_ai_Claude_Docs | 298 |\n| mcp__claude_ai_Claude_Docs__guide | claude_ai_Claude_Docs | 191 |\n| mcp__claude_ai_Claude_Docs__query | claude_ai_Claude_Docs | 167 |\n| mcp__claude_ai_Claude_Docs__read | claude_ai_Claude_Docs | 298 |\n| mcp__claude_ai_Claude_Docs__update | claude_ai_Claude_Docs | 273 |\n| mcp__context7__query-docs | context7 | 658 |\n| mcp__context7__resolve-library-id | context7 | 1.1k |\n\n### Custom Agents\n\n| Agent Type | Source | Tokens |\n|------------|--------|--------|\n| code-reviewer | Project | 70 |\n| Codebase Researcher | Project | 68 |\n| Command Runner | Project | 221 |\n| Dependency Analyst | Project | 242 |\n| eas-deployer | Project | 404 |\n| finapp-mobile-expert | Project | 102 |\n| Full Package Auditor | Project | 238 |\n| Plan Auditor | Project | 71 |\n| React Performance Reviewer | Project | 77 |\n| screen-designer | Project | 58 |\n\n### Memory Files\n\n| Type | Path | Tokens |\n|------|------|--------|\n| Project | C:\\Projects\\FinApp\\fin-app-mobile\\CLAUDE.md | 1.2k |\n| Project | C:\\Projects\\FinApp\\fin-app-mobile\\AGENTS.md | 2.4k |\n| Project | C:\\Projects\\FinApp\\fin-app-mobile\\ai\\rules\\common\\response-rules.md | 356 |\n| Project | C:\\Projects\\FinApp\\fin-app-mobile\\ai\\rules\\common\\agent-workflow.md | 1.6k |\n| Project | C:\\Projects\\FinApp\\fin-app-mobile\\ai\\rules\\common\\git-policy.md | 806 |\n| Project | C:\\Projects\\FinApp\\fin-app-mobile\\ai\\rules\\common\\patterns.md | 4.2k |\n| Project | C:\\Projects\\FinApp\\fin-app-mobile\\ai\\rules\\common\\token-economy.md | 1.1k |\n| Project | C:\\Projects\\FinApp\\fin-app-mobile\\ai\\rules\\common\\implementation-plans.md | 4.1k |\n\n### Skills\n\n| Skill | Source | Tokens |\n|-------|--------|--------|\n| audit-plan | Project | ~40 |\n| audit-security | Project | ~20 |\n| commit | Project | ~40 |\n| deploy-preflight | Project | ~50 |\n| eas-status | Project | ~30 |\n| implement-plan-step | Project | ~30 |\n| lint | Project | < 20 |\n| post-code | Project | ~30 |\n| review-react-perf | Project | ~30 |\n| start-task | Project | ~30 |\n| typecheck | Project | ~30 |\n| ui-ux-pro-max | Project | ~280 |\n| dataviz | Built-in | ~480 |\n| update-config | Built-in | ~240 |\n| keybindings-help | Built-in | ~80 |\n| code-review | Built-in | ~330 |\n| simplify | Built-in | ~60 |\n| fewer-permission-prompts | Built-in | ~60 |\n| loop | Built-in | ~120 |\n| schedule | Built-in | ~130 |\n| claude-api | Built-in | ~360 |\n| run | Built-in | ~120 |\n| plugin-authoring | Built-in | ~80 |\n| init | Built-in | ~20 |\n| security-review | Built-in | ~30 |\n| docs | claude.ai sync | ~340 |\n| docx | claude.ai sync | ~320 |\n| google-workspace | claude.ai sync | ~330 |\n| import-memory | claude.ai sync | ~60 |\n| morning | claude.ai sync | ~120 |\n| pdf | claude.ai sync | ~150 |\n| pptx | claude.ai sync | ~330 |\n| skill-creator | claude.ai sync | ~120 |\n| xlsx | claude.ai sync | ~320 |\n\n"
+  ],
+  "terminal": [
+    {
+      "is_error": false,
+      "duration_api_ms": 0,
+      "num_turns": 0,
+      "stop_reason": null,
+      "session_id": "0620d3c6-eb75-4984-a47d-8864837d33c7",
+      "total_cost_usd": 0,
+      "usage": {
+        "output_tokens_details": {
+          "thinking_tokens": 0
+        },
+        "input_tokens": 0,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "output_tokens": 0,
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 0,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "",
+        "iterations": [],
+        "speed": "standard",
+        "fallback_credit": null
+      },
+      "modelUsage": {},
+      "permission_denials": [],
+      "fast_mode_state": "off",
+      "fast_mode_disabled_reason": "sdk_opt_in_required",
+      "subagent_stats": {
+        "spawned": 0,
+        "requested": {
+          "background": 0,
+          "foreground": 0,
+          "unset": 0
+        },
+        "started_in_background": 0,
+        "max_depth": 0,
+        "spawned_by_subagents": 0,
+        "completed": 0,
+        "failed": 0,
+        "killed": {
+          "parent": 0,
+          "user": 0,
+          "system": 0
+        },
+        "refused": {
+          "depth_limit": 0,
+          "concurrency_limit": 0,
+          "budget": 0
+        },
+        "by_type": {}
+      },
+      "subtype": "success",
+      "result": "## Context Usage\n\n**Model:** claude-sonnet-5-5  \n**Tokens:** 34.4k / 1m (3%)\n\n### Estimated usage by category\n\n| Category | Tokens | Percentage |\n|----------|--------|------------|\n| System prompt | 2.3k | 0.2% |\n| System tools | 8.4k | 0.8% |\n| MCP tools | 615 | 0.1% |\n| MCP server instructions | 922 | 0.1% |\n| MCP tools (deferred) | 3.1k | 0.3% |\n| System tools (deferred) | 13.3k | 1.3% |\n| Custom agents | 1.6k | 0.2% |\n| Memory files | 15.9k | 1.6% |\n| Skills | 4.8k | 0.5% |\n| Messages | 10 | 0.0% |\n| Free space | 932.6k | 93.3% |\n| Autocompact buffer | 33k | 3.3% |\n\n### MCP Tools\n\n| Tool | Server | Tokens |\n|------|--------|--------|\n| mcp__claude_ai_Claude_Docs__batch | claude_ai_Claude_Docs | 151 |\n| mcp__claude_ai_Claude_Docs__create | claude_ai_Claude_Docs | 235 |\n| mcp__claude_ai_Claude_Docs__delete | claude_ai_Claude_Docs | 315 |\n| mcp__claude_ai_Claude_Docs__export | claude_ai_Claude_Docs | 298 |\n| mcp__claude_ai_Claude_Docs__guide | claude_ai_Claude_Docs | 191 |\n| mcp__claude_ai_Claude_Docs__query | claude_ai_Claude_Docs | 167 |\n| mcp__claude_ai_Claude_Docs__read | claude_ai_Claude_Docs | 298 |\n| mcp__claude_ai_Claude_Docs__update | claude_ai_Claude_Docs | 273 |\n| mcp__context7__query-docs | context7 | 658 |\n| mcp__context7__resolve-library-id | context7 | 1.1k |\n\n### Custom Agents\n\n| Agent Type | Source | Tokens |\n|------------|--------|--------|\n| code-reviewer | Project | 70 |\n| Codebase Researcher | Project | 68 |\n| Command Runner | Project | 221 |\n| Dependency Analyst | Project | 242 |\n| eas-deployer | Project | 404 |\n| finapp-mobile-expert | Project | 102 |\n| Full Package Auditor | Project | 238 |\n| Plan Auditor | Project | 71 |\n| React Performance Reviewer | Project | 77 |\n| screen-designer | Project | 58 |\n\n### Memory Files\n\n| Type | Path | Tokens |\n|------|------|--------|\n| Project | C:\\Projects\\FinApp\\fin-app-mobile\\CLAUDE.md | 1.2k |\n| Project | C:\\Projects\\FinApp\\fin-app-mobile\\AGENTS.md | 2.4k |\n| Project | C:\\Projects\\FinApp\\fin-app-mobile\\ai\\rules\\common\\response-rules.md | 356 |\n| Project | C:\\Projects\\FinApp\\fin-app-mobile\\ai\\rules\\common\\agent-workflow.md | 1.6k |\n| Project | C:\\Projects\\FinApp\\fin-app-mobile\\ai\\rules\\common\\git-policy.md | 806 |\n| Project | C:\\Projects\\FinApp\\fin-app-mobile\\ai\\rules\\common\\patterns.md | 4.2k |\n| Project | C:\\Projects\\FinApp\\fin-app-mobile\\ai\\rules\\common\\token-economy.md | 1.1k |\n| Project | C:\\Projects\\FinApp\\fin-app-mobile\\ai\\rules\\common\\implementation-plans.md | 4.1k |\n\n### Skills\n\n| Skill | Source | Tokens |\n|-------|--------|--------|\n| audit-plan | Project | ~40 |\n| audit-security | Project | ~20 |\n| commit | Project | ~40 |\n| deploy-preflight | Project | ~50 |\n| eas-status | Project | ~30 |\n| implement-plan-step | Project | ~30 |\n| lint | Project | < 20 |\n| post-code | Project | ~30 |\n| review-react-perf | Project | ~30 |\n| start-task | Project | ~30 |\n| typecheck | Project | ~30 |\n| ui-ux-pro-max | Project | ~280 |\n| dataviz | Built-in | ~480 |\n| update-config | Built-in | ~240 |\n| keybindings-help | Built-in | ~80 |\n| code-review | Built-in | ~330 |\n| simplify | Built-in | ~60 |\n| fewer-permission-prompts | Built-in | ~60 |\n| loop | Built-in | ~120 |\n| schedule | Built-in | ~130 |\n| claude-api | Built-in | ~360 |\n| run | Built-in | ~120 |\n| plugin-authoring | Built-in | ~80 |\n| init | Built-in | ~20 |\n| security-review | Built-in | ~30 |\n| docs | claude.ai sync | ~340 |\n| docx | claude.ai sync | ~320 |\n| google-workspace | claude.ai sync | ~330 |\n| import-memory | claude.ai sync | ~60 |\n| morning | claude.ai sync | ~120 |\n| pdf | claude.ai sync | ~150 |\n| pptx | claude.ai sync | ~330 |\n| skill-creator | claude.ai sync | ~120 |\n| xlsx | claude.ai sync | ~320 |\n\n",
+      "local_command": "context",
+      "type": "result",
+      "duration_ms": 1344,
+      "uuid": "bc28858b-3b0a-4000-8175-c8803efd58de",
+      "queued_turn_count": 0,
+      "result_index": 0
+    }
+  ]
+}

@@ -37,7 +37,12 @@ Agents that declare `memory: project` in their frontmatter:
 - `full-package-auditor` — recurring audit findings, accepted deviations
 - `eas-deployer` — EAS project layout, release decisions, failure causes
 
+## Status of Memory
+
+Memory is a Claude-only optimization. It is never a source of obligations: mandatory agreements and task state live in `ai/**` and `plans/**` (`ai/rules/common/agent-workflow.md`). Role definitions live in `ai/agents/<name>.md`.
+
 ## Related
 
-- `.claude/AGENTS.md` — full agent and skill index
+- `.claude/INDEX.md` — Claude layer index
+- `ai/agents/INDEX.md` — roles, routing, permission matrix
 - `ai/rules/common/ai-models.md` — model tier per agent

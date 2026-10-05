@@ -17,7 +17,7 @@ Optimize AI context: load only what's needed, when needed.
 ## File Loading
 
 Always Load (~200 tokens):
-- `ai/rules/common/core-rules.md` - Entry point with task map
+- `AGENTS.md` - Entry point with the Read First set and the Task → Rule table
 
 Load by Task:
 - TypeScript/async/errors: `ai/rules/common/patterns.md` (~900 tokens)

@@ -42,7 +42,7 @@ Decision rule:
 | 6 | GitHub Actions | `eas update --branch OTA_BRANCH --environment production --message "<commit message> (<sha>)"` |
 | 7 | Expo | Update published; clients on a matching RUNTIME_VERSION pick it up on next launch |
 
-CI does NOT run ESLint — only the type check. Lint is a local gate (`rtk yarn lint`) and part of `/deploy-preflight`.
+CI does NOT run ESLint — only the type check. Lint is a local gate (`rtk yarn lint`) and part of the `deploy-preflight` skill.
 
 ## Native Build (manual)
 
@@ -64,16 +64,17 @@ CI does NOT run ESLint — only the type check. Lint is a local gate (`rtk yarn 
 
 ## Pre-Release Gates
 
-Before merging into PUBLISH_TRIGGER_BRANCH (the `/deploy-preflight` skill runs these in order, stopping at the first failure):
+Before merging into PUBLISH_TRIGGER_BRANCH (the `deploy-preflight` skill runs these in order, stopping at the first failure):
 
 1. `rtk yarn lint`
 2. `rtk yarn tsc --noEmit`
-3. `version` matches across `package.json` and `expo.version` in APP_CONFIG_FILE
-4. `CHANGELOG.md` has a section for the target version dated today
-5. Current branch matches `r-<version>`
-6. EAS_CONFIG_FILE parses and the EAS_BUILD_PROFILE profile exists
-7. `EXPO_PUBLIC_API_URL` is set for the target environment
-8. Native-vs-OTA impact stated; RUNTIME_VERSION bumped only if a native build is required
+3. `rtk yarn agents:check --strict`
+4. `version` matches across `package.json` and `expo.version` in APP_CONFIG_FILE
+5. `CHANGELOG.md` has a section for the target version dated today
+6. Current branch matches `r-<version>`
+7. EAS_CONFIG_FILE parses and the EAS_BUILD_PROFILE profile exists
+8. `EXPO_PUBLIC_API_URL` is set for the target environment
+9. Native-vs-OTA impact stated; RUNTIME_VERSION bumped only if a native build is required
 
 Version and CHANGELOG rules: `ai/rules/common/versioning-changelog.md`.
 

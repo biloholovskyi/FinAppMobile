@@ -1,0 +1,44 @@
+{
+  "id": "agents-root",
+  "cwd": "C:\\Projects\\FinApp\\fin-app-mobile",
+  "client": "codex",
+  "args": [
+    "proxy",
+    "codex.exe",
+    "exec",
+    "--ephemeral",
+    "--json",
+    "--cd",
+    "C:\\Projects\\FinApp\\fin-app-mobile",
+    "-s",
+    "read-only",
+    "-m",
+    "gpt-6-sol",
+    "-c",
+    "model_reasoning_effort=medium",
+    "--skip-git-repo-check",
+    "-"
+  ],
+  "code": 0,
+  "durationMs": 7795,
+  "changed": [
+    "tmp-hook-probe.txt"
+  ],
+  "commands": [],
+  "messages": [
+    "Раздел **Read First** требует прочитать:\n\n- `ai/rules/common/response-rules.md`\n- `ai/rules/common/agent-workflow.md`\n- `ai/rules/common/git-policy.md`\n- `ai/rules/common/patterns.md`\n- `ai/rules/common/token-economy.md`\n\nКоманда проверки конфигурации агентов: `rtk yarn agents:check --strict`."
+  ],
+  "terminal": [
+    {
+      "type": "turn.completed",
+      "usage": {
+        "input_tokens": 20791,
+        "cached_input_tokens": 20608,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 112,
+        "reasoning_output_tokens": 20
+      }
+    }
+  ],
+  "observationNote": "tmp-hook-probe.txt was created concurrently by the separately logged hook-probe session; this read-only run executed no tools."
+}

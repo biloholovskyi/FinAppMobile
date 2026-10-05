@@ -1,0 +1,4 @@
+{"type":"thread.started","thread_id":"01a106f0-8a51-76a3-b66d-ad02a8e5be38"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"Раздел **Read First** требует прочитать:\n\n- `ai/rules/common/response-rules.md`\n- `ai/rules/common/agent-workflow.md`\n- `ai/rules/common/git-policy.md`\n- `ai/rules/common/patterns.md`\n- `ai/rules/common/token-economy.md`\n\nКоманда проверки конфигурации агентов: `rtk yarn agents:check --strict`."}}
+{"type":"turn.completed","usage":{"input_tokens":20791,"cached_input_tokens":20608,"cache_write_input_tokens":0,"output_tokens":112,"reasoning_output_tokens":20}}

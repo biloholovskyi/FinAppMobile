@@ -1,3 +1,5 @@
+> Historical (09.04.2026). Superseded by `plans/2026-09-30-multi-agent-rules/`: entry point `AGENTS.md`, catalogs `ai/rules/INDEX.md` and `.claude/INDEX.md`. File names below describe the layout of that date.
+
 # AI System Migration Design
 
 **Date:** 2026-04-09  
@@ -205,7 +207,7 @@ Source of truth: `ai/rules/projects/fin-app-mobile/state-management.md`
 Создать: `ai/rules/projects/fin-app-mobile/architecture.md`, `ai/rules/projects/fin-app-mobile/state-management.md`
 
 ### Фаза 4 — Compiled indexes и entry points
-Создать: `CLAUDE.md` (корень), `.claude/AGENTS.md`, `ai/rules/AGENTS.md`
+Создать: `CLAUDE.md` (корень), `.claude/AGENTS.md`, `ai/rules/INDEX.md`
 
 ### Фаза 5 — Path-gated stubs
 Преобразовать `.claude/rules/*.md` — добавить `paths:` frontmatter, упростить содержимое до redirect.
@@ -241,7 +243,7 @@ Source of truth: `ai/rules/projects/fin-app-mobile/state-management.md`
 **Новые файлы:** 35
 - `CLAUDE.md`
 - `.claude/AGENTS.md`
-- `ai/rules/AGENTS.md`
+- `ai/rules/INDEX.md`
 - `ai/rules/common/` — 11 файлов
 - `ai/rules/common/performance/` — 14 файлов (13 скопировать + 1 адаптировать)
 - `ai/rules/common/skills/` — 7 файлов

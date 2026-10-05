@@ -1,6 +1,6 @@
 # Tooling
 
-Mission: define shell behavior, package scripts, and the Claude-native configuration layout for `fin-app-mobile`.
+Mission: define shell behavior and package scripts for `fin-app-mobile`, and point to the client-specific configuration layout.
 
 ## Constants
 
@@ -19,28 +19,42 @@ Mission: define shell behavior, package scripts, and the Claude-native configura
 - Never run `npm install` / `pnpm install` here — they desync `yarn.lock`
 - For Expo-ecosystem packages prefer `rtk npx expo install <pkg>` over `yarn add` — it resolves the SDK 57 compatible version
 
-## Claude Layout
+## Agent Layout
 
-`.claude/` is canonical and hand-edited:
-- Rules: `.claude/rules/*.md` — path-gated pointers to `ai/rules/...`
-- Agents: `.claude/agents/*.md`
-- Skills: `.claude/skills/<name>/SKILL.md`
-- Agent memory: `.claude/agent-memory/<agent>/MEMORY.md`
-- Settings: `.claude/settings.json` (project, committed) and `.claude/settings.local.json` (local only)
-- MCP servers: `.mcp.json`
-- Entry point: `CLAUDE.md` (root) → `.claude/rules/*.md` → `ai/rules/AGENTS.md`
+Shared (tool-neutral):
+- Entry point: `AGENTS.md` — read by every client
+- Rules: `ai/rules/**`, catalog `ai/rules/INDEX.md`
+- Skill procedures: `ai/skills/<name>/procedure.md` (+ helper files next to the procedure)
+- Roles: `ai/agents/<name>.md`, routing and permission matrix `ai/agents/INDEX.md`
+
+Claude Code (index `.claude/INDEX.md`):
+- `CLAUDE.md` — `@AGENTS.md` + always-loaded imports + Claude-only rules
+- `.claude/rules/*.md` — `paths`-gated stubs pointing to `ai/rules/**`
+- `.claude/skills/<name>/SKILL.md`, `.claude/agents/<name>.md` — adapters pointing to the canon
+- `.claude/agent-memory/` — Claude-only memory, never a source of obligations
+- `.claude/settings.json` (committed) and `.claude/settings.local.json` (local), `.mcp.json`
+
+Codex (index `.codex/README.md`):
+- `.agents/skills/<name>/SKILL.md` (+ `agents/openai.yaml` for explicit-only skills) — adapters
+- `.codex/agents/<name>.toml` — role adapters
+- `.codex/config.toml`, `.codex/rules/git.rules`, `.codex/hooks.json` + `.codex/hooks/*.mjs`
+
+Adapters hold only metadata and a pointer; `rtk yarn agents:check --strict` verifies canon ↔ adapter pairs, invocation policy, and every referenced path.
 
 Plans live in `plans/` at the project root — never `docs/plans/`.
 
 ## Requirements
 
-- Source rules live under RULES_ROOT; `.claude/rules/*.md` point back to them
+- Source rules live under RULES_ROOT; client rule stubs point back to them
+- After changing any agent configuration file, run `rtk yarn agents:check --strict`
 - Use PACKAGE_MANAGER for project scripts
 - Prefix shell commands with SHELL_PREFIX (`rtk`)
+- Windows fallback: when `rtk yarn …` or `rtk npx …` fails with `[rtk: program not found]` (rtk cannot spawn the `.cmd` shims), run the same command as `rtk proxy yarn.cmd …` or `rtk proxy npx.cmd …`
+- A gate that could not run is reported as not run — never as passed
 - Prefer `rtk yarn <script>` for package scripts
 - Prefer `rtk grep` / `rtk ls` / `rtk read` for search and targeted reads
 - Use PowerShell-native commands when shell features are required on Windows
-- Keep machine-specific permissions in `.claude/settings.local.json`; shared permissions and hooks in `.claude/settings.json`
+- Keep machine-specific permissions in the client's local settings; shared permissions and hooks in the client's project settings
 
 ## Command Reference
 
@@ -68,10 +82,10 @@ EAS:
 - Using unprefixed package-manager commands in assistant-facing docs
 - Adding a `test` script or test tooling without an explicit request
 - Running Unix-only shell aliases on Windows when PowerShell-native commands are needed
-- Duplicating rule content into `.claude/rules/*.md` instead of pointing back to `ai/rules/...`
+- Duplicating rule content into client rule stubs instead of pointing back to `ai/rules/...`
 
 ## Related Rules
 
 - `ai/rules/common/post-code-workflow.md` — required checks after edits
 - `ai/rules/common/deployment.md` — EAS build, OTA update, CI pipeline
-- `ai/rules/common/core-rules.md` — task-to-rule routing
+- `AGENTS.md` — task-to-rule routing

@@ -450,6 +450,30 @@
       letter-spacing: -0.2px;
     }
 
+    /* --- Эквивалент в гривнах под суммой (не-UAH кошелёк, не перевод) --- */
+    .uah-equiv {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+    .uah-equiv .rate-pill {
+      padding: 3px 10px;
+    }
+    .uah-equiv-amount {
+      font-family: 'DM Mono', monospace;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: -0.2px;
+      color: var(--text-secondary);
+    }
+    .uah-equiv-hint {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      font-weight: 400;
+      color: var(--text-muted);
+    }
+
     /* --- Демо-переключатель валюты получателя (только для прототипа) --- */
     .demo-toggle-row {
       padding: 10px 16px 14px;
@@ -749,9 +773,16 @@
           <span class="amount-label">Сумма</span>
           <div class="amount-input-wrap" id="amountWrap">
             <input class="amount-value" id="amountInput" type="text" value="320" inputmode="decimal" maxlength="10">
-            <span class="amount-currency" id="amountCurrency">₽</span>
+            <span class="amount-currency" id="amountCurrency">₴</span>
           </div>
           <span class="amount-hint row-hidden" id="amountHint">Остаток после разделения платежа</span>
+          <div class="uah-equiv row-hidden" id="uahEquiv">
+            <span class="rate-pill">
+              <span class="rate-icon"><i data-lucide="repeat" width="11" height="11"></i></span>
+              <span class="rate-value" id="uahEquivAmount">≈ 0,00 ₴</span>
+            </span>
+            <span class="uah-equiv-hint" id="uahEquivHint">1 $ = 41,10 ₴</span>
+          </div>
         </div>
 
         <div class="form-card">
@@ -761,7 +792,7 @@
             </div>
             <div class="form-row-content">
               <span class="form-row-label">Кошелёк</span>
-              <span class="form-row-value">Monobank</span>
+              <span class="form-row-value" id="walletFromValue">Monobank</span>
             </div>
             <div class="form-row-right">
               <i data-lucide="chevron-right" width="16" height="16" class="chevron"></i>
@@ -795,7 +826,7 @@
             <div class="form-row-right">
               <span class="rate-pill row-hidden" id="ratePill">
                 <span class="rate-icon"><i data-lucide="repeat" width="11" height="11"></i></span>
-                <span class="rate-value" id="rateValue">1 ₽ = 0,011 $</span>
+                <span class="rate-value" id="rateValue">1 ₴ = 0,024 $</span>
               </span>
             </div>
           </div>
@@ -836,6 +867,14 @@
             <div class="form-row-right">
               <i data-lucide="chevron-right" width="16" height="16" class="chevron"></i>
             </div>
+          </div>
+
+          <div class="demo-toggle-row row-hidden" id="rowDemoWallet">
+            <span class="demo-toggle-label">Демо: валюта кошелька</span>
+            <button class="demo-toggle-btn" id="btnDemoWallet" type="button">
+              <i data-lucide="shuffle" width="12" height="12"></i>
+              <span id="demoWalletLabel">Monobank (₴)</span>
+            </button>
           </div>
 
           <div class="demo-toggle-row row-hidden" id="rowDemoToggle">
@@ -885,7 +924,7 @@
               <span class="split-amount-label">Сумма</span>
               <div class="split-amount-input-wrap">
                 <input class="split-amount-input" id="splitAmount" type="text" value="0,00" inputmode="decimal" maxlength="10">
-                <span class="split-amount-currency">₽</span>
+                <span class="split-amount-currency" id="splitCurrency">₴</span>
               </div>
             </div>
           </div>
@@ -921,6 +960,14 @@
     const btnDemoCurrency = document.getElementById('btnDemoCurrency');
     const demoCurrencyLabel = document.getElementById('demoCurrencyLabel');
     const btnSave = document.getElementById('btnSave');
+    const uahEquiv = document.getElementById('uahEquiv');
+    const uahEquivAmount = document.getElementById('uahEquivAmount');
+    const uahEquivHint = document.getElementById('uahEquivHint');
+    const walletFromValue = document.getElementById('walletFromValue');
+    const rowDemoWallet = document.getElementById('rowDemoWallet');
+    const btnDemoWallet = document.getElementById('btnDemoWallet');
+    const demoWalletLabel = document.getElementById('demoWalletLabel');
+    const splitCurrency = document.getElementById('splitCurrency');
 
     const btnSplit = document.getElementById('btnSplit');
     const splitCard = document.getElementById('splitCard');
@@ -948,21 +995,26 @@
     ];
     let splitCatIndex = 1;
 
-    // Демо: валюта кошелька-отправителя всегда ₽ (Monobank).
-    // Переключаем валюту кошелька-получателя между "другой" (USD) и "такой же" (RUB),
+    // Демо: для расхода/дохода переключаем кошелёк между Monobank (₴) и "Валютный счёт (USD)".
+    // Для перевода отправитель всегда ₴ (Monobank).
+    // Переключаем валюту кошелька-получателя между "другой" (USD) и "такой же" (UAH),
     // чтобы показать оба состояния — с курсом и без курса.
     let recipientIsDifferentCurrency = true;
 
-    const SENDER_CURRENCY_SYMBOL = '₽';
+    const SENDER_CURRENCY_SYMBOL = '₴';
 
-    // Демо-курс ₽ -> $ (условный, только для прототипа).
+    // Демо-курс ₴ -> $ (условный, только для прототипа).
     // Меняется, если пользователь вручную правит поле "Зачислено".
-    const DEMO_RATE_RUB_TO_USD = 0.011;
-    let currentRate = DEMO_RATE_RUB_TO_USD;
+    const DEMO_RATE_UAH_TO_USD = 0.024;
+    let currentRate = DEMO_RATE_UAH_TO_USD;
+
+    // Демо-курс $ -> ₴ для эквивалента под суммой (условный, только для прототипа).
+    const DEMO_RATE_USD_TO_UAH = 41.1;
+    let walletIsUsd = false;
 
     const recipientCurrencyMap = {
       different: { code: 'USD', symbol: '$', label: 'USD (другая)', walletName: 'Валютный счёт (USD)' },
-      same:      { code: 'RUB', symbol: '₽', label: 'RUB (такая же)', walletName: 'Накопительный счёт (₽)' },
+      same:      { code: 'UAH', symbol: '₴', label: 'UAH (такая же)', walletName: 'Накопительный счёт (₴)' },
     };
 
     const activeClassMap = {
@@ -1004,7 +1056,8 @@
     }
 
     function parseRu(value) {
-      const parsed = parseFloat(String(value || '0').replace(',', '.'));
+      // ru-RU форматирует тысячи через (узкий) неразрывный пробел — убираем все пробелы
+      const parsed = parseFloat(String(value || '0').replace(/[\s  ]/g, '').replace(',', '.'));
       return Number.isFinite(parsed) ? parsed : 0;
     }
 
@@ -1050,8 +1103,30 @@
       const recipient = activeRecipient();
       walletToValue.textContent = recipient.walletName;
       demoCurrencyLabel.textContent = recipient.label;
-      if (!recipientIsDifferentCurrency) currentRate = DEMO_RATE_RUB_TO_USD;
+      if (!recipientIsDifferentCurrency) currentRate = DEMO_RATE_UAH_TO_USD;
       recalcCreditedFromSent();
+    }
+
+    // Эквивалент в ₴ под суммой: только не-перевод и не-UAH кошелёк.
+    // Сумма берётся из верхнего поля (при разделении — это остаток).
+    function updateUahEquiv() {
+      const isVisible = currentType !== 'transfer' && walletIsUsd;
+      uahEquiv.classList.toggle('row-hidden', !isVisible);
+      if (!isVisible) return;
+      const uahAmount = parseRu(amountInput.value) * DEMO_RATE_USD_TO_UAH;
+      uahEquivAmount.textContent = '≈ ' + formatAmountRu(uahAmount) + ' ₴';
+      uahEquivHint.textContent = '1 $ = ' + formatAmountRu(DEMO_RATE_USD_TO_UAH).replace('.', ',') + ' ₴';
+    }
+
+    // Символ валюты кошелька-отправителя: для перевода всегда ₴.
+    function applyWalletCurrency() {
+      const isUsd = walletIsUsd && currentType !== 'transfer';
+      const symbol = isUsd ? '$' : '₴';
+      amountCurrency.textContent = symbol;
+      splitCurrency.textContent = symbol;
+      walletFromValue.textContent = isUsd ? 'Валютный счёт (USD)' : 'Monobank';
+      demoWalletLabel.textContent = walletIsUsd ? 'Валютный счёт (USD)' : 'Monobank (₴)';
+      updateUahEquiv();
     }
 
     // --- Разделение платежа (только для типа "Расход") ---
@@ -1079,6 +1154,7 @@
       }
       const remainder = splitBaseAmount - amount;
       amountInput.value = formatAmountRu(remainder);
+      updateUahEquiv();
     }
 
     function updateSplitButtonVisibility() {
@@ -1121,6 +1197,7 @@
       amountInput.readOnly = false;
       amountHint.classList.add('row-hidden');
       amountInput.value = formatAmountRu(splitBaseAmount);
+      updateUahEquiv();
 
       updateSplitButtonVisibility();
     }
@@ -1151,17 +1228,20 @@
         rowWalletTo.classList.remove('row-hidden');
         rowCredited.classList.remove('row-hidden');
         rowDemoToggle.classList.remove('row-hidden');
+        rowDemoWallet.classList.add('row-hidden');
         recalcTransferConversion();
       } else {
         rowCategory.classList.remove('row-hidden');
         rowWalletTo.classList.add('row-hidden');
         rowCredited.classList.add('row-hidden');
         rowDemoToggle.classList.add('row-hidden');
+        rowDemoWallet.classList.remove('row-hidden');
       }
 
       if (type !== 'expense' && splitActive) {
         disableSplit();
       }
+      applyWalletCurrency();
       updateSplitButtonVisibility();
 
       btnSave.style.background = saveBgMap[type];
@@ -1175,6 +1255,7 @@
 
     amountInput.addEventListener('input', () => {
       if (currentType === 'transfer') recalcCreditedFromSent();
+      updateUahEquiv();
     });
 
     creditedInput.addEventListener('input', () => {
@@ -1184,6 +1265,11 @@
     btnDemoCurrency.addEventListener('click', () => {
       recipientIsDifferentCurrency = !recipientIsDifferentCurrency;
       recalcTransferConversion();
+    });
+
+    btnDemoWallet.addEventListener('click', () => {
+      walletIsUsd = !walletIsUsd;
+      applyWalletCurrency();
     });
 
     rowWalletTo.classList.add('row-hidden');

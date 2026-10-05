@@ -1,0 +1,3 @@
+[rtk] /!\ No hook installed — run `rtk init -g` for automatic token savings
+2026-10-04T12:39:34.708852Z  WARN codex_core::shell_snapshot: Failed to create shell snapshot for powershell: Shell snapshot not supported yet for PowerShell
+2026-10-04T12:40:08.164176Z ERROR codex_core::tools::router: error=collab spawn failed: Fatal error: failed to load model context for thread 01a106ed-4219-7c91-b0dc-b6ab7eae6419: invalid thread-store request: no rollout found for thread id 01a106ed-4219-7c91-b0dc-b6ab7eae6419

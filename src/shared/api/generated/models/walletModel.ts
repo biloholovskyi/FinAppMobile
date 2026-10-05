@@ -6,6 +6,7 @@
  * OpenAPI spec version: 1.5.0
  */
 import type { WalletModelType } from './walletModelType';
+import type { WalletModelPurpose } from './walletModelPurpose';
 import type { WalletModelIntegrationType } from './walletModelIntegrationType';
 import type { WalletModelSystemId } from './walletModelSystemId';
 
@@ -14,6 +15,7 @@ export interface WalletModel {
   name: string;
   balance: number;
   type: WalletModelType;
+  purpose: WalletModelPurpose;
   currency: string;
   /** @nullable */
   integrationType?: WalletModelIntegrationType;

@@ -44,5 +44,5 @@ yarn-error.*
 # orval generated API — committed intentionally, generated locally via yarn api:generate
 
 # Claude skills python cache
-.claude/skills/**/__pycache__/
+ai/skills/**/__pycache__/
 *.pyc

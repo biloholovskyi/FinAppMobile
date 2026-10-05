@@ -1,0 +1,9 @@
+# Project-level Codex config for fin-app-mobile.
+# Loads only when this project is trusted (see .codex/README.md).
+
+approval_policy = "on-request"
+sandbox_mode = "workspace-write"
+
+[mcp_servers.context7]
+command = "npx"
+args = ["-y", "@upstash/context7-mcp"]

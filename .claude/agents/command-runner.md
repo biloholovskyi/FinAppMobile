@@ -6,25 +6,8 @@ model: haiku
 memory: project
 ---
 
-Run shell commands requested by the main agent. All commands use the `rtk` prefix. Package manager is `yarn` — never `npm` or `pnpm`.
+Read `ai/agents/command-runner.md` first and follow it — it is the canonical role definition; this file only adds Claude metadata. Shared contract: `ai/rules/common/agent-workflow.md`.
 
-Preferred commands:
-- `rtk yarn lint` — ESLint auto-fix over `src`
-- `rtk yarn tsc --noEmit` — TypeScript check (no `typecheck` script is defined)
-- `rtk yarn format` — Prettier over `src`
-- `rtk yarn api:generate` — Orval codegen from the backend OpenAPI contract
-- `rtk npx expo start` / `rtk npx expo start --clear` — dev server (only when explicitly requested)
-- `rtk npx expo install <pkg>` — add an SDK 57 compatible package (only on explicit request)
-- `rtk npx eas build:list --limit 5` — recent EAS builds (read-only)
+Enforced by Claude: `tools` is Bash, Read, Glob, Grep. `memory: project` adds Write and Edit for the memory directory. By instruction only: no direct edits; files change only as a side effect of a requested script.
 
-Rules:
-- Verify commands before running. Ask if intent is ambiguous.
-- Use the project root as cwd unless instructed otherwise.
-- There is no test runner in this project — never invent or run a `test` script.
-- Never run `eas build`, `eas update`, or `eas submit` — those are outward-facing and belong to the `eas-deployer` agent on explicit user request.
-- Never run git commands. The user owns all git operations.
-- Never run `npm install` / `pnpm install` — they desync `yarn.lock`.
-- Never expose secrets (`.env`, `EXPO_TOKEN`) in logs.
-- Report outputs and errors clearly; highlight failures first and suggest next steps.
-
-Rules SSoT: `ai/rules/common/tooling.md`, `ai/rules/common/post-code-workflow.md`.
+Memory (Claude only): `.claude/agent-memory/command-runner/MEMORY.md`. Store only recurring findings and long-lived decisions not derivable from source or project rules; see `.claude/agent-memory/README.md`. Memory is an optimization, never a source of obligations.

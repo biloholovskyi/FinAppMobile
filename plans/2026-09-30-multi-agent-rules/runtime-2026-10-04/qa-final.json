@@ -1,0 +1,32 @@
+{
+  "date": "2026-10-04",
+  "cwd": "C:/Projects/FinApp/fin-app-mobile",
+  "runner": "Command Runner, independent delegated run",
+  "sequence": [
+    {
+      "command": "rtk proxy yarn.cmd lint",
+      "exit_code": 0,
+      "duration_seconds": 5.012,
+      "errors": 0,
+      "warnings": 3,
+      "warning_files": [
+        "src/features/dashboard/DashboardScreen/useDashboardScreen.ts:18:47 — isError unused",
+        "src/features/dashboard/DashboardScreen/useDashboardScreen.ts:18:56 — error unused",
+        "src/shared/api/base.ts:7:26 — import/no-named-as-default-member, axios.create"
+      ]
+    },
+    {
+      "command": "rtk proxy yarn.cmd tsc --noEmit",
+      "exit_code": 0,
+      "duration_seconds": 2.452,
+      "errors": 0
+    },
+    {
+      "command": "rtk proxy yarn.cmd agents:check --strict",
+      "exit_code": 0,
+      "duration_seconds": 0.329,
+      "output": "agents:check (strict) passed: 135 files scanned"
+    }
+  ],
+  "note": "Known Windows RTK shim failure was already demonstrated; the permitted yarn.cmd fallback was used directly. This records the Command Runner's report, not a fabricated raw stdout transcript."
+}

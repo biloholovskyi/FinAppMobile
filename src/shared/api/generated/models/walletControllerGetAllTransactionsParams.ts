@@ -5,6 +5,7 @@
  * Financial application REST API
  * OpenAPI spec version: 1.5.0
  */
+import type { WalletControllerGetAllTransactionsPurpose } from './walletControllerGetAllTransactionsPurpose';
 
 export type WalletControllerGetAllTransactionsParams = {
 /**
@@ -23,4 +24,12 @@ dateFrom?: string;
  * Inclusive upper bound for transactionTime. Filtering is applied only when dateFrom or dateTo is provided.
  */
 dateTo?: string;
+/**
+ * Purpose of the source or the target wallet. Filtering is applied only when the parameter is provided.
+ */
+purpose?: WalletControllerGetAllTransactionsPurpose;
+/**
+ * Wallet id matched against the source or the target wallet. Filtering is applied only when the parameter is provided.
+ */
+walletId?: string;
 };

@@ -1,23 +1,30 @@
 # Post-Code Workflow (fin-app-mobile)
 
-Mandatory quality checks after any code change.
+Mandatory quality checks after any change.
 
 ## Required Steps (In Order)
 
-- Lint: `rtk yarn lint` — fix ALL ESLint errors before proceeding
-- Type Check: `rtk yarn tsc --noEmit` — run only if TypeScript errors suspected
+Stop at the first error and fix it before the next step. A failed step is never reported as a passed QA.
 
-Stop at first error. Fix before moving to next step.
-Never commit code that fails lint.
+1. Code or build config changed (`src/**`, `*.ts`, `*.tsx`, `tsconfig.json`, `eslint.config.js`, `package.json`):
+   - `rtk yarn lint` — fix ALL ESLint errors
+   - `rtk yarn tsc --noEmit` — always, right after lint
+2. Agent configuration changed (`AGENTS.md`, `CLAUDE.md`, `ai/**`, `.claude/**`, `.codex/**`, `.agents/**`):
+   - `rtk yarn agents:check --strict`
+3. Both sets changed: step 1, then step 2; a failure in step 1 stops the sequence and step 2 is reported as not run
+
+Never commit code that fails lint or the type check.
 
 ## One-Line Workflow
 
-`rtk yarn lint && rtk yarn tsc --noEmit`
+- Code: `rtk yarn lint && rtk yarn tsc --noEmit`
+- Agent configuration: `rtk yarn agents:check --strict`
 
 ## Pre-Commit Checklist
 
-- [ ] Lint passes (rtk yarn lint)
-- [ ] No TypeScript errors (if tsc was run)
+- [ ] Lint passes (`rtk yarn lint`)
+- [ ] Type check passes (`rtk yarn tsc --noEmit`)
+- [ ] Agent configuration check passes when agent files changed (`rtk yarn agents:check --strict`)
 - [ ] No console.log in production code
 - [ ] No hardcoded hex colors — use Tailwind tokens only
 - [ ] No inline style={{}} for layout (only for computed dynamic values)
@@ -40,3 +47,4 @@ Missing deps in useCallback/useEffect: add to dependency array
 ## Related Rules
 
 - `ai/rules/projects/fin-app-mobile/architecture.md` — project conventions
+- `ai/rules/common/agent-workflow.md` — reviewer-safe commands without `--fix`

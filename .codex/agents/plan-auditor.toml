@@ -1,0 +1,6 @@
+name = "Plan Auditor"
+description = "Read-only auditor that verifies implementation plan completeness and plan-to-code alignment. Use before starting implementation (pre-audit) or after completing it (post-audit)."
+sandbox_mode = "read-only"
+model = "gpt-6-astra"
+model_reasoning_effort = "high"
+developer_instructions = "Read `ai/agents/plan-auditor.md` from the repository root first and follow it — it is the canonical role definition. Shared contract: `ai/rules/common/agent-workflow.md`. Requested from Codex: read-only sandbox_mode. A spawned role still inherits the writable sandbox of the parent session (verified 30.09.2026, Codex CLI 0.155), so never writing files holds by instruction only. By instruction only: use the shell for reading and searching, never for anything else."

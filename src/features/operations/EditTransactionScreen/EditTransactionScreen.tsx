@@ -32,7 +32,7 @@ export function EditTransactionScreen() {
     isLoading, isSaving, isDeleting, isCreateMode,
     sourceWalletName, walletId,
     type, setType, setAmountStr, description, setDescription, transactionTime, setTransactionTime,
-    split, onRemoveSplit, amountValue, isAmountReadOnly, amountHint,
+    split, onRemoveSplit, amountValue, isAmountReadOnly, amountHint, uahEquivalent,
     sourceWalletId, setSourceWalletId,
     categoryId, setCategoryId, subCategoryId, setSubCategoryId,
     targetWalletId, setTargetWalletId,
@@ -85,6 +85,7 @@ export function EditTransactionScreen() {
             currency={sourceCurrency}
             isReadOnly={isAmountReadOnly}
             hint={amountHint}
+            uahEquivalent={uahEquivalent}
           />
 
           <View className="mx-5 bg-[#10101C] border border-white/[0.08] rounded-2xl overflow-hidden">

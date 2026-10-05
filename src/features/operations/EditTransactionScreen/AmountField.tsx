@@ -1,5 +1,7 @@
 import { View, Text, TextInput } from 'react-native'
 import { getCurrencySymbol } from '@/shared/utils/currency'
+import { AmountUahEquivalent } from './AmountUahEquivalent'
+import type { AmountUahEquivalentState } from './useAmountUahEquivalent'
 
 type AmountFieldProps = {
   value: string
@@ -9,6 +11,7 @@ type AmountFieldProps = {
   currency: string
   isReadOnly?: boolean
   hint?: string | null
+  uahEquivalent?: AmountUahEquivalentState
 }
 
 export function AmountField({
@@ -19,6 +22,7 @@ export function AmountField({
   currency,
   isReadOnly,
   hint,
+  uahEquivalent,
 }: AmountFieldProps) {
   return (
     <View className="items-center px-5 pb-6 gap-1.5">
@@ -44,6 +48,13 @@ export function AmountField({
           {getCurrencySymbol(currency)}
         </Text>
       </View>
+      {uahEquivalent?.isVisible && uahEquivalent.rate !== null ? (
+        <AmountUahEquivalent
+          amountUahKopecks={uahEquivalent.amountUahKopecks}
+          rate={uahEquivalent.rate}
+          currency={currency}
+        />
+      ) : null}
       {hint ? <Text className="text-[#44445A] text-[11px]">{hint}</Text> : null}
     </View>
   )

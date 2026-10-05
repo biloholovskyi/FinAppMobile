@@ -1,0 +1,5 @@
+[rtk] /!\ No hook installed — run `rtk init -g` for automatic token savings
+2026-10-04T12:51:59.811080Z  WARN codex_core::shell_snapshot: Failed to create shell snapshot for powershell: Shell snapshot not supported yet for PowerShell
+2026-10-04T12:51:59.876488Z  WARN codex_mcp::rmcp_client: MCP server startup failed server_name="acceptance_missing" error=program not found
+2026-10-04T12:51:59.876750Z ERROR codex_core::session: Failed to create session: required MCP servers failed to initialize: acceptance_missing: program not found
+Error: thread/start: thread/start failed: error creating thread: Fatal error: Failed to initialize session: required MCP servers failed to initialize: acceptance_missing: program not found (code -32603)

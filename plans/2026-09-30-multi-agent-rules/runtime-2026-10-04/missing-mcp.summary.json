@@ -1,0 +1,32 @@
+{
+  "id": "missing-mcp",
+  "cwd": "C:\\Projects\\FinApp\\fin-app-mobile",
+  "client": "codex",
+  "args": [
+    "proxy",
+    "codex.exe",
+    "exec",
+    "--ephemeral",
+    "-c",
+    "mcp_servers.acceptance_missing.command=__finapp_acceptance_missing_mcp__",
+    "-c",
+    "mcp_servers.acceptance_missing.required=true",
+    "--json",
+    "--cd",
+    "C:\\Projects\\FinApp\\fin-app-mobile",
+    "-s",
+    "read-only",
+    "-m",
+    "gpt-6-sol",
+    "-c",
+    "model_reasoning_effort=medium",
+    "--skip-git-repo-check",
+    "-"
+  ],
+  "code": 1,
+  "durationMs": 1055,
+  "changed": [],
+  "commands": [],
+  "messages": [],
+  "terminal": []
+}

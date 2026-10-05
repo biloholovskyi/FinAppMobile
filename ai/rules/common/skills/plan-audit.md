@@ -35,7 +35,7 @@ Run before any code is written. The plan must exist as a folder `plans/YYYY-MM-D
 - [ ] Acceptance criteria are verifiable (grep scans, command outputs)
 - [ ] Mandatory lifecycle phases are present: Post-code, Audit/Hardening, Docs, CHANGELOG
 - [ ] Phase dependencies are explicit (handoff notes say what the next phase needs)
-- [ ] Docs phase checklist includes stale-doc prevention checks across `ai/rules/**`, `CLAUDE.md`, and `.claude/**`
+- [ ] Docs phase checklist includes stale-doc prevention checks across `ai/rules/**`, client entry points, and client adapter layers
 
 ### Risk Assessment Checklist
 
@@ -75,11 +75,11 @@ Run after all implementation phases are done but before final commit.
 - [ ] Generated Orval output is fresh when the backend contract changed (`rtk yarn api:generate`)
 - [ ] `rtk yarn lint` and `rtk yarn tsc --noEmit` pass
 - [ ] Documentation matches implemented behavior (no stale examples or versions)
-- [ ] Documentation cross-links follow direction: `CLAUDE.md -> ai/rules/** -> plan artifacts`
+- [ ] Documentation cross-links follow direction: `entry points -> ai/rules/** -> plan artifacts`
 
 ### Stale Artifact Sweep
 
-- [ ] No old env var names (`EXPO_PUBLIC_*`), route paths, or query keys left in: `src/`, `ai/rules/`, `.claude/`, `CLAUDE.md`
+- [ ] No old env var names (`EXPO_PUBLIC_*`), route paths, or query keys left in: `src/`, `ai/rules/`, client entry points, client adapter layers
 - [ ] No stale package versions claimed in rules — they must match `package.json`
 - [ ] No TODO/FIXME comments from the plan remain unresolved
 - [ ] No "deferred to Phase X" items left unaddressed

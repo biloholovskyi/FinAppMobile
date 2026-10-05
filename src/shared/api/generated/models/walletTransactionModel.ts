@@ -10,6 +10,9 @@ import type { WalletTransactionModelCategoryId } from './walletTransactionModelC
 import type { WalletTransactionModelSubCategoryId } from './walletTransactionModelSubCategoryId';
 import type { WalletTransactionModelType } from './walletTransactionModelType';
 import type { WalletTransactionModelTargetAmount } from './walletTransactionModelTargetAmount';
+import type { WalletTransactionModelCurrency } from './walletTransactionModelCurrency';
+import type { WalletTransactionModelExchangeRate } from './walletTransactionModelExchangeRate';
+import type { WalletTransactionModelAmountUah } from './walletTransactionModelAmountUah';
 import type { WalletTransactionModelDescription } from './walletTransactionModelDescription';
 import type { WalletTransactionModelExternalId } from './walletTransactionModelExternalId';
 
@@ -26,6 +29,21 @@ export interface WalletTransactionModel {
   amount: number;
   /** @nullable */
   targetAmount?: WalletTransactionModelTargetAmount;
+  /**
+   * Source wallet currency at creation; null for transfers
+   * @nullable
+   */
+  currency?: WalletTransactionModelCurrency;
+  /**
+   * Rate to UAH applied to the transaction; null for transfers
+   * @nullable
+   */
+  exchangeRate?: WalletTransactionModelExchangeRate;
+  /**
+   * UAH equivalent in kopecks; null for transfers
+   * @nullable
+   */
+  amountUah?: WalletTransactionModelAmountUah;
   /** @nullable */
   description?: WalletTransactionModelDescription;
   transactionTime: string;

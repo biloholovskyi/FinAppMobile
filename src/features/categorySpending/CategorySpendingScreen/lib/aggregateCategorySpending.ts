@@ -1,6 +1,9 @@
 import { KOPECK_MULTIPLIER, PERCENT_MULTIPLIER } from '@/shared/constants'
 import type { Transaction } from '@/entities/transaction'
-import { WalletTransactionType } from '@/entities/transaction'
+import {
+  getTransactionAmountUah,
+  WalletTransactionType,
+} from '@/entities/transaction'
 import type { MonthBudgetRow } from '@/shared/api/budgets'
 
 export type SubCategorySpendingRow = {
@@ -40,12 +43,17 @@ export function aggregateCategorySpending(
   const year = selectedMonth.getFullYear()
   const month = selectedMonth.getMonth()
 
-  // 1. Filter: expense type + correct month (UTC to avoid local-timezone shift)
-  const expenses = transactions.filter((t) => {
-    if (t.type !== WalletTransactionType.expense) return false
+  // 1. Filter: expense type + correct month (transactionTime is a real instant; the user's month is the device-local month)
+  // Expenses without a UAH equivalent are excluded so totals and percentages converge
+  const expenses: { t: Transaction; amountUah: number }[] = []
+  for (const t of transactions) {
+    if (t.type !== WalletTransactionType.expense) continue
     const d = new Date(t.transactionTime)
-    return d.getUTCFullYear() === year && d.getUTCMonth() === month
-  })
+    if (d.getFullYear() !== year || d.getMonth() !== month) continue
+    const uah = getTransactionAmountUah(t)
+    if (uah === null) continue
+    expenses.push({ t, amountUah: Math.abs(uah) })
+  }
 
   const totalBudget =
     budgetRows.reduce((sum, r) => sum + r.baseBudget + r.additionalBudget, 0) *
@@ -55,7 +63,7 @@ export function aggregateCategorySpending(
     return { rows: [], summary: { totalBudget, totalSpent: 0 } }
   }
 
-  const totalSpentAll = expenses.reduce((sum, t) => sum + Math.abs(t.amount), 0)
+  const totalSpentAll = expenses.reduce((sum, e) => sum + e.amountUah, 0)
 
   // 2. Group by categoryId
   type SubAccum = { name: string; total: number }
@@ -68,7 +76,7 @@ export function aggregateCategorySpending(
   }
   const categoryMap = new Map<string | null, CatAccum>()
 
-  for (const t of expenses) {
+  for (const { t, amountUah } of expenses) {
     const catKey = t.categoryId ?? null
 
     const catEntry = categoryMap.get(catKey) ?? {
@@ -78,7 +86,7 @@ export function aggregateCategorySpending(
       total: 0,
       subMap: new Map<string, SubAccum>(),
     }
-    catEntry.total += Math.abs(t.amount)
+    catEntry.total += amountUah
     categoryMap.set(catKey, catEntry)
 
     if (t.subCategoryId) {
@@ -86,7 +94,7 @@ export function aggregateCategorySpending(
         name: t.subCategory?.name ?? t.subCategoryId,
         total: 0,
       }
-      subEntry.total += Math.abs(t.amount)
+      subEntry.total += amountUah
       catEntry.subMap.set(t.subCategoryId, subEntry)
     }
   }

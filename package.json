@@ -1,6 +1,6 @@
 {
   "name": "app-skeleton",
-  "version": "1.10.0",
+  "version": "1.11.0",
   "main": "expo-router/entry",
   "scripts": {
     "start": "expo start",
@@ -11,7 +11,8 @@
     "lint": "eslint src --fix",
     "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json}\"",
     "api:generate": "orval --config orval.config.ts",
-    "api:generate:watch": "orval --config orval.config.ts --watch"
+    "api:generate:watch": "orval --config orval.config.ts --watch",
+    "agents:check": "node scripts/check-agent-config.mjs --strict"
   },
   "dependencies": {
     "@react-native-community/datetimepicker": "9.1.0",

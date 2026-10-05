@@ -1,0 +1,2 @@
+[rtk] /!\ No hook installed — run `rtk init -g` for automatic token savings
+Ignoring 54 permissions.allow entries from .claude/settings.json and .claude/settings.local.json: this workspace has not been trusted. Run Claude Code interactively here once and accept the trust dialog, or set projects["C:/Projects/FinApp/fin-app-mobile"].hasTrustDialogAccepted: true in C:\Users\biloh\.claude-acc\.claude.json.

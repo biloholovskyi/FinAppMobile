@@ -28,7 +28,8 @@ import type {
   CreateCreditDto,
   CreateTransactionDto,
   CreditModel,
-  TransactionModel
+  TransactionModel,
+  UpdateCreditDto
 } from '.././models';
 
 import { axiosInstance } from '../../base';
@@ -172,6 +173,64 @@ const {mutation: mutationOptions} = options ?
       > => {
 
       const mutationOptions = getCreditControllerCreateMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    export const creditControllerUpdate = (
+    id: string,
+    updateCreditDto: UpdateCreditDto,
+ ) => {
+      
+      
+      return axiosInstance<CreditModel>(
+      {url: `/credits/${id}`, method: 'PATCH',
+      headers: {'Content-Type': 'application/json', },
+      data: updateCreditDto
+    },
+      );
+    }
+  
+
+
+export const getCreditControllerUpdateMutationOptions = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof creditControllerUpdate>>, TError,{id: string;data: UpdateCreditDto}, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof creditControllerUpdate>>, TError,{id: string;data: UpdateCreditDto}, TContext> => {
+
+const mutationKey = ['creditControllerUpdate'];
+const {mutation: mutationOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof creditControllerUpdate>>, {id: string;data: UpdateCreditDto}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  creditControllerUpdate(id,data,)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreditControllerUpdateMutationResult = NonNullable<Awaited<ReturnType<typeof creditControllerUpdate>>>
+    export type CreditControllerUpdateMutationBody = UpdateCreditDto
+    export type CreditControllerUpdateMutationError = void
+
+    export const useCreditControllerUpdate = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof creditControllerUpdate>>, TError,{id: string;data: UpdateCreditDto}, TContext>, }
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof creditControllerUpdate>>,
+        TError,
+        {id: string;data: UpdateCreditDto},
+        TContext
+      > => {
+
+      const mutationOptions = getCreditControllerUpdateMutationOptions(options);
 
       return useMutation(mutationOptions , queryClient);
     }

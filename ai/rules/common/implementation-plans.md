@@ -45,17 +45,20 @@ Behavior contracts (API shapes, money/locale handling, layer boundaries) must ha
 
 Ownership map:
 - `ai/rules/**` = rule and convention source of truth
-- `CLAUDE.md` + `.claude/**` = Claude entry point, agents, skills, path stubs
+- `AGENTS.md` = shared entry point; links to `ai/**`, never holds rule bodies
+- `ai/skills/**` = skill procedures; `ai/agents/**` = role definitions and routing
+- Client entry points and adapter layers = client-specific adapters; their locations are listed only in `ai/rules/common/tooling.md`, Agent Layout
 - `plans/**` = implementation history, gates, and evidence (one folder per plan)
 - `designs/**` = HTML screen prototypes (design intent, not behavior contracts)
 
 Mandatory link direction:
-1. `CLAUDE.md` links to the owning `ai/rules/**` file, never duplicates its body.
-2. `.claude/rules/*.md` stubs point back to `ai/rules/**` only.
-3. Plan files link to the `ai/rules/**` files whose contracts they change.
+1. `AGENTS.md` and client entry points link to the owning `ai/**` file, never duplicate its body.
+2. Client adapters (rule stubs, skills, agents) point back to `ai/**` only; `ai/**` does not depend on client layers except the Agent Layout section of `ai/rules/common/tooling.md`.
+3. Plan files link to the `ai/**` files whose contracts they change.
+4. Model schedules in plans use tiers (FAST / BALANCED / DEEP / LONG_CONTEXT), never client model names.
 
 Feature/hybrid plan stale-doc checklist:
-- Inventory touched files across `ai/rules/**`, `CLAUDE.md`, `.claude/**`.
+- Inventory touched files across `ai/rules/**`, client entry points, and client adapter layers.
 - Mark one authoritative location per changed convention.
 - Add explicit historical/deprecated markers for superseded content.
 - Verify env keys (`EXPO_PUBLIC_*`) and command examples are consistent across rules and code.
@@ -144,7 +147,7 @@ For each phase (no step skipped):
 2. Self-audit: re-read scope, run verification commands, compare against acceptance criteria
 3. Update history: handoff note (max 7 bullets) in `history.md`, dated
 4. Mark done: update status in the phase file and in the index phase list, with an evidence note
-5. User gate: present results, wait for approval before the next phase. The user shortcut `np` is that approval and also authorises continuing into the following phase without a new gate (`ai/rules/common/response-rules.md`)
+5. User gate: present results, wait for approval before the next phase. The user shortcut `np` is that approval and starts exactly one next phase, which ends at its own user gate (`ai/rules/common/response-rules.md`)
 
 ## Model Protocol
 
@@ -188,7 +191,7 @@ The project has no test framework — PLAN_AUDIT_MIN_RECHECKS is `rtk yarn lint`
 - Do not skip Research or Design for multi-phase work
 - Do not write code during Research, Design, or Plan phases
 - Do not implement multiple phases in one cycle
-- Do not skip the user gate even when asked to "implement the whole plan" — the `np` shortcut is the only standing exception
+- Do not skip the user gate, even when asked to "implement the whole plan" or given `np` — every phase ends at a user gate
 - Do not mark a phase done without verification evidence
 - Do not load all phase files — only the index + active phase
 - Do not leave a phase without its own `phase-XX-{slug}.md` file
@@ -200,7 +203,7 @@ The project has no test framework — PLAN_AUDIT_MIN_RECHECKS is `rtk yarn lint`
 
 ## Cross-References
 
-- `ai/rules/common/core-rules.md` — entry point, task routing
+- `AGENTS.md` — entry point, task routing
 - `ai/rules/common/token-economy.md` — file loading, token budget
 - `ai/rules/common/ai-models.md` — model tier selection
 - `ai/rules/common/post-code-workflow.md` — quality checks
