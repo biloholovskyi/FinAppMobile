@@ -1,13 +1,14 @@
 import { useState, useCallback } from 'react'
 import { View, Text, TouchableOpacity } from 'react-native'
-import { ChevronDown } from 'lucide-react-native'
+import { ChevronDown, ChevronRight } from 'lucide-react-native'
 import { BudgetProgress, BUDGET_PROGRESS_HEIGHT } from './BudgetProgress'
 import { BudgetMetaRow } from './BudgetMetaRow'
 import { PercentBadge } from './PercentBadge'
 import { SpendingIcon } from './SpendingIcon'
-import { SubCategoryItem } from './SubCategoryItem'
+import { SubCategoryList } from './SubCategoryList'
 import { formatKopecksUah, getBudgetProgress } from './lib/spendingFormat'
 import type { CategorySpendingRow } from './lib/aggregateCategorySpending'
+import { buildCategoryRowId } from './lib/flattenSpendingRows'
 
 /** Прозрачность в hex для подложки иконки категории. */
 const ICON_BG_ALPHA = '26'
@@ -17,16 +18,19 @@ const ICON_COLOR_FALLBACK = '#44445A'
 
 type CategoryCardProps = {
   row: CategorySpendingRow
+  /** Открывает шторку транзакций листа. */
+  onOpenLeaf: (leafKey: string) => void
 }
 
 /** Карточка категории с раскрытием списка подкатегорий. */
-export function CategoryCard({ row }: CategoryCardProps) {
+export function CategoryCard({ row, onOpenLeaf }: CategoryCardProps) {
   const [isOpen, setIsOpen] = useState(false)
   const hasSubCategories = row.subCategories.length > 0
 
   const handlePress = useCallback(() => {
     if (hasSubCategories) setIsOpen((v) => !v)
-  }, [hasSubCategories])
+    else onOpenLeaf(buildCategoryRowId(row.categoryId))
+  }, [hasSubCategories, onOpenLeaf, row.categoryId])
 
   const { hasBudget, isExceeded } = getBudgetProgress(row.totalSpent, row.budget)
   const iconColor = row.categoryColor ?? ICON_COLOR_FALLBACK
@@ -43,7 +47,7 @@ export function CategoryCard({ row }: CategoryCardProps) {
     >
       <TouchableOpacity
         onPress={handlePress}
-        activeOpacity={hasSubCategories ? 0.7 : 1}
+        activeOpacity={0.7}
         className="gap-2.5 p-3.5"
       >
         <View className="flex-row items-center gap-2.5">
@@ -90,13 +94,15 @@ export function CategoryCard({ row }: CategoryCardProps) {
             />
           </View>
 
-          <View style={{ opacity: hasSubCategories ? 1 : 0 }}>
+          {hasSubCategories ? (
             <View
               style={{ transform: [{ rotate: isOpen ? '180deg' : '0deg' }] }}
             >
               <ChevronDown size={15} color={isOpen ? '#4F9EFF' : '#44445A'} />
             </View>
-          </View>
+          ) : (
+            <ChevronRight size={15} color="#44445A" />
+          )}
         </View>
 
         {hasBudget && (
@@ -111,13 +117,7 @@ export function CategoryCard({ row }: CategoryCardProps) {
         )}
       </TouchableOpacity>
 
-      {isOpen && hasSubCategories && (
-        <View className="gap-3 border-t border-white/[0.04] px-3.5 pb-3.5 pt-2">
-          {row.subCategories.map((sub) => (
-            <SubCategoryItem key={sub.subCategoryId} row={sub} />
-          ))}
-        </View>
-      )}
+      {isOpen && hasSubCategories && <SubCategoryList row={row} onOpenLeaf={onOpenLeaf} />}
     </View>
   )
 }

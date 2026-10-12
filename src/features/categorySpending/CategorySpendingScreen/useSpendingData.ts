@@ -3,10 +3,13 @@ import { useQuery } from '@tanstack/react-query'
 import { fetchTransactions } from '@/shared/api/transactions'
 import { getMonthBudget } from '@/shared/api/budgets'
 import { QUERY_KEYS } from '@/shared/constants/queryKeys'
+import type { Transaction } from '@/entities/transaction'
 import { aggregateCategorySpending } from './lib/aggregateCategorySpending'
 import type { AggregateResult } from './lib/aggregateCategorySpending'
 
 export type SpendingData = AggregateResult & {
+  /** Все загруженные транзакции — тот же кэш, что у ленты операций. */
+  transactions: Transaction[]
   isLoading: boolean
   isError: boolean
 }
@@ -45,6 +48,7 @@ export function useSpendingData(
   )
 
   return {
+    transactions,
     rows,
     summary,
     isLoading: txLoading || budgetLoading,

@@ -1,4 +1,5 @@
-import { View, Text } from 'react-native'
+import { View, Text, TouchableOpacity } from 'react-native'
+import { ChevronRight } from 'lucide-react-native'
 import { BudgetProgress, BUDGET_PROGRESS_HEIGHT } from './BudgetProgress'
 import { BudgetMetaRow } from './BudgetMetaRow'
 import { PercentBadge } from './PercentBadge'
@@ -27,17 +28,23 @@ function getBadgeVariant(
 
 type SpendingRowCardProps = {
   row: FlatSpendingRow
+  /** Открывает шторку транзакций строки. */
+  onPress: (leafKey: string) => void
 }
 
 /** Строка плоского списка: подкатегория, остаток категории или категория без подкатегорий. */
-export function SpendingRowCard({ row }: SpendingRowCardProps) {
+export function SpendingRowCard({ row, onPress }: SpendingRowCardProps) {
   const { hasBudget, isExceeded } = getBudgetProgress(row.totalSpent, row.budget)
   const isMuted = row.id === UNCATEGORIZED_ROW_ID
   const iconColor = row.color ?? ICON_COLOR_FALLBACK
   const amountColor = isExceeded ? '#FF4B6B' : isMuted ? '#8888AA' : '#F2F2FF'
 
   return (
-    <View className="gap-2.5 overflow-hidden rounded-2xl border border-white/[0.08] bg-[#10101C] p-3.5">
+    <TouchableOpacity
+      className="gap-2.5 overflow-hidden rounded-2xl border border-white/[0.08] bg-[#10101C] p-3.5"
+      activeOpacity={0.7}
+      onPress={() => onPress(row.id)}
+    >
       <View className="flex-row items-center gap-2.5">
         <View
           className="h-9 w-9 items-center justify-center rounded-lg"
@@ -72,6 +79,7 @@ export function SpendingRowCard({ row }: SpendingRowCardProps) {
             variant={getBadgeVariant(isMuted, isExceeded)}
           />
         </View>
+        <ChevronRight size={15} color="#44445A" />
       </View>
 
       <View className="gap-1.5">
@@ -88,6 +96,6 @@ export function SpendingRowCard({ row }: SpendingRowCardProps) {
           </Text>
         )}
       </View>
-    </View>
+    </TouchableOpacity>
   )
 }

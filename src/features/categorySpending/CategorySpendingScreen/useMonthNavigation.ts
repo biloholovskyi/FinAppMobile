@@ -1,11 +1,5 @@
 import { useState, useCallback, useMemo } from 'react'
-
-/** Месяц в формате, пригодном для ключа запроса бюджета. */
-function toMonthStr(date: Date): string {
-  const year = date.getFullYear()
-  const month = String(date.getMonth() + 1).padStart(2, '0')
-  return `${year}-${month}-01T00:00:00.000Z`
-}
+import { toMonthStr } from '../lib/parseMonthStr'
 
 function startOfMonth(date: Date): Date {
   return new Date(date.getFullYear(), date.getMonth(), 1)

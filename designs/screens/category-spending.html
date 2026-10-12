@@ -35,6 +35,20 @@
       --accent-purple:      #A374FF;
       --accent-purple-glow: rgba(163,116,255,0.2);
 
+      --tint-blue:   rgba(79,158,255,0.14);
+      --tint-red:    rgba(255,75,107,0.14);
+      --tint-purple: rgba(163,116,255,0.14);
+      --tint-green:  rgba(0,224,137,0.12);
+      --tint-amber:  rgba(255,176,32,0.14);
+      --tint-muted:  rgba(68,68,90,0.25);
+      --scrim:       rgba(5,5,8,0.62);
+      --scrim-strong: rgba(5,5,8,0.72);
+      --red-soft:    rgba(255,75,107,0.10);
+      --red-line:    rgba(255,75,107,0.35);
+      --shadow-acc-red:   0 4px 16px rgba(255,75,107,0.3);
+      --shadow-acc-green: 0 4px 16px rgba(0,224,137,0.25);
+      --shadow-acc-blue:  0 4px 16px rgba(79,158,255,0.3);
+
       --text-primary:   #F2F2FF;
       --text-secondary: #8888AA;
       --text-muted:     #44445A;
@@ -630,6 +644,649 @@
       padding: 2px 12px;
     }
     .tab-item.active { color: var(--accent-blue); }
+
+    /* ── Leaf affordance (opens transactions) ── */
+    [data-leaf]:focus-visible { outline: 2px solid var(--accent-blue); outline-offset: -2px; }
+
+    .cat-chevron.leaf { color: var(--text-muted); }
+    .cat-chevron.leaf svg { transition: transform var(--t-fast) var(--ease-out); }
+
+    .cat-header.is-leaf,
+    .sub-item.leaf,
+    .flat-item[data-leaf] {
+      cursor: pointer;
+      transition: background var(--t-fast) var(--ease-out),
+                  border-color var(--t-fast) var(--ease-out);
+    }
+
+    .cat-header.is-leaf:hover { background: var(--border-subtle); }
+    .cat-header.is-leaf:active { background: var(--border-default); }
+
+    .flat-item[data-leaf]:hover { background: var(--bg-elevated); border-color: var(--border-strong); }
+    .flat-item[data-leaf]:active { background: var(--bg-overlay); }
+
+    .sub-item.leaf {
+      margin: -6px -8px;
+      padding: 6px 8px;
+      border-radius: var(--radius-sm);
+    }
+    .sub-item.leaf:hover { background: var(--border-subtle); }
+    .sub-item.leaf:active { background: var(--border-default); }
+
+    .cat-header.is-leaf:hover .cat-chevron.leaf,
+    .sub-item.leaf:hover .cat-chevron.leaf,
+    .flat-item[data-leaf]:hover .cat-chevron.leaf { color: var(--accent-blue); }
+
+    .cat-header.is-leaf:hover .cat-chevron.leaf svg,
+    .sub-item.leaf:hover .cat-chevron.leaf svg,
+    .flat-item[data-leaf]:hover .cat-chevron.leaf svg { transform: translateX(2px); }
+
+    /* ── Pill ── */
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+      font-family: 'Outfit', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+    }
+    .pill-blue { background: var(--accent-blue-glow); color: var(--accent-blue); }
+
+    /* ── Bottom sheet: transactions ── */
+    .sheet-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 50;
+      pointer-events: none;
+      visibility: hidden;
+      transition: visibility 0s linear var(--t-slow);
+    }
+    .sheet-layer.open {
+      pointer-events: auto;
+      visibility: visible;
+      transition-delay: 0s;
+    }
+
+    .sheet-backdrop {
+      position: absolute;
+      inset: 0;
+      background: var(--scrim);
+      -webkit-backdrop-filter: blur(6px);
+      backdrop-filter: blur(6px);
+      opacity: 0;
+      transition: opacity var(--t-base) var(--ease-out);
+    }
+    .sheet-layer.open .sheet-backdrop { opacity: 1; }
+
+    .sheet {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      max-height: 85%;
+      display: flex;
+      flex-direction: column;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-default);
+      border-bottom: none;
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+      box-shadow: var(--shadow-card);
+      transform: translateY(100%);
+      transition: transform var(--t-slow) var(--ease-spring);
+    }
+    .sheet::after {
+      /* hides the gap that the spring overshoot would expose */
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      height: 48px;
+      background: var(--bg-surface);
+    }
+    .sheet-layer.open .sheet { transform: translateY(0); }
+
+    .sheet-head {
+      flex-shrink: 0;
+      padding: 8px 16px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      border-bottom: 1px solid var(--border-subtle);
+      touch-action: none;
+      cursor: grab;
+    }
+
+    .sheet-handle {
+      width: 38px;
+      height: 4px;
+      border-radius: var(--radius-full);
+      background: var(--border-strong);
+      margin: 0 auto 4px;
+    }
+
+    .sheet-title-row { display: flex; align-items: center; gap: 12px; }
+
+    .sheet-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .sheet-sub {
+      font-family: 'Outfit', sans-serif;
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-top: 2px;
+    }
+
+    .sheet-close {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-sm);
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: background var(--t-fast) var(--ease-out), color var(--t-fast) var(--ease-out);
+    }
+    .sheet-close:hover { background: var(--bg-overlay); color: var(--text-primary); }
+    .sheet-close:active { background: var(--border-strong); }
+
+    .sheet-month { align-self: flex-start; }
+
+    .sheet-body {
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      overflow-x: hidden;
+      scrollbar-width: none;
+      padding: 12px 16px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .sheet-body::-webkit-scrollbar { display: none; }
+
+    /* Summary strip */
+    .tx-summary {
+      background: var(--bg-base);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-md);
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+    .tx-stats { display: flex; justify-content: space-between; }
+    .tx-stat { display: flex; flex-direction: column; gap: 3px; }
+    .tx-stat.center { align-items: center; }
+    .tx-stat.end { align-items: flex-end; }
+    .tx-stat-value.over { color: var(--accent-red); }
+    .tx-track-empty { background: var(--border-subtle); }
+    .tx-no-budget { color: var(--text-muted); font-style: italic; }
+
+    /* Day groups */
+    .tx-days { display: flex; flex-direction: column; gap: 4px; flex-shrink: 0; }
+
+    .tx-day-head {
+      position: sticky;
+      top: -12px;
+      z-index: 2;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 12px 0 6px;
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .tx-day-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .tx-day-total {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      font-weight: 400;
+      color: var(--text-secondary);
+    }
+
+    .tx-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 8px;
+      margin: 0 -8px;
+      border-radius: var(--radius-sm);
+      transition: background var(--t-fast) var(--ease-out);
+      animation: fadeUp var(--t-base) var(--ease-out) both;
+    }
+    .tx-row:hover { background: var(--border-subtle); }
+    .tx-row:active { background: var(--border-default); }
+
+    .tx-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+    .tx-merchant {
+      font-family: 'Outfit', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .tx-meta {
+      font-family: 'Outfit', sans-serif;
+      font-size: 11px;
+      color: var(--text-secondary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .tx-meta .tx-acc { color: var(--text-muted); }
+
+    .tx-side { display: flex; flex-direction: column; align-items: flex-end; gap: 3px; flex-shrink: 0; }
+    .amount-negative { color: var(--accent-red); font-family: 'Space Mono', monospace; font-weight: 700; font-size: 13px; }
+    .tx-fx {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      color: var(--text-secondary);
+    }
+
+    /* Empty state */
+    .tx-empty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      padding: 36px 16px 16px;
+      text-align: center;
+      animation: fadeUp var(--t-slow) var(--ease-out) both;
+    }
+    .tx-empty-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: var(--radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-default);
+      color: var(--text-muted);
+    }
+    .tx-empty-title { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 600; color: var(--text-primary); }
+    .tx-empty-text { font-family: 'Outfit', sans-serif; font-size: 12px; font-weight: 300; color: var(--text-secondary); max-width: 220px; }
+
+    /* ── Editable transactions: row actions ── */
+    [hidden] { display: none !important; }
+    .tx-row { cursor: pointer; }
+    .tx-row:focus-visible { outline: 2px solid var(--accent-blue); outline-offset: -2px; }
+    .sheet-body.no-anim .tx-row { animation: none; }
+    .tx-actions { display: flex; gap: 6px; flex-shrink: 0; }
+    .tx-act {
+      width: 26px;
+      height: 26px;
+      border: none;
+      border-radius: var(--radius-full);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: opacity var(--t-fast) var(--ease-out), transform var(--t-fast) var(--ease-spring);
+    }
+    .tx-act:hover { opacity: 0.8; }
+    .tx-act:active { transform: scale(0.9); }
+    .tx-act.edit { background: var(--accent-blue-glow); color: var(--accent-blue); }
+    .tx-act.delete { background: var(--accent-red-glow); color: var(--accent-red); }
+
+    /* Dynamic list helpers */
+    .amt-over { color: var(--accent-red) !important; }
+    .amt-muted { color: var(--text-secondary) !important; }
+    .name-muted { color: var(--text-secondary) !important; }
+    .italic { font-style: italic; }
+    .sub-dot.over { background: var(--accent-red); opacity: 0.6; }
+    .sub-bar { padding-left: 13px; }
+    .summary-stat.center { align-items: center; }
+    .summary-stat.end { align-items: flex-end; }
+    .summary-stat-value.ok { color: var(--accent-green); }
+    .summary-stat-value.over { color: var(--accent-red); }
+    .summary-foot { display: flex; flex-direction: column; gap: 5px; }
+    .summary-foot-meta {
+      display: flex;
+      justify-content: space-between;
+      font-family: 'Outfit', sans-serif;
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    /* ── Pushed route: edit transaction ── */
+    :root {
+      --acc: var(--accent-red);
+      --acc-glow: var(--accent-red-glow);
+      --acc-shadow: var(--shadow-acc-red);
+    }
+    .route-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 60;
+      background: var(--bg-base);
+      transform: translateX(100%);
+      visibility: hidden;
+      transition: transform var(--t-base) var(--ease-out), visibility 0s linear var(--t-base);
+    }
+    .route-layer.open {
+      transform: translateX(0);
+      visibility: visible;
+      transition-delay: 0s;
+    }
+    .ep { height: 100%; display: flex; flex-direction: column; }
+    .ep[data-type="expense"]  { --acc: var(--accent-red);   --acc-glow: var(--accent-red-glow);   --acc-shadow: var(--shadow-acc-red); }
+    .ep[data-type="income"]   { --acc: var(--accent-green); --acc-glow: var(--accent-green-glow); --acc-shadow: var(--shadow-acc-green); }
+    .ep[data-type="transfer"] { --acc: var(--accent-blue);  --acc-glow: var(--accent-blue-glow);  --acc-shadow: var(--shadow-acc-blue); }
+
+    .ep-nav { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px 10px; flex-shrink: 0; }
+    .ep-back {
+      display: flex; align-items: center; gap: 6px;
+      background: none; border: none; padding: 4px 0; cursor: pointer;
+      color: var(--accent-blue);
+      font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 500;
+      transition: opacity var(--t-fast) var(--ease-out);
+    }
+    .ep-back:hover { opacity: 0.7; }
+    .ep-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 17px; color: var(--text-primary); }
+    .ep-nav-right { width: 60px; }
+
+    .ep-scroll { flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden; scrollbar-width: none; padding-bottom: 16px; }
+    .ep-scroll::-webkit-scrollbar { display: none; }
+
+    .ep-segment-wrap { padding: 0 20px 16px; }
+    .ep-segment {
+      display: flex; gap: 2px; padding: 4px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-md);
+    }
+    .ep-seg-btn {
+      flex: 1; padding: 8px 0; border: none; border-radius: var(--radius-sm);
+      background: transparent; color: var(--text-muted); cursor: pointer;
+      font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 600;
+      transition: background var(--t-base) var(--ease-out), color var(--t-base) var(--ease-out);
+    }
+    .ep-seg-btn.active { background: var(--acc-glow); color: var(--acc); }
+
+    .ep-amount { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 8px 20px 24px; }
+    .ep-amount-label {
+      font-family: 'Outfit', sans-serif; font-size: 11px; font-weight: 500;
+      color: var(--text-secondary); letter-spacing: 0.6px; text-transform: uppercase;
+    }
+    .ep-amount-wrap {
+      display: flex; align-items: baseline; justify-content: center; gap: 4px;
+      width: 100%; padding-bottom: 10px;
+      border-bottom: 2px solid var(--acc);
+      transition: border-color var(--t-fast) var(--ease-out);
+    }
+    .ep-amount-wrap.readonly { border-bottom-color: var(--text-muted); }
+    .ep-sign { font-family: 'Space Mono', monospace; font-size: 36px; font-weight: 700; color: var(--acc); margin-right: 2px; }
+    .ep-amount-input {
+      font-family: 'Space Mono', monospace; font-size: 38px; font-weight: 700;
+      color: var(--text-primary); background: none; border: none; outline: none;
+      text-align: center; width: 200px; min-width: 40px; letter-spacing: -2px; caret-color: var(--acc);
+    }
+    .ep-amount-input[readonly] { color: var(--text-secondary); caret-color: transparent; cursor: default; }
+    .ep-cur { font-family: 'Space Mono', monospace; font-size: 24px; font-weight: 700; color: var(--text-secondary); }
+    .ep-hint { font-family: 'Outfit', sans-serif; font-size: 11px; color: var(--text-muted); }
+    .ep-equiv { display: flex; flex-direction: column; align-items: center; gap: 4px; padding-top: 4px; }
+    .ep-equiv-pill {
+      padding: 4px 10px; border-radius: var(--radius-full);
+      background: var(--accent-blue-glow); color: var(--accent-blue);
+      font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 600;
+    }
+    .ep-equiv-hint { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--text-muted); }
+
+    .ep-card {
+      margin: 0 20px; overflow: hidden;
+      background: var(--bg-surface); border: 1px solid var(--border-default);
+      border-radius: var(--radius-md); box-shadow: var(--shadow-card);
+    }
+    .ep-card + .ep-card { margin-top: 12px; }
+    .ep-row {
+      display: flex; align-items: center; gap: 12px; padding: 14px 16px; width: 100%;
+      background: none; border: none; border-bottom: 1px solid var(--border-subtle);
+      text-align: left; font: inherit; color: inherit;
+    }
+    .ep-row:last-child { border-bottom: none; }
+    button.ep-row { cursor: pointer; transition: background var(--t-fast) var(--ease-out); }
+    button.ep-row:hover { background: var(--border-subtle); }
+    button.ep-row:active { background: var(--border-default); }
+    .ep-row-icon {
+      width: 30px; height: 30px; flex-shrink: 0; border-radius: var(--radius-sm);
+      display: flex; align-items: center; justify-content: center;
+      background: var(--bg-elevated); border: 1px solid var(--border-subtle); color: var(--text-secondary);
+    }
+    .ep-row-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+    .ep-row-label { font-family: 'Outfit', sans-serif; font-size: 11px; font-weight: 500; color: var(--text-secondary); }
+    .ep-row-value { font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 500; color: var(--text-primary); }
+    .ep-row-value.empty { color: var(--text-muted); font-weight: 400; }
+    .ep-badge {
+      align-self: flex-start; padding: 2px 8px; border-radius: var(--radius-full);
+      font-family: 'Outfit', sans-serif; font-size: 12px; font-weight: 500;
+    }
+    .ep-input {
+      width: 100%; background: none; border: none; outline: none;
+      font-family: 'Outfit', sans-serif; font-size: 14px; color: var(--text-primary);
+    }
+    .ep-input::placeholder { color: var(--text-muted); }
+    .ep-chevron { color: var(--text-muted); flex-shrink: 0; }
+    .ep-money-input {
+      width: 110px; padding: 0; background: none; border: none; outline: none;
+      font-family: 'Space Mono', monospace; font-size: 17px; font-weight: 700; letter-spacing: -0.3px;
+    }
+    .ep-money-input.blue { color: var(--accent-blue); caret-color: var(--accent-blue); }
+    .ep-money-input.red { color: var(--accent-red); caret-color: var(--accent-red); }
+    .ep-money-line { display: flex; align-items: baseline; gap: 4px; }
+    .ep-money-sym { font-family: 'Space Mono', monospace; font-size: 17px; font-weight: 700; }
+    .ep-money-sym.blue { color: var(--accent-blue); }
+    .ep-money-sym.red { color: var(--accent-red); }
+    .ep-rate-pill {
+      display: inline-flex; align-items: center; gap: 5px; flex-shrink: 0; white-space: nowrap;
+      padding: 4px 10px; border-radius: var(--radius-full);
+      background: var(--accent-blue-glow); color: var(--accent-blue);
+      font-family: 'Outfit', sans-serif; font-size: 11px; font-weight: 500;
+    }
+
+    .ep-split-btn {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      width: calc(100% - 40px); margin: 12px 20px 0; padding: 14px 20px; cursor: pointer;
+      background: var(--bg-surface); border: 1px solid var(--border-default); border-radius: var(--radius-md);
+      color: var(--text-secondary); font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 500;
+      transition: background var(--t-fast) var(--ease-out), color var(--t-fast) var(--ease-out);
+    }
+    .ep-split-btn:hover { background: var(--bg-elevated); color: var(--text-primary); }
+    .ep-split-card { margin-top: 12px; animation: scaleIn var(--t-base) var(--ease-out) both; }
+    .ep-split-head { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px 10px; }
+    .ep-split-title { font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 600; color: var(--text-primary); }
+    .ep-split-sub { font-family: 'Outfit', sans-serif; font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+    .ep-icon-btn {
+      padding: 6px; border: none; background: none; cursor: pointer; color: var(--accent-red);
+      display: flex; border-radius: var(--radius-sm); transition: background var(--t-fast) var(--ease-out);
+    }
+    .ep-icon-btn:hover { background: var(--accent-red-glow); }
+
+    .ep-actions { display: flex; flex-direction: column; gap: 10px; padding: 20px 20px 0; }
+    .ep-error {
+      display: flex; align-items: flex-start; gap: 10px; padding: 12px 14px;
+      background: var(--red-soft); border: 1px solid var(--red-line); border-radius: var(--radius-md);
+      animation: errorIn var(--t-base) var(--ease-out) both, errorShake 400ms var(--ease-out) 280ms;
+    }
+    .ep-error-icon {
+      width: 26px; height: 26px; flex-shrink: 0; border-radius: var(--radius-sm);
+      display: flex; align-items: center; justify-content: center;
+      background: var(--accent-red-glow); color: var(--accent-red);
+    }
+    .ep-error-text {
+      flex: 1; min-width: 0; padding-top: 3px;
+      font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 500; line-height: 1.45; color: var(--accent-red);
+    }
+    .ep-error-close {
+      display: flex; padding: 4px; margin: -2px -4px 0 0; flex-shrink: 0;
+      background: none; border: none; cursor: pointer; color: var(--accent-red); opacity: 0.6;
+      transition: opacity var(--t-fast) var(--ease-out);
+    }
+    .ep-error-close:hover { opacity: 1; }
+    @keyframes errorIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes errorShake {
+      0%, 100% { transform: translateX(0); } 20% { transform: translateX(-4px); }
+      40% { transform: translateX(4px); } 60% { transform: translateX(-3px); } 80% { transform: translateX(2px); }
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .btn-save {
+      display: flex; align-items: center; justify-content: center; width: 100%; min-height: 50px;
+      padding: 15px 24px; border: none; border-radius: var(--radius-md); cursor: pointer;
+      background: var(--acc); color: var(--text-inverse); box-shadow: var(--acc-shadow);
+      font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 600;
+      transition: transform var(--t-fast) var(--ease-spring), box-shadow var(--t-base) var(--ease-out), opacity var(--t-fast);
+    }
+    .btn-save:hover:not(:disabled) { transform: scale(1.02); }
+    .btn-save:active:not(:disabled) { transform: scale(0.98); }
+    .btn-save:disabled, .btn-remove:disabled { opacity: 0.6; cursor: default; }
+    .btn-remove {
+      width: 100%; padding: 12px 24px; background: none; border: none; cursor: pointer; text-align: center;
+      color: var(--accent-red); font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 500;
+      transition: opacity var(--t-fast) var(--ease-out);
+    }
+    .btn-remove:hover:not(:disabled) { opacity: 0.7; }
+    .spinner {
+      width: 18px; height: 18px; border-radius: var(--radius-full);
+      border: 2px solid var(--border-strong); border-top-color: var(--text-inverse);
+      animation: spin 700ms linear infinite;
+    }
+    .spinner.light { border-top-color: var(--text-primary); }
+    .spinner.red { border-top-color: var(--accent-red); }
+
+    /* ── Pickers (category, wallet, date) ── */
+    .pick-layer, .confirm-layer {
+      position: absolute; inset: 0; pointer-events: none; visibility: hidden;
+      transition: visibility 0s linear var(--t-slow);
+    }
+    .pick-layer { z-index: 70; }
+    .confirm-layer { z-index: 80; }
+    .pick-layer.open, .confirm-layer.open { pointer-events: auto; visibility: visible; transition-delay: 0s; }
+    .pick-backdrop, .confirm-backdrop {
+      position: absolute; inset: 0; opacity: 0;
+      background: var(--scrim-strong);
+      -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+      transition: opacity var(--t-base) var(--ease-out);
+    }
+    .pick-layer.open .pick-backdrop, .confirm-layer.open .confirm-backdrop { opacity: 1; }
+    .pick-sheet, .confirm-sheet {
+      position: absolute; left: 0; right: 0; bottom: 0;
+      display: flex; flex-direction: column;
+      background: var(--bg-surface); border: 1px solid var(--border-default); border-bottom: none;
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+      transform: translateY(100%); transition: transform var(--t-slow) var(--ease-spring);
+    }
+    .pick-sheet::after, .confirm-sheet::after {
+      content: ''; position: absolute; top: 100%; left: 0; right: 0; height: 48px; background: var(--bg-surface);
+    }
+    .pick-layer.open .pick-sheet, .confirm-layer.open .confirm-sheet { transform: translateY(0); }
+    .pick-sheet { max-height: 65%; }
+    .pick-head {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 20px; border-bottom: 1px solid var(--border-subtle); flex-shrink: 0;
+    }
+    .pick-title { font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 600; color: var(--text-primary); }
+    .pick-body { overflow-y: auto; scrollbar-width: none; padding-bottom: 24px; }
+    .pick-body::-webkit-scrollbar { display: none; }
+    .pick-item {
+      display: flex; align-items: center; gap: 12px; width: 100%; padding: 12px 16px;
+      background: none; border: none; border-bottom: 1px solid var(--border-subtle); cursor: pointer; text-align: left;
+      transition: background var(--t-fast) var(--ease-out);
+    }
+    .pick-item:hover { background: var(--border-subtle); }
+    .pick-item:active { background: var(--border-default); }
+    .pick-item-icon { width: 32px; height: 32px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; }
+    .pick-item-name { flex: 1; font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 500; color: var(--text-primary); }
+    .pick-check { color: var(--accent-blue); }
+    .pick-date { padding: 20px; display: flex; flex-direction: column; gap: 16px; }
+    .pick-date-input {
+      width: 100%; padding: 14px; color-scheme: dark;
+      background: var(--bg-elevated); border: 1px solid var(--border-default); border-radius: var(--radius-md);
+      color: var(--text-primary); font-family: 'Space Mono', monospace; font-size: 15px; outline: none;
+    }
+    .pick-date-input:focus { border-color: var(--accent-blue); }
+    .btn-primary {
+      width: 100%; padding: 15px 24px; border: none; border-radius: var(--radius-md); cursor: pointer;
+      background: var(--accent-blue); color: var(--text-inverse);
+      font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 600;
+      transition: transform var(--t-fast) var(--ease-spring), box-shadow var(--t-base) var(--ease-out);
+    }
+    .btn-primary:hover { transform: scale(1.02); box-shadow: var(--glow-blue); }
+    .btn-primary:active { transform: scale(0.98); }
+
+    /* ── Delete confirmation ── */
+    .confirm-sheet { align-items: center; padding: 14px 20px 28px; box-shadow: var(--shadow-card); }
+    .confirm-grabber { width: 36px; height: 4px; border-radius: var(--radius-full); background: var(--border-strong); margin-bottom: 18px; }
+    .confirm-icon {
+      width: 56px; height: 56px; border-radius: var(--radius-full); margin-bottom: 16px;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--accent-red-glow); color: var(--accent-red); box-shadow: var(--glow-red);
+    }
+    .confirm-title { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 700; color: var(--text-primary); text-align: center; margin-bottom: 16px; }
+    .confirm-card {
+      width: 100%; padding: 4px 14px; margin-bottom: 16px;
+      background: var(--bg-elevated); border: 1px solid var(--border-default); border-radius: var(--radius-md);
+    }
+    .dl-item { display: flex; align-items: center; gap: 12px; padding: 12px 0; }
+    .dl-icon { width: 38px; height: 38px; flex-shrink: 0; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; }
+    .dl-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+    .dl-desc { font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 500; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .dl-badge { align-self: flex-start; padding: 2px 7px; border-radius: var(--radius-full); font-family: 'Outfit', sans-serif; font-size: 10px; font-weight: 500; }
+    .dl-wallet { font-family: 'Outfit', sans-serif; font-size: 10px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .dl-right { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; flex-shrink: 0; }
+    .dl-amount { font-family: 'Space Mono', monospace; font-size: 13px; font-weight: 700; }
+    .dl-time { font-family: 'Outfit', sans-serif; font-size: 10px; color: var(--text-muted); }
+    .confirm-warning { display: flex; align-items: flex-start; gap: 8px; width: 100%; padding: 0 4px; margin-bottom: 24px; }
+    .confirm-warning i, .confirm-warning svg { color: var(--accent-amber); flex-shrink: 0; margin-top: 1px; }
+    .confirm-warning-text { font-family: 'Outfit', sans-serif; font-size: 12px; line-height: 1.5; color: var(--text-secondary); }
+    .confirm-actions { display: flex; gap: 10px; width: 100%; }
+    .btn-cancel, .btn-confirm-delete {
+      flex: 1; height: 50px; display: flex; align-items: center; justify-content: center; gap: 6px;
+      border-radius: var(--radius-md); cursor: pointer;
+      font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 600;
+      transition: transform var(--t-fast) var(--ease-spring), box-shadow var(--t-base) var(--ease-out), opacity var(--t-fast);
+    }
+    .btn-cancel { background: var(--bg-elevated); border: 1px solid var(--border-strong); color: var(--text-primary); }
+    .btn-confirm-delete { background: var(--accent-red); border: none; color: var(--text-primary); box-shadow: var(--shadow-acc-red); }
+    .btn-cancel:hover:not(:disabled) { opacity: 0.85; }
+    .btn-confirm-delete:hover:not(:disabled) { transform: scale(1.02); box-shadow: var(--glow-red); }
+    .btn-cancel:active:not(:disabled), .btn-confirm-delete:active:not(:disabled) { transform: scale(0.97); }
+    .btn-cancel:disabled, .btn-confirm-delete:disabled { opacity: 0.5; cursor: default; }
+
+    /* ── Toast ── */
+    .toast {
+      position: absolute; left: 16px; right: 16px; bottom: 96px; z-index: 90;
+      display: flex; align-items: center; gap: 10px; padding: 12px 14px;
+      background: var(--bg-overlay); border: 1px solid var(--border-strong); border-radius: var(--radius-md);
+      box-shadow: var(--shadow-card); pointer-events: none;
+      font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 500; color: var(--text-primary);
+      opacity: 0; transform: translateY(12px);
+      transition: opacity var(--t-base) var(--ease-out), transform var(--t-base) var(--ease-spring);
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+    .toast svg { flex-shrink: 0; }
+    .toast.ok svg { color: var(--accent-green); }
+    .toast.del svg { color: var(--accent-red); }
   </style>
 </head>
 <body>
@@ -754,12 +1411,13 @@
             <div class="sub-inner">
 
               <!-- Супермаркет · 62.5% бюджета (нет инд. бюджета, бюджет родителя) -->
-              <div class="sub-item">
+              <div class="sub-item leaf" data-leaf="sub-super">
                 <div class="sub-row">
                   <div class="sub-dot"></div>
                   <span class="sub-name">Супермаркет</span>
                   <span class="sub-amount">₴4 500</span>
                   <span class="sub-pct">20.6%</span>
+                  <span class="cat-chevron leaf"><i data-lucide="chevron-right" width="14" height="14"></i></span>
                 </div>
                 <div style="padding-left:13px">
                   <div class="progress-track sm">
@@ -773,12 +1431,13 @@
               </div>
 
               <!-- Рынок -->
-              <div class="sub-item">
+              <div class="sub-item leaf" data-leaf="sub-market">
                 <div class="sub-row">
                   <div class="sub-dot"></div>
                   <span class="sub-name">Рынок</span>
                   <span class="sub-amount">₴1 800</span>
                   <span class="sub-pct">8.2%</span>
+                  <span class="cat-chevron leaf"><i data-lucide="chevron-right" width="14" height="14"></i></span>
                 </div>
                 <div style="padding-left:13px">
                   <div class="progress-track sm">
@@ -792,12 +1451,13 @@
               </div>
 
               <!-- Кафе и рестораны — без бюджета -->
-              <div class="sub-item">
+              <div class="sub-item leaf" data-leaf="sub-cafe">
                 <div class="sub-row">
                   <div class="sub-dot"></div>
                   <span class="sub-name">Кафе и рестораны</span>
                   <span class="sub-amount">₴900</span>
                   <span class="sub-pct">4.1%</span>
+                  <span class="cat-chevron leaf"><i data-lucide="chevron-right" width="14" height="14"></i></span>
                 </div>
                 <div style="padding-left:13px">
                   <div class="progress-track sm" style="background:rgba(255,255,255,0.03)">
@@ -851,12 +1511,13 @@
             <div class="sub-inner">
 
               <!-- Такси · ₴2 900 · budget ₴2 000 → 145% exceeded -->
-              <div class="sub-item">
+              <div class="sub-item leaf" data-leaf="sub-taxi">
                 <div class="sub-row">
                   <div class="sub-dot" style="background:var(--accent-red);opacity:0.6"></div>
                   <span class="sub-name">Такси</span>
                   <span class="sub-amount" style="color:var(--accent-red)">₴2 900</span>
                   <span class="sub-pct">13.3%</span>
+                  <span class="cat-chevron leaf"><i data-lucide="chevron-right" width="14" height="14"></i></span>
                 </div>
                 <div style="padding-left:13px">
                   <div class="progress-track sm">
@@ -871,12 +1532,13 @@
               </div>
 
               <!-- Метро / транспорт · ₴1 200 · budget ₴1 500 → 80% -->
-              <div class="sub-item">
+              <div class="sub-item leaf" data-leaf="sub-metro">
                 <div class="sub-row">
                   <div class="sub-dot"></div>
                   <span class="sub-name">Метро / транспорт</span>
                   <span class="sub-amount">₴1 200</span>
                   <span class="sub-pct">5.5%</span>
+                  <span class="cat-chevron leaf"><i data-lucide="chevron-right" width="14" height="14"></i></span>
                 </div>
                 <div style="padding-left:13px">
                   <div class="progress-track sm">
@@ -890,12 +1552,13 @@
               </div>
 
               <!-- Топливо — без бюджета -->
-              <div class="sub-item">
+              <div class="sub-item leaf" data-leaf="sub-fuel">
                 <div class="sub-row">
                   <div class="sub-dot"></div>
                   <span class="sub-name">Топливо</span>
                   <span class="sub-amount">₴700</span>
                   <span class="sub-pct">3.2%</span>
+                  <span class="cat-chevron leaf"><i data-lucide="chevron-right" width="14" height="14"></i></span>
                 </div>
                 <div style="padding-left:13px">
                   <div class="progress-track sm" style="background:rgba(255,255,255,0.03)"></div>
@@ -911,7 +1574,7 @@
 
         <!-- 3. Развлечения · ₴3 500 · 16% · budget ₴2 000 · EXCEEDED 175% -->
         <div class="cat-card" id="cat-3">
-          <div class="cat-header" onclick="toggleCat('cat-3')">
+          <div class="cat-header is-leaf" data-leaf="cat-3">
             <div class="cat-top">
               <div class="cat-icon" style="background:rgba(163,116,255,0.14)">
                 <i data-lucide="gamepad-2" width="18" height="18" style="color:var(--accent-purple)"></i>
@@ -924,9 +1587,9 @@
                 <span class="cat-amount" style="color:var(--accent-red)">₴3 500</span>
                 <span class="pct-badge over">16.0%</span>
               </div>
-              <!-- no subcategories, hide chevron -->
-              <div class="cat-chevron" style="visibility:hidden">
-                <i data-lucide="chevron-down" width="15" height="15"></i>
+              <!-- no subcategories: tap opens transactions -->
+              <div class="cat-chevron leaf">
+                <i data-lucide="chevron-right" width="15" height="15"></i>
               </div>
             </div>
             <!-- Exceeded: 3500/2000=175% → overflow=75% -->
@@ -981,12 +1644,13 @@
             <div class="sub-inner">
 
               <!-- Электричество и газ · ₴1 650 · budget ₴2 000 → 83% -->
-              <div class="sub-item">
+              <div class="sub-item leaf" data-leaf="sub-electric">
                 <div class="sub-row">
                   <div class="sub-dot"></div>
                   <span class="sub-name">Электричество и газ</span>
                   <span class="sub-amount">₴1 650</span>
                   <span class="sub-pct">7.5%</span>
+                  <span class="cat-chevron leaf"><i data-lucide="chevron-right" width="14" height="14"></i></span>
                 </div>
                 <div style="padding-left:13px">
                   <div class="progress-track sm">
@@ -1000,12 +1664,13 @@
               </div>
 
               <!-- Интернет и связь · ₴1 200 · budget ₴1 000 → 120% exceeded -->
-              <div class="sub-item">
+              <div class="sub-item leaf" data-leaf="sub-internet">
                 <div class="sub-row">
                   <div class="sub-dot" style="background:var(--accent-red);opacity:0.6"></div>
                   <span class="sub-name">Интернет и связь</span>
                   <span class="sub-amount" style="color:var(--accent-red)">₴1 200</span>
                   <span class="sub-pct">5.5%</span>
+                  <span class="cat-chevron leaf"><i data-lucide="chevron-right" width="14" height="14"></i></span>
                 </div>
                 <div style="padding-left:13px">
                   <div class="progress-track sm">
@@ -1025,7 +1690,7 @@
 
         <!-- 5. Здоровье · ₴1 800 · 8.2% · budget ₴2 000 · 90% -->
         <div class="cat-card" id="cat-5">
-          <div class="cat-header" onclick="toggleCat('cat-5')">
+          <div class="cat-header is-leaf" data-leaf="cat-5">
             <div class="cat-top">
               <div class="cat-icon" style="background:rgba(255,176,32,0.14)">
                 <i data-lucide="heart-pulse" width="18" height="18" style="color:var(--accent-amber)"></i>
@@ -1038,8 +1703,8 @@
                 <span class="cat-amount">₴1 800</span>
                 <span class="pct-badge">8.2%</span>
               </div>
-              <div class="cat-chevron" style="visibility:hidden">
-                <i data-lucide="chevron-down" width="15" height="15"></i>
+              <div class="cat-chevron leaf">
+                <i data-lucide="chevron-right" width="15" height="15"></i>
               </div>
             </div>
             <div class="cat-progress-block">
@@ -1056,7 +1721,7 @@
 
         <!-- 6. Одежда · ₴1 100 · 5% · budget ₴1 500 · 73% -->
         <div class="cat-card" id="cat-6">
-          <div class="cat-header" onclick="toggleCat('cat-6')">
+          <div class="cat-header is-leaf" data-leaf="cat-6">
             <div class="cat-top">
               <div class="cat-icon" style="background:rgba(163,116,255,0.12)">
                 <i data-lucide="shirt" width="18" height="18" style="color:var(--accent-purple)"></i>
@@ -1069,8 +1734,8 @@
                 <span class="cat-amount">₴1 100</span>
                 <span class="pct-badge">5.0%</span>
               </div>
-              <div class="cat-chevron" style="visibility:hidden">
-                <i data-lucide="chevron-down" width="15" height="15"></i>
+              <div class="cat-chevron leaf">
+                <i data-lucide="chevron-right" width="15" height="15"></i>
               </div>
             </div>
             <div class="cat-progress-block">
@@ -1087,7 +1752,7 @@
 
         <!-- 7. Без категории · ₴600 · 2.7% · нет бюджета -->
         <div class="cat-card" id="cat-7">
-          <div class="cat-header">
+          <div class="cat-header is-leaf" data-leaf="cat-7">
             <div class="cat-top">
               <div class="cat-icon" style="background:rgba(68,68,90,0.25)">
                 <i data-lucide="tag" width="18" height="18" style="color:var(--text-muted)"></i>
@@ -1100,8 +1765,8 @@
                 <span class="cat-amount" style="color:var(--text-secondary)">₴600</span>
                 <span class="pct-badge muted">2.7%</span>
               </div>
-              <div class="cat-chevron" style="visibility:hidden">
-                <i data-lucide="chevron-down" width="15" height="15"></i>
+              <div class="cat-chevron leaf">
+                <i data-lucide="chevron-right" width="15" height="15"></i>
               </div>
             </div>
           </div>
@@ -1113,7 +1778,7 @@
       <div class="flat-list view-hidden" id="flat-list">
 
         <!-- 1. Супермаркет · родитель Продукты питания · ₴4 500 · 20.6% · budget ₴6 000 · 75% -->
-        <div class="flat-item">
+        <div class="flat-item" data-leaf="sub-super">
           <div class="cat-top">
             <div class="cat-icon" style="background:rgba(79,158,255,0.14)">
               <i data-lucide="shopping-cart" width="18" height="18" style="color:var(--accent-blue)"></i>
@@ -1126,6 +1791,7 @@
               <span class="cat-amount">₴4 500</span>
               <span class="pct-badge">20.6%</span>
             </div>
+            <div class="cat-chevron leaf"><i data-lucide="chevron-right" width="15" height="15"></i></div>
           </div>
           <div class="cat-progress-block">
             <div class="progress-track">
@@ -1139,7 +1805,7 @@
         </div>
 
         <!-- 2. Развлечения · категория без подкатегорий · ₴3 500 · 16.0% · budget ₴2 000 · EXCEEDED 175% -->
-        <div class="flat-item">
+        <div class="flat-item" data-leaf="cat-3">
           <div class="cat-top">
             <div class="cat-icon" style="background:rgba(163,116,255,0.14)">
               <i data-lucide="gamepad-2" width="18" height="18" style="color:var(--accent-purple)"></i>
@@ -1152,6 +1818,7 @@
               <span class="cat-amount" style="color:var(--accent-red)">₴3 500</span>
               <span class="pct-badge over">16.0%</span>
             </div>
+            <div class="cat-chevron leaf"><i data-lucide="chevron-right" width="15" height="15"></i></div>
           </div>
           <div class="cat-progress-block">
             <div class="progress-track">
@@ -1166,7 +1833,7 @@
         </div>
 
         <!-- 3. Такси · родитель Транспорт · ₴2 900 · 13.3% · budget ₴2 000 · EXCEEDED 145% -->
-        <div class="flat-item">
+        <div class="flat-item" data-leaf="sub-taxi">
           <div class="cat-top">
             <div class="cat-icon" style="background:rgba(255,75,107,0.14)">
               <i data-lucide="car" width="18" height="18" style="color:var(--accent-red)"></i>
@@ -1179,6 +1846,7 @@
               <span class="cat-amount" style="color:var(--accent-red)">₴2 900</span>
               <span class="pct-badge over">13.3%</span>
             </div>
+            <div class="cat-chevron leaf"><i data-lucide="chevron-right" width="15" height="15"></i></div>
           </div>
           <div class="cat-progress-block">
             <div class="progress-track">
@@ -1193,7 +1861,7 @@
         </div>
 
         <!-- 4. Рынок · родитель Продукты питания · ₴1 800 · 8.2% · budget ₴2 000 · 90% -->
-        <div class="flat-item">
+        <div class="flat-item" data-leaf="sub-market">
           <div class="cat-top">
             <div class="cat-icon" style="background:rgba(79,158,255,0.14)">
               <i data-lucide="shopping-cart" width="18" height="18" style="color:var(--accent-blue)"></i>
@@ -1206,6 +1874,7 @@
               <span class="cat-amount">₴1 800</span>
               <span class="pct-badge">8.2%</span>
             </div>
+            <div class="cat-chevron leaf"><i data-lucide="chevron-right" width="15" height="15"></i></div>
           </div>
           <div class="cat-progress-block">
             <div class="progress-track">
@@ -1219,7 +1888,7 @@
         </div>
 
         <!-- 5. Здоровье · категория без подкатегорий · ₴1 800 · 8.2% · budget ₴2 000 · 90% -->
-        <div class="flat-item">
+        <div class="flat-item" data-leaf="cat-5">
           <div class="cat-top">
             <div class="cat-icon" style="background:rgba(255,176,32,0.14)">
               <i data-lucide="heart-pulse" width="18" height="18" style="color:var(--accent-amber)"></i>
@@ -1232,6 +1901,7 @@
               <span class="cat-amount">₴1 800</span>
               <span class="pct-badge">8.2%</span>
             </div>
+            <div class="cat-chevron leaf"><i data-lucide="chevron-right" width="15" height="15"></i></div>
           </div>
           <div class="cat-progress-block">
             <div class="progress-track">
@@ -1245,7 +1915,7 @@
         </div>
 
         <!-- 6. Электричество и газ · родитель Коммунальные · ₴1 650 · 7.5% · budget ₴2 000 · 83% -->
-        <div class="flat-item">
+        <div class="flat-item" data-leaf="sub-electric">
           <div class="cat-top">
             <div class="cat-icon" style="background:rgba(0,224,137,0.12)">
               <i data-lucide="zap" width="18" height="18" style="color:var(--accent-green)"></i>
@@ -1258,6 +1928,7 @@
               <span class="cat-amount">₴1 650</span>
               <span class="pct-badge">7.5%</span>
             </div>
+            <div class="cat-chevron leaf"><i data-lucide="chevron-right" width="15" height="15"></i></div>
           </div>
           <div class="cat-progress-block">
             <div class="progress-track">
@@ -1271,7 +1942,7 @@
         </div>
 
         <!-- 7. Метро / транспорт · родитель Транспорт · ₴1 200 · 5.5% · budget ₴1 500 · 80% -->
-        <div class="flat-item">
+        <div class="flat-item" data-leaf="sub-metro">
           <div class="cat-top">
             <div class="cat-icon" style="background:rgba(255,75,107,0.14)">
               <i data-lucide="car" width="18" height="18" style="color:var(--accent-red)"></i>
@@ -1284,6 +1955,7 @@
               <span class="cat-amount">₴1 200</span>
               <span class="pct-badge">5.5%</span>
             </div>
+            <div class="cat-chevron leaf"><i data-lucide="chevron-right" width="15" height="15"></i></div>
           </div>
           <div class="cat-progress-block">
             <div class="progress-track">
@@ -1297,7 +1969,7 @@
         </div>
 
         <!-- 8. Интернет и связь · родитель Коммунальные · ₴1 200 · 5.5% · budget ₴1 000 · EXCEEDED 120% -->
-        <div class="flat-item">
+        <div class="flat-item" data-leaf="sub-internet">
           <div class="cat-top">
             <div class="cat-icon" style="background:rgba(0,224,137,0.12)">
               <i data-lucide="zap" width="18" height="18" style="color:var(--accent-green)"></i>
@@ -1310,6 +1982,7 @@
               <span class="cat-amount" style="color:var(--accent-red)">₴1 200</span>
               <span class="pct-badge over">5.5%</span>
             </div>
+            <div class="cat-chevron leaf"><i data-lucide="chevron-right" width="15" height="15"></i></div>
           </div>
           <div class="cat-progress-block">
             <div class="progress-track">
@@ -1324,7 +1997,7 @@
         </div>
 
         <!-- 9. Одежда и аксессуары · категория без подкатегорий · ₴1 100 · 5.0% · budget ₴1 500 · 73% -->
-        <div class="flat-item">
+        <div class="flat-item" data-leaf="cat-6">
           <div class="cat-top">
             <div class="cat-icon" style="background:rgba(163,116,255,0.12)">
               <i data-lucide="shirt" width="18" height="18" style="color:var(--accent-purple)"></i>
@@ -1337,6 +2010,7 @@
               <span class="cat-amount">₴1 100</span>
               <span class="pct-badge">5.0%</span>
             </div>
+            <div class="cat-chevron leaf"><i data-lucide="chevron-right" width="15" height="15"></i></div>
           </div>
           <div class="cat-progress-block">
             <div class="progress-track">
@@ -1350,7 +2024,7 @@
         </div>
 
         <!-- 10. Кафе и рестораны · родитель Продукты питания · ₴900 · 4.1% · без бюджета -->
-        <div class="flat-item">
+        <div class="flat-item" data-leaf="sub-cafe">
           <div class="cat-top">
             <div class="cat-icon" style="background:rgba(79,158,255,0.14)">
               <i data-lucide="shopping-cart" width="18" height="18" style="color:var(--accent-blue)"></i>
@@ -1363,6 +2037,7 @@
               <span class="cat-amount">₴900</span>
               <span class="pct-badge">4.1%</span>
             </div>
+            <div class="cat-chevron leaf"><i data-lucide="chevron-right" width="15" height="15"></i></div>
           </div>
           <div class="cat-progress-block">
             <div class="progress-track" style="background:rgba(255,255,255,0.03)"></div>
@@ -1373,7 +2048,7 @@
         </div>
 
         <!-- 11. Топливо · родитель Транспорт · ₴700 · 3.2% · без бюджета -->
-        <div class="flat-item">
+        <div class="flat-item" data-leaf="sub-fuel">
           <div class="cat-top">
             <div class="cat-icon" style="background:rgba(255,75,107,0.14)">
               <i data-lucide="car" width="18" height="18" style="color:var(--accent-red)"></i>
@@ -1386,6 +2061,7 @@
               <span class="cat-amount">₴700</span>
               <span class="pct-badge">3.2%</span>
             </div>
+            <div class="cat-chevron leaf"><i data-lucide="chevron-right" width="15" height="15"></i></div>
           </div>
           <div class="cat-progress-block">
             <div class="progress-track" style="background:rgba(255,255,255,0.03)"></div>
@@ -1396,7 +2072,7 @@
         </div>
 
         <!-- 12. Без категории · категория без подкатегорий · ₴600 · 2.7% · без бюджета -->
-        <div class="flat-item">
+        <div class="flat-item" data-leaf="cat-7">
           <div class="cat-top">
             <div class="cat-icon" style="background:rgba(68,68,90,0.25)">
               <i data-lucide="tag" width="18" height="18" style="color:var(--text-muted)"></i>
@@ -1409,6 +2085,7 @@
               <span class="cat-amount" style="color:var(--text-secondary)">₴600</span>
               <span class="pct-badge muted">2.7%</span>
             </div>
+            <div class="cat-chevron leaf"><i data-lucide="chevron-right" width="15" height="15"></i></div>
           </div>
           <div class="cat-progress-block">
             <div class="progress-track" style="background:rgba(255,255,255,0.03)"></div>
@@ -1443,12 +2120,246 @@
   </div>
 
   <div class="home-indicator"></div>
+
+  <!-- Transactions bottom sheet -->
+  <div class="sheet-layer" id="tx-layer" aria-hidden="true">
+    <div class="sheet-backdrop" id="tx-backdrop"></div>
+    <div class="sheet" id="tx-sheet" role="dialog" aria-modal="true" aria-labelledby="tx-title">
+      <div class="sheet-head" id="tx-head">
+        <div class="sheet-handle"></div>
+        <div class="sheet-title-row">
+          <div class="cat-icon" id="tx-icon"></div>
+          <div class="cat-info">
+            <div class="sheet-title" id="tx-title"></div>
+            <div class="sheet-sub" id="tx-sub"></div>
+          </div>
+          <button class="sheet-close" id="tx-close" type="button" aria-label="Закрыть">
+            <i data-lucide="x" width="16" height="16"></i>
+          </button>
+        </div>
+        <span class="pill pill-blue sheet-month" id="tx-month"></span>
+      </div>
+      <div class="sheet-body" id="tx-body"></div>
+    </div>
+  </div>
+
+  <!-- Pushed route: edit transaction (transaction/[id]) -->
+  <div class="route-layer" id="ep-layer" aria-hidden="true">
+    <div class="ep" id="ep" data-type="expense">
+      <div class="status-bar">
+        <span class="status-time">9:41</span>
+        <div class="status-icons">
+          <i data-lucide="signal" width="14" height="14"></i>
+          <i data-lucide="wifi" width="14" height="14"></i>
+          <i data-lucide="battery" width="14" height="14"></i>
+        </div>
+      </div>
+
+      <div class="ep-nav">
+        <button class="ep-back" id="ep-back" type="button">
+          <i data-lucide="chevron-left" width="18" height="18"></i>
+          Назад
+        </button>
+        <span class="ep-title">Редактировать</span>
+        <div class="ep-nav-right"></div>
+      </div>
+
+      <div class="ep-scroll" id="ep-scroll">
+        <div class="ep-segment-wrap">
+          <div class="ep-segment" id="ep-segment">
+            <button class="ep-seg-btn" type="button" data-type="expense">Расход</button>
+            <button class="ep-seg-btn" type="button" data-type="income">Доход</button>
+            <button class="ep-seg-btn" type="button" data-type="transfer">Перевод</button>
+          </div>
+        </div>
+
+        <div class="ep-amount">
+          <span class="ep-amount-label">Сумма</span>
+          <div class="ep-amount-wrap" id="ep-amount-wrap">
+            <span class="ep-sign" id="ep-sign">−</span>
+            <input class="ep-amount-input" id="ep-amount" type="text" inputmode="decimal" maxlength="10" autocomplete="off" aria-label="Сумма">
+            <span class="ep-cur" id="ep-cur">₴</span>
+          </div>
+          <div class="ep-equiv" id="ep-equiv" hidden>
+            <span class="ep-equiv-pill" id="ep-equiv-amount"></span>
+            <span class="ep-equiv-hint" id="ep-equiv-hint"></span>
+          </div>
+          <span class="ep-hint" id="ep-hint" hidden>Остаток после разделения</span>
+        </div>
+
+        <div class="ep-card">
+          <div class="ep-row" id="ep-row-wallet">
+            <div class="ep-row-icon"><i data-lucide="building-2" width="14" height="14"></i></div>
+            <div class="ep-row-body">
+              <span class="ep-row-label">Кошелёк</span>
+              <span class="ep-row-value" id="ep-wallet"></span>
+            </div>
+          </div>
+
+          <button class="ep-row" id="ep-row-target" type="button" hidden>
+            <div class="ep-row-icon"><i data-lucide="wallet" width="14" height="14"></i></div>
+            <div class="ep-row-body">
+              <span class="ep-row-label">Кошелёк-получатель</span>
+              <span class="ep-row-value" id="ep-target"></span>
+            </div>
+            <i class="ep-chevron" data-lucide="chevron-right" width="16" height="16"></i>
+          </button>
+
+          <div class="ep-row" id="ep-row-credited" hidden>
+            <div class="ep-row-icon"><i data-lucide="arrow-down-to-line" width="14" height="14"></i></div>
+            <div class="ep-row-body">
+              <span class="ep-row-label">Зачислено</span>
+              <div class="ep-money-line">
+                <input class="ep-money-input blue" id="ep-credited" type="text" inputmode="decimal" maxlength="12" placeholder="0" autocomplete="off" aria-label="Зачислено">
+                <span class="ep-money-sym blue" id="ep-credited-sym">$</span>
+              </div>
+            </div>
+            <span class="ep-rate-pill" id="ep-rate-pill" hidden>
+              <i data-lucide="repeat" width="11" height="11"></i>
+              <span id="ep-rate"></span>
+            </span>
+          </div>
+
+          <button class="ep-row" id="ep-row-cat" type="button">
+            <div class="ep-row-icon"><i data-lucide="tag" width="14" height="14"></i></div>
+            <div class="ep-row-body">
+              <span class="ep-row-label">Категория</span>
+              <span id="ep-cat"></span>
+            </div>
+            <i class="ep-chevron" data-lucide="chevron-right" width="16" height="16"></i>
+          </button>
+
+          <button class="ep-row" id="ep-row-sub" type="button" hidden>
+            <div class="ep-row-icon"><i data-lucide="tag" width="14" height="14"></i></div>
+            <div class="ep-row-body">
+              <span class="ep-row-label">Подкатегория</span>
+              <span id="ep-sub"></span>
+            </div>
+            <i class="ep-chevron" data-lucide="chevron-right" width="16" height="16"></i>
+          </button>
+
+          <div class="ep-row">
+            <div class="ep-row-icon"><i data-lucide="pencil-line" width="14" height="14"></i></div>
+            <div class="ep-row-body">
+              <span class="ep-row-label">Описание</span>
+              <input class="ep-input" id="ep-desc" type="text" maxlength="512" placeholder="Добавить описание..." autocomplete="off">
+            </div>
+          </div>
+
+          <button class="ep-row" id="ep-row-date" type="button">
+            <div class="ep-row-icon"><i data-lucide="calendar" width="14" height="14"></i></div>
+            <div class="ep-row-body">
+              <span class="ep-row-label">Дата и время</span>
+              <span class="ep-row-value" id="ep-date"></span>
+            </div>
+            <i class="ep-chevron" data-lucide="chevron-right" width="16" height="16"></i>
+          </button>
+        </div>
+
+        <div class="ep-card ep-split-card" id="ep-split-card" hidden>
+          <div class="ep-split-head">
+            <div>
+              <div class="ep-split-title">Новый платёж</div>
+              <div class="ep-split-sub">Сумма вычитается из исходной</div>
+            </div>
+            <button class="ep-icon-btn" id="ep-split-remove" type="button" aria-label="Убрать разделение">
+              <i data-lucide="trash-2" width="16" height="16"></i>
+            </button>
+          </div>
+          <button class="ep-row" id="ep-split-row-cat" type="button">
+            <div class="ep-row-icon"><i data-lucide="tag" width="14" height="14"></i></div>
+            <div class="ep-row-body">
+              <span class="ep-row-label">Категория</span>
+              <span id="ep-split-cat"></span>
+            </div>
+            <i class="ep-chevron" data-lucide="chevron-right" width="16" height="16"></i>
+          </button>
+          <button class="ep-row" id="ep-split-row-sub" type="button" hidden>
+            <div class="ep-row-icon"><i data-lucide="tag" width="14" height="14"></i></div>
+            <div class="ep-row-body">
+              <span class="ep-row-label">Подкатегория</span>
+              <span id="ep-split-sub"></span>
+            </div>
+            <i class="ep-chevron" data-lucide="chevron-right" width="16" height="16"></i>
+          </button>
+          <div class="ep-row">
+            <div class="ep-row-icon"><i data-lucide="coins" width="14" height="14"></i></div>
+            <div class="ep-row-body">
+              <span class="ep-row-label">Сумма нового платежа</span>
+              <div class="ep-money-line">
+                <input class="ep-money-input red" id="ep-split-amount" type="text" inputmode="decimal" maxlength="10" placeholder="0" autocomplete="off" aria-label="Сумма нового платежа">
+                <span class="ep-money-sym red" id="ep-split-sym">₴</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button class="ep-split-btn" id="ep-split-btn" type="button">
+          <i data-lucide="split" width="16" height="16"></i>
+          Разделить платёж
+        </button>
+
+        <div class="ep-actions">
+          <div class="ep-error" id="ep-error" role="alert" hidden>
+            <div class="ep-error-icon"><i data-lucide="circle-alert" width="14" height="14"></i></div>
+            <span class="ep-error-text" id="ep-error-text"></span>
+            <button class="ep-error-close" id="ep-error-close" type="button" aria-label="Скрыть ошибку">
+              <i data-lucide="x" width="14" height="14"></i>
+            </button>
+          </div>
+          <button class="btn-save" id="ep-save" type="button">Сохранить</button>
+          <button class="btn-remove" id="ep-delete" type="button">Удалить транзакцию</button>
+        </div>
+      </div>
+
+      <div class="home-indicator"></div>
+    </div>
+  </div>
+
+  <!-- Picker sheet: category, subcategory, wallet, date -->
+  <div class="pick-layer" id="pick-layer" aria-hidden="true">
+    <div class="pick-backdrop" id="pick-backdrop"></div>
+    <div class="pick-sheet" role="dialog" aria-modal="true" aria-labelledby="pick-title">
+      <div class="pick-head">
+        <span class="pick-title" id="pick-title"></span>
+        <button class="sheet-close" id="pick-close" type="button" aria-label="Закрыть">
+          <i data-lucide="x" width="16" height="16"></i>
+        </button>
+      </div>
+      <div class="pick-body" id="pick-body"></div>
+    </div>
+  </div>
+
+  <!-- Delete confirmation -->
+  <div class="confirm-layer" id="del-layer" aria-hidden="true">
+    <div class="confirm-backdrop" id="del-backdrop"></div>
+    <div class="confirm-sheet" role="alertdialog" aria-modal="true" aria-labelledby="del-title">
+      <div class="confirm-grabber"></div>
+      <div class="confirm-icon"><i data-lucide="trash-2" width="26" height="26"></i></div>
+      <h2 class="confirm-title" id="del-title">Удалить транзакцию?</h2>
+      <div class="confirm-card" id="del-card"></div>
+      <div class="confirm-warning">
+        <i data-lucide="alert-triangle" width="15" height="15"></i>
+        <span class="confirm-warning-text">Это действие нельзя отменить. Транзакция будет удалена навсегда.</span>
+      </div>
+      <div class="confirm-actions">
+        <button class="btn-cancel" id="del-cancel" type="button">Отмена</button>
+        <button class="btn-confirm-delete" id="del-confirm" type="button">
+          <i data-lucide="trash-2" width="15" height="15"></i>
+          Удалить
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
 </div>
 
 <script>
   // ── Month switcher ──────────────────────────────────────
   const TODAY = new Date();
-  let cur = { year: TODAY.getFullYear(), month: TODAY.getMonth() };
+  // Starts on the month the mock data belongs to (апрель 2026)
+  let cur = { year: 2026, month: 3 };
 
   const MONTHS_RU = [
     'январь','февраль','март','апрель','май','июнь',
@@ -1471,6 +2382,7 @@
     if (cur.month < 0)  { cur.month = 11; cur.year--; }
     if (cur.month > 11) { cur.month = 0;  cur.year++; }
     renderMonth();
+    refreshAll();
   }
 
   renderMonth();
@@ -1513,6 +2425,1082 @@
 
     replayStagger(showFlat ? flatList : categoryList);
   }
+
+  // ── Transactions: data model, aggregates, edit & delete ──
+  // <logic>
+  /** Month the mock transactions belong to. */
+  const DATA_MONTH = { year: 2026, month: 3 };
+  const KOPECK_DIVISOR = 100;
+  const OVERALL_BUDGET_KOP = 25_000 * KOPECK_DIVISOR;
+  const BUDGET_WARN_PCT = 95;
+  const BUDGET_FULL_PCT = 100;
+  const UNCATEGORIZED_ID = 'cat-7';
+  const UAH_PER_USD = 41.25;
+  const RATE_TO_UAH = { UAH: 1, USD: UAH_PER_USD };
+  const CURRENCY_SYMBOLS = { UAH: '₴', USD: '$' };
+  const TYPE_SIGNS = { expense: '−', income: '+', transfer: '' };
+
+  const ERR_AMOUNT = 'Введите корректную сумму';
+  const ERR_TARGET_WALLET = 'Выберите кошелёк-получатель';
+  const ERR_CREDITED = 'Укажите сумму зачисления';
+  const ERR_SPLIT_CATEGORY = 'Выберите категорию нового платежа';
+  const ERR_SPLIT_AMOUNT = 'Введите сумму нового платежа';
+  const ERR_SPLIT_TOO_LARGE = 'Сумма разделения не может превышать сумму транзакции';
+
+  // Categories (budget in whole UAH) and subcategories
+  const CATS = {
+    'cat-1': { name: 'Продукты питания',    icon: 'shopping-cart', tone: 'blue',   budget: 8000, subs: ['sub-super', 'sub-market', 'sub-cafe'] },
+    'cat-2': { name: 'Транспорт',           icon: 'car',           tone: 'red',    budget: 3500, subs: ['sub-taxi', 'sub-metro', 'sub-fuel'] },
+    'cat-3': { name: 'Развлечения',         icon: 'gamepad-2',     tone: 'purple', budget: 2000, subs: [] },
+    'cat-4': { name: 'Коммунальные',        icon: 'zap',           tone: 'green',  budget: 3000, subs: ['sub-electric', 'sub-internet'] },
+    'cat-5': { name: 'Здоровье',            icon: 'heart-pulse',   tone: 'amber',  budget: 2000, subs: [] },
+    'cat-6': { name: 'Одежда и аксессуары', icon: 'shirt',         tone: 'purple', budget: 1500, subs: [] },
+    'cat-7': { name: 'Без категории',       icon: 'tag',           tone: 'muted',  budget: null, subs: [] }
+  };
+  const SUBS = {
+    'sub-super':    { name: 'Супермаркет',         cat: 'cat-1', budget: 6000 },
+    'sub-market':   { name: 'Рынок',               cat: 'cat-1', budget: 2000 },
+    'sub-cafe':     { name: 'Кафе и рестораны',    cat: 'cat-1', budget: null },
+    'sub-taxi':     { name: 'Такси',               cat: 'cat-2', budget: 2000 },
+    'sub-metro':    { name: 'Метро / транспорт',   cat: 'cat-2', budget: 1500 },
+    'sub-fuel':     { name: 'Топливо',             cat: 'cat-2', budget: null },
+    'sub-electric': { name: 'Электричество и газ', cat: 'cat-4', budget: 2000 },
+    'sub-internet': { name: 'Интернет и связь',    cat: 'cat-4', budget: 1000 }
+  };
+
+  // Leaf items (slots): subcategories and categories without subcategories
+  const ITEMS = {};
+  Object.keys(CATS).forEach((catId) => {
+    const cat = CATS[catId];
+    if (!cat.subs.length) {
+      ITEMS[catId] = { name: cat.name, parent: null, catId, icon: cat.icon, tone: cat.tone, budget: cat.budget };
+      return;
+    }
+    cat.subs.forEach((subId) => {
+      ITEMS[subId] = { name: SUBS[subId].name, parent: cat.name, catId, icon: cat.icon, tone: cat.tone, budget: SUBS[subId].budget };
+    });
+  });
+
+  const WALLETS = {
+    mono: { name: 'Monobank',            label: 'Monobank ••4421',     cur: 'UAH' },
+    priv: { name: 'Приват',              label: 'Приват ••8830',       cur: 'UAH' },
+    cash: { name: 'Наличные',            label: 'Наличные',            cur: 'UAH' },
+    usd:  { name: 'Валютный счёт (USD)', label: 'Monobank USD ••9015', cur: 'USD' },
+    save: { name: 'Накопительный счёт',  label: 'Накопительный счёт',  cur: 'UAH' }
+  };
+
+  // Seed: slot → [day of April, time, description, wallet, amount in wallet currency, rate to UAH (default 1)]
+  const SEED = {
+    'sub-super': [
+      [2, '18:42', 'Сільпо', 'mono', 612], [5, '11:15', 'АТБ', 'priv', 487], [9, '19:03', 'Сільпо', 'mono', 1150],
+      [13, '09:50', 'АТБ', 'priv', 268], [13, '17:28', 'Novus', 'mono', 743], [19, '20:11', 'Сільпо', 'mono', 890],
+      [26, '13:37', 'Novus', 'priv', 350]
+    ],
+    'sub-market': [
+      [4, '09:20', 'Центральный рынок', 'cash', 520], [11, '10:05', 'Центральный рынок', 'cash', 380],
+      [18, '08:55', 'Рынок «Юность»', 'cash', 640], [25, '09:40', 'Центральный рынок', 'cash', 260]
+    ],
+    'sub-cafe': [
+      [3, '13:10', 'Aroma Kava', 'mono', 185], [10, '14:25', 'Пузата хата', 'priv', 260],
+      [17, '12:40', 'Coffee Lab', 'mono', 145], [24, '20:15', 'Sushi Master', 'mono', 310]
+    ],
+    'sub-taxi': [
+      [1, '08:12', 'Uber', 'mono', 215], [4, '23:48', 'Bolt', 'mono', 168], [8, '18:30', 'Uklon', 'priv', 342],
+      [12, '07:55', 'Bolt', 'mono', 289], [15, '21:20', 'Uber', 'usd', 12, 41.25], [20, '19:05', 'Bolt', 'mono', 380],
+      [23, '02:14', 'Uklon', 'priv', 611], [28, '17:42', 'Uber', 'mono', 400]
+    ],
+    'sub-metro': [
+      [2, '08:30', 'Метро — пополнение карты', 'mono', 300], [11, '08:34', 'Метро — пополнение карты', 'mono', 300],
+      [19, '08:29', 'Kyiv Smart Card', 'priv', 400], [27, '08:41', 'Метро — пополнение карты', 'mono', 200]
+    ],
+    'sub-fuel': [
+      [6, '16:20', 'WOG', 'mono', 280], [14, '18:45', 'OKKO', 'priv', 220], [22, '12:10', 'UPG', 'mono', 200]
+    ],
+    'cat-3': [
+      [1, '00:05', 'Netflix', 'usd', 16, 40], [6, '19:30', 'Multiplex — кино', 'mono', 420],
+      [11, '03:12', 'Steam', 'usd', 20, 42.5], [14, '18:00', 'Боулинг «Кегля»', 'priv', 560],
+      [20, '12:48', 'Concert.ua — билеты', 'mono', 780], [27, '00:02', 'Spotify Family', 'mono', 250]
+    ],
+    'sub-electric': [
+      [7, '10:15', 'ДТЭК — электроэнергия', 'priv', 640], [12, '10:22', 'Нафтогаз — газ', 'priv', 480],
+      [20, '09:58', 'ДТЭК — электроэнергия', 'priv', 530]
+    ],
+    'sub-internet': [
+      [3, '11:00', 'Київстар', 'mono', 350], [5, '11:03', 'Датагруп', 'priv', 450], [16, '15:12', 'lifecell', 'mono', 400]
+    ],
+    'cat-5': [
+      [4, '10:35', 'Аптека «Подорожник»', 'mono', 340], [10, '12:00', 'Клиника «Добробут»', 'priv', 900],
+      [17, '17:50', 'Аптека АНЦ', 'mono', 260], [23, '09:15', 'Synevo — анализы', 'priv', 300]
+    ],
+    'cat-6': [
+      [7, '15:20', 'Zara', 'mono', 450], [15, '14:05', 'H&M', 'priv', 300], [22, '16:40', 'Intertop', 'mono', 350]
+    ],
+    'cat-7': [
+      [3, '21:10', 'Перевод на карту', 'mono', 200], [12, '13:25', 'Оплата по QR', 'priv', 150],
+      [25, '18:05', 'Перевод на карту', 'mono', 250]
+    ]
+  };
+
+  /** Amounts (UAH) shown on the screen before any edit. */
+  const EXPECTED_SPENT = {
+    'sub-super': 4500, 'sub-market': 1800, 'sub-cafe': 900, 'sub-taxi': 2900, 'sub-metro': 1200, 'sub-fuel': 700,
+    'cat-3': 3500, 'sub-electric': 1650, 'sub-internet': 1200, 'cat-5': 1800, 'cat-6': 1100, 'cat-7': 600
+  };
+
+  const pad2 = (n) => String(n).padStart(2, '0');
+  let txCounter = 0;
+  const nextTxId = () => 'tx' + (++txCounter);
+
+  /** @type {Array<{id:string,type:string,catId:string,subId:string|null,desc:string,walletId:string,amt:number,rate:number,at:string,targetWalletId:string|null,targetAmt:number|null}>} */
+  const TXS = [];
+  Object.keys(SEED).forEach((slot) => {
+    const subId = SUBS[slot] ? slot : null;
+    const catId = subId ? SUBS[subId].cat : slot;
+    SEED[slot].forEach(([day, time, desc, walletId, amt, rate = 1]) => {
+      TXS.push({
+        id: nextTxId(), type: 'expense', catId, subId, desc, walletId, amt, rate,
+        at: `2026-04-${pad2(day)}T${time}`, targetWalletId: null, targetAmt: null
+      });
+    });
+  });
+
+  const kopOf = (tx) => Math.round(tx.amt * tx.rate * KOPECK_DIVISOR);
+  const sumKop = (rows) => rows.reduce((acc, tx) => acc + kopOf(tx), 0);
+  const findTx = (id) => TXS.find((tx) => tx.id === id) || null;
+  const atParts = (at) => ({ y: +at.slice(0, 4), m: +at.slice(5, 7) - 1, d: +at.slice(8, 10), time: at.slice(11, 16) });
+  const isInSelectedMonth = (tx) => {
+    const p = atParts(tx.at);
+    return p.y === cur.year && p.m === cur.month;
+  };
+  /** Leaf item a transaction is counted in; null when it belongs to a parent category only. */
+  const slotOf = (tx) => tx.subId || (CATS[tx.catId].subs.length ? null : tx.catId);
+  const selectedExpenses = () => TXS.filter((tx) => tx.type === 'expense' && isInSelectedMonth(tx));
+
+  /** Spent per leaf item and per category (kopecks) for the selected month. */
+  function aggregate() {
+    const slots = {};
+    const cats = {};
+    let total = 0;
+    Object.keys(ITEMS).forEach((id) => { slots[id] = 0; });
+    Object.keys(CATS).forEach((id) => { cats[id] = 0; });
+    selectedExpenses().forEach((tx) => {
+      const kop = kopOf(tx);
+      total += kop;
+      cats[tx.catId] += kop;
+      const slot = slotOf(tx);
+      if (slot) slots[slot] += kop;
+    });
+    return { slots, cats, total };
+  }
+
+  /** Budget usage for a spent amount (kopecks) against a budget in whole UAH; null when no budget. */
+  function budgetInfo(spentKop, budget) {
+    if (!budget) return null;
+    const budgetKop = budget * KOPECK_DIVISOR;
+    const pct = Math.round((spentKop / budgetKop) * 100);
+    const isOver = spentKop > budgetKop;
+    return {
+      pct, isOver, budgetKop, spentKop,
+      isWarn: !isOver && pct >= BUDGET_WARN_PCT,
+      fill: isOver ? 'fill-exceeded' : pct >= BUDGET_WARN_PCT ? 'fill-warning' : 'fill-normal',
+      width: Math.min(pct, BUDGET_FULL_PCT),
+      overflow: isOver ? Math.min(pct - BUDGET_FULL_PCT, BUDGET_FULL_PCT) : 0,
+      leftKop: budgetKop - spentKop,
+      overKop: spentKop - budgetKop
+    };
+  }
+
+  function parseAmountInput(raw) {
+    const normalized = String(raw).trim().replace(',', '.');
+    if (normalized === '') return null;
+    const value = Number(normalized);
+    if (!Number.isFinite(value) || value <= 0) return null;
+    return value;
+  }
+  function amountStrToKop(raw) {
+    const value = Number(String(raw).trim().replace(',', '.'));
+    return Number.isFinite(value) && value > 0 ? Math.round(value * KOPECK_DIVISOR) : 0;
+  }
+  const kopToAmountStr = (kop) => String(kop / KOPECK_DIVISOR).replace('.', ',');
+  const isCrossCurrency = (e, tx) => {
+    const target = WALLETS[e.targetWalletId];
+    return !!target && target.cur !== WALLETS[tx.walletId].cur;
+  };
+
+  /** Amount of the edited transaction in wallet currency: remainder when split is active. */
+  function editAmount(e) {
+    if (!e.split.on) return parseAmountInput(e.amountStr);
+    return Math.max(0, amountStrToKop(e.split.baseStr) - amountStrToKop(e.split.amountStr)) / KOPECK_DIVISOR;
+  }
+
+  /** Same order of checks as useSaveTransaction + validateSplitPart. Returns an error text or null. */
+  function validateEdit(e) {
+    const tx = findTx(e.txId);
+    if (editAmount(e) === null) return ERR_AMOUNT;
+    if (e.split.on) {
+      const splitKop = amountStrToKop(e.split.amountStr);
+      const remainderKop = Math.max(0, amountStrToKop(e.split.baseStr) - splitKop);
+      if (!e.split.catId) return ERR_SPLIT_CATEGORY;
+      if (splitKop <= 0) return ERR_SPLIT_AMOUNT;
+      if (remainderKop <= 0) return ERR_SPLIT_TOO_LARGE;
+    }
+    if (e.type !== 'transfer') return null;
+    if (!e.targetWalletId) return ERR_TARGET_WALLET;
+    const credited = isCrossCurrency(e, tx) ? parseAmountInput(e.creditedStr) : editAmount(e);
+    if (!(credited > 0)) return ERR_CREDITED;
+    return null;
+  }
+
+  /** Writes the validated edit into TXS; a split creates one more transaction. Returns the saved tx. */
+  function applyEdit(e) {
+    const tx = findTx(e.txId);
+    const amount = editAmount(e);
+    const catId = e.catId || UNCATEGORIZED_ID;
+    const hasSubs = CATS[catId].subs.length > 0;
+    tx.type = e.type;
+    tx.amt = amount;
+    tx.desc = e.desc;
+    tx.at = e.at;
+    tx.catId = catId;
+    tx.subId = hasSubs ? e.subId : null;
+    const isTransfer = e.type === 'transfer';
+    tx.targetWalletId = isTransfer ? e.targetWalletId : null;
+    tx.targetAmt = isTransfer ? (isCrossCurrency(e, tx) ? parseAmountInput(e.creditedStr) : amount) : null;
+    if (e.split.on) {
+      const splitCatId = e.split.catId;
+      TXS.push({
+        ...tx, id: nextTxId(), type: 'expense', amt: amountStrToKop(e.split.amountStr) / KOPECK_DIVISOR,
+        catId: splitCatId, subId: CATS[splitCatId].subs.length ? e.split.subId : null,
+        targetWalletId: null, targetAmt: null
+      });
+    }
+    return tx;
+  }
+
+  function removeTx(id) {
+    const index = TXS.findIndex((tx) => tx.id === id);
+    if (index === -1) return false;
+    TXS.splice(index, 1);
+    return true;
+  }
+
+  /** Dev guard: leaf totals must match the amounts shown on the screen (before edits). */
+  function checkSums() {
+    const agg = aggregate();
+    return Object.keys(EXPECTED_SPENT).filter((id) => agg.slots[id] !== EXPECTED_SPENT[id] * KOPECK_DIVISOR);
+  }
+  // </logic>
+
+  checkSums().forEach((id) => console.warn('TX sum mismatch for', id));
+
+  // ── Formatting ──────────────────────────────────────────
+  const MONTHS_GEN = [
+    'января','февраля','марта','апреля','мая','июня',
+    'июля','августа','сентября','октября','ноября','декабря'
+  ];
+  const WEEKDAYS_RU = ['вс','пн','вт','ср','чт','пт','сб'];
+  const ROW_STAGGER_MS = 35;
+  const ROW_STAGGER_MAX = 10;
+  const SHEET_CLOSE_DRAG_PX = 100;
+  const TOAST_MS = 2600;
+  const SAVE_DELAY_MS = 600;
+  const DELETE_DELAY_MS = 500;
+  const NO_SUB_LABEL = 'Категория без подкатегорий';
+  const MINUS = '−';
+
+  const TONES = {
+    blue:   { color: 'var(--accent-blue)',   bg: 'var(--tint-blue)' },
+    red:    { color: 'var(--accent-red)',    bg: 'var(--tint-red)' },
+    purple: { color: 'var(--accent-purple)', bg: 'var(--tint-purple)' },
+    green:  { color: 'var(--accent-green)',  bg: 'var(--tint-green)' },
+    amber:  { color: 'var(--accent-amber)',  bg: 'var(--tint-amber)' },
+    muted:  { color: 'var(--text-muted)',    bg: 'var(--tint-muted)' }
+  };
+
+  const moneyFmt = new Intl.NumberFormat('uk-UA', { useGrouping: 'always', maximumFractionDigits: 2 });
+  /** Kopecks → "₴4 500". */
+  const money = (kop) => '₴' + moneyFmt.format(kop / KOPECK_DIVISOR);
+  const moneyWhole = (uah) => money(uah * KOPECK_DIVISOR);
+  const pctShare = (kop, total) => (total ? ((kop / total) * 100).toFixed(1) : '0.0') + '%';
+  const $ = (id) => document.getElementById(id);
+  const iconHtml = (name, size, color) =>
+    `<i data-lucide="${name}" width="${size}" height="${size}"${color ? ` style="color:${color}"` : ''}></i>`;
+
+  function formatTxTime(at) {
+    const p = atParts(at);
+    const date = new Date(p.y, p.m, p.d);
+    if (date.toDateString() === new Date().toDateString()) return `Сегодня, ${p.time}`;
+    return `${date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' })}, ${p.time}`;
+  }
+  const formatRate = (rate) => rate.toLocaleString('uk-UA', { minimumFractionDigits: 2, maximumFractionDigits: 4 });
+  const formatFixed = (kop) => (kop / KOPECK_DIVISOR).toLocaleString('uk-UA', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+  // ── Screen: shared progress markup ──────────────────────
+  function barHtml(info, isSmall) {
+    const size = isSmall ? ' sm' : '';
+    if (!info) return `<div class="progress-track${size} tx-track-empty"></div>`;
+    const overflow = info.overflow ? `<div class="progress-overflow" style="width:${info.overflow}%"></div>` : '';
+    return `<div class="progress-track${size}"><div class="progress-fill ${info.fill}" style="width:${info.width}%"></div>${overflow}</div>`;
+  }
+
+  function metaHtml(info) {
+    if (!info) return '<div class="cat-budget-meta"><span class="tx-no-budget">бюджет не установлен</span></div>';
+    const left = `${money(info.spentKop)} из ${money(info.budgetKop)} · ${info.pct}%`;
+    let right = `<span>осталось ${money(info.leftKop)}</span>`;
+    if (info.isOver) right = `<span class="lbl-exceeded">+${money(info.overKop)} превышение</span>`;
+    else if (info.isWarn) right = `<span class="lbl-warn">осталось ${money(info.leftKop)}</span>`;
+    return `<div class="cat-budget-meta"><span>${left}</span>${right}</div>`;
+  }
+
+  function progressBlockHtml(info) {
+    return `<div class="cat-progress-block">${barHtml(info, false)}${metaHtml(info)}</div>`;
+  }
+
+  function topRowHtml({ tone, icon, name, nameExtra, label, labelMuted, spent, total, info, chevron, isMuted }) {
+    const t = TONES[tone];
+    const over = info && info.isOver;
+    const amountCls = over ? ' amt-over' : isMuted ? ' amt-muted' : '';
+    const badgeCls = over ? ' over' : isMuted ? ' muted' : '';
+    return `
+      <div class="cat-top">
+        <div class="cat-icon" style="background:${t.bg}">${iconHtml(icon, 18, t.color)}</div>
+        <div class="cat-info">
+          <div class="cat-name${isMuted ? ' name-muted' : ''}">${name}${nameExtra || ''}</div>
+          <div class="cat-budget-label${labelMuted ? ' italic' : ''}">${label}</div>
+        </div>
+        <div class="cat-right">
+          <span class="cat-amount${amountCls}">${money(spent)}</span>
+          <span class="pct-badge${badgeCls}">${pctShare(spent, total)}</span>
+        </div>
+        ${chevron}
+      </div>`;
+  }
+
+  const CHEVRON_DOWN = `<div class="cat-chevron">${iconHtml('chevron-down', 15)}</div>`;
+  const CHEVRON_LEAF = `<div class="cat-chevron leaf">${iconHtml('chevron-right', 15)}</div>`;
+
+  function catHeaderHtml(catId, agg) {
+    const cat = CATS[catId];
+    const spent = agg.cats[catId];
+    const info = budgetInfo(spent, cat.budget);
+    const hasSubs = cat.subs.length > 0;
+    return topRowHtml({
+      tone: cat.tone, icon: cat.icon, name: cat.name,
+      nameExtra: hasSubs ? `<span class="cat-sub-badge">${cat.subs.length}</span>` : '',
+      label: cat.budget ? `Бюджет: ${moneyWhole(cat.budget)}` : 'бюджет не установлен',
+      labelMuted: !cat.budget, spent, total: agg.total, info,
+      chevron: hasSubs ? CHEVRON_DOWN : CHEVRON_LEAF, isMuted: catId === UNCATEGORIZED_ID
+    }) + (info ? progressBlockHtml(info) : '');
+  }
+
+  function subItemHtml(subId, agg) {
+    const item = ITEMS[subId];
+    const spent = agg.slots[subId];
+    const info = budgetInfo(spent, item.budget);
+    const over = info && info.isOver;
+    const left = info
+      ? `<span>${money(spent)} из ${moneyWhole(item.budget)}${over ? ` · ${info.pct}%` : ''}</span>`
+      : '<span class="tx-no-budget">бюджет не установлен</span>';
+    const right = !info ? '' : over
+      ? `<span class="amt-over">+${money(info.overKop)}</span>`
+      : `<span>${info.pct}%</span>`;
+    return `
+      <div class="sub-row">
+        <div class="sub-dot${over ? ' over' : ''}"></div>
+        <span class="sub-name">${item.name}</span>
+        <span class="sub-amount${over ? ' amt-over' : ''}">${money(spent)}</span>
+        <span class="sub-pct">${pctShare(spent, agg.total)}</span>
+        <span class="cat-chevron leaf">${iconHtml('chevron-right', 14)}</span>
+      </div>
+      <div class="sub-bar">${barHtml(info, true)}</div>
+      <div class="sub-budget-row">${left}${right}</div>`;
+  }
+
+  function flatItemHtml(slot, agg) {
+    const item = ITEMS[slot];
+    const spent = agg.slots[slot];
+    const info = budgetInfo(spent, item.budget);
+    return topRowHtml({
+      tone: item.tone, icon: item.icon, name: item.name, label: item.parent || NO_SUB_LABEL,
+      labelMuted: slot === UNCATEGORIZED_ID, spent, total: agg.total, info, chevron: CHEVRON_LEAF,
+      isMuted: slot === UNCATEGORIZED_ID
+    }) + progressBlockHtml(info);
+  }
+
+  function summaryCardHtml(agg) {
+    const remaining = OVERALL_BUDGET_KOP - agg.total;
+    const pct = (agg.total / OVERALL_BUDGET_KOP) * 100;
+    const isOver = remaining < 0;
+    const overflow = isOver ? `<div class="progress-overflow" style="width:${Math.min(pct - BUDGET_FULL_PCT, BUDGET_FULL_PCT)}%"></div>` : '';
+    return `
+      <span class="summary-title">Бюджет на месяц</span>
+      <div class="summary-stats">
+        <div class="summary-stat">
+          <span class="summary-stat-label">Бюджет</span>
+          <span class="summary-stat-value">${money(OVERALL_BUDGET_KOP)}</span>
+        </div>
+        <div class="summary-stat center">
+          <span class="summary-stat-label">Потрачено</span>
+          <span class="summary-stat-value">${money(agg.total)}</span>
+          <span class="summary-stat-sub">${pct.toFixed(1)}%</span>
+        </div>
+        <div class="summary-stat end">
+          <span class="summary-stat-label">Остаток</span>
+          <span class="summary-stat-value ${isOver ? 'over' : 'ok'}">${isOver ? MINUS : ''}${money(Math.abs(remaining))}</span>
+        </div>
+      </div>
+      <div class="summary-foot">
+        <div class="progress-track">
+          <div class="progress-fill ${isOver ? 'fill-exceeded' : 'fill-overall'}" style="width:${Math.min(pct, BUDGET_FULL_PCT)}%"></div>${overflow}
+        </div>
+        <div class="summary-foot-meta">
+          <span>${money(0)}</span><span>${pct.toFixed(1)}% использовано</span><span>${money(OVERALL_BUDGET_KOP)}</span>
+        </div>
+      </div>`;
+  }
+
+  /** Re-sorts children of a container by spent (desc), keeping the original order on ties. */
+  function sortChildren(container, elements, spentOf) {
+    elements
+      .map((el, index) => ({ el, index, spent: spentOf(el) }))
+      .sort((a, b) => b.spent - a.spent || a.index - b.index)
+      .forEach(({ el }) => container.appendChild(el));
+  }
+
+  function refreshScreen() {
+    const agg = aggregate();
+    document.querySelector('.summary-card').innerHTML = summaryCardHtml(agg);
+
+    const cardEls = Object.keys(CATS).map((id) => $(id));
+    cardEls.forEach((card) => { card.querySelector('.cat-header').innerHTML = catHeaderHtml(card.id, agg); });
+    sortChildren($('category-list'), cardEls, (el) => agg.cats[el.id]);
+
+    Object.keys(SUBS).forEach((subId) => {
+      document.querySelector(`.sub-item[data-leaf="${subId}"]`).innerHTML = subItemHtml(subId, agg);
+    });
+    Object.keys(CATS).forEach((catId) => {
+      const inner = document.querySelector(`#${catId}-sub .sub-inner`);
+      if (inner) sortChildren(inner, [...inner.children], (el) => agg.slots[el.dataset.leaf]);
+    });
+
+    const flatEls = Object.keys(ITEMS).map((id) => document.querySelector(`.flat-item[data-leaf="${id}"]`));
+    flatEls.forEach((el) => { el.innerHTML = flatItemHtml(el.dataset.leaf, agg); });
+    sortChildren($('flat-list'), flatEls, (el) => agg.slots[el.dataset.leaf]);
+    lucide.createIcons();
+  }
+
+  // ── Bottom sheet: transactions of one leaf item ─────────
+  const sheetEl = {
+    layer: $('tx-layer'), sheet: $('tx-sheet'), head: $('tx-head'), body: $('tx-body'),
+    icon: $('tx-icon'), title: $('tx-title'), sub: $('tx-sub'), month: $('tx-month')
+  };
+  let sheetItemId = null;
+  let lastFocus = null;
+
+  function sheetBudgetHtml(info) {
+    const meta = info
+      ? `<div class="cat-budget-meta"><span>${money(info.spentKop)} из ${money(info.budgetKop)} · ${info.pct}%</span>${
+          info.isOver ? `<span class="lbl-exceeded">+${money(info.overKop)} превышение</span>`
+            : `<span class="${info.isWarn ? 'lbl-warn' : ''}">осталось ${money(info.leftKop)}</span>`}</div>`
+      : '<div class="cat-budget-meta"><span class="tx-no-budget">бюджет не установлен</span></div>';
+    return barHtml(info, true) + meta;
+  }
+
+  function sheetSummaryHtml(item, spentKop, count) {
+    const info = budgetInfo(spentKop, item.budget);
+    return `
+      <div class="tx-summary">
+        <div class="tx-stats">
+          <div class="tx-stat">
+            <span class="summary-stat-label">Потрачено</span>
+            <span class="summary-stat-value tx-stat-value ${info && info.isOver ? 'over' : ''}">${money(spentKop)}</span>
+          </div>
+          <div class="tx-stat center">
+            <span class="summary-stat-label">Операций</span>
+            <span class="summary-stat-value">${count}</span>
+          </div>
+          <div class="tx-stat end">
+            <span class="summary-stat-label">Бюджет</span>
+            <span class="summary-stat-value">${item.budget ? moneyWhole(item.budget) : '—'}</span>
+          </div>
+        </div>
+        <div class="cat-progress-block">${sheetBudgetHtml(info)}</div>
+      </div>`;
+  }
+
+  /** Foreign-currency hint such as "$12.00 → ₴495". */
+  function fxHint(tx) {
+    if (tx.rate === 1) return '';
+    const sym = CURRENCY_SYMBOLS[WALLETS[tx.walletId].cur];
+    return `${sym}${tx.amt.toFixed(2)} → ${money(kopOf(tx))}`;
+  }
+
+  function txRowHtml(tx, index, item) {
+    const delay = Math.min(index, ROW_STAGGER_MAX) * ROW_STAGGER_MS;
+    const fx = fxHint(tx);
+    return `
+      <div class="tx-row" role="button" tabindex="0" data-tx="${tx.id}" style="animation-delay:${delay}ms">
+        <div class="tx-main">
+          <span class="tx-merchant">${tx.desc || item.name}</span>
+          <span class="tx-meta">${atParts(tx.at).time} · <span class="tx-acc">${WALLETS[tx.walletId].label}</span></span>
+        </div>
+        <div class="tx-side">
+          <span class="amount-negative">${MINUS}${money(kopOf(tx))}</span>
+          ${fx ? `<span class="tx-fx">${fx}</span>` : ''}
+        </div>
+        <div class="tx-actions">
+          <button class="tx-act edit" type="button" data-act="edit" aria-label="Изменить">${iconHtml('pencil', 12)}</button>
+          <button class="tx-act delete" type="button" data-act="delete" aria-label="Удалить">${iconHtml('trash-2', 12)}</button>
+        </div>
+      </div>`;
+  }
+
+  function txDaysHtml(rows, item) {
+    const days = new Map();
+    [...rows].sort((a, b) => (a.at < b.at ? 1 : -1)).forEach((tx) => {
+      const key = tx.at.slice(0, 10);
+      if (!days.has(key)) days.set(key, []);
+      days.get(key).push(tx);
+    });
+    let index = 0;
+    const groups = [];
+    days.forEach((dayRows, key) => {
+      const p = atParts(key + 'T00:00');
+      const weekday = WEEKDAYS_RU[new Date(p.y, p.m, p.d).getDay()];
+      groups.push(`
+        <div class="tx-day">
+          <div class="tx-day-head">
+            <span class="tx-day-title">${p.d} ${MONTHS_GEN[p.m]}, ${weekday}</span>
+            <span class="tx-day-total">${MINUS}${money(sumKop(dayRows))}</span>
+          </div>
+          ${dayRows.map((tx) => txRowHtml(tx, index++, item)).join('')}
+        </div>`);
+    });
+    return `<div class="tx-days">${groups.join('')}</div>`;
+  }
+
+  const EMPTY_HTML = `
+    <div class="tx-empty">
+      <div class="tx-empty-icon">${iconHtml('receipt-text', 26)}</div>
+      <span class="tx-empty-title">Операций нет</span>
+      <span class="tx-empty-text">За выбранный месяц по этой категории расходов не было</span>
+    </div>`;
+
+  function renderSheetBody(animate) {
+    const item = ITEMS[sheetItemId];
+    if (!item) return;
+    const rows = selectedExpenses().filter((tx) => slotOf(tx) === sheetItemId);
+    const scrollTop = sheetEl.body.scrollTop;
+    sheetEl.body.classList.toggle('no-anim', !animate);
+    sheetEl.body.innerHTML = sheetSummaryHtml(item, sumKop(rows), rows.length) +
+      (rows.length ? txDaysHtml(rows, item) : EMPTY_HTML);
+    sheetEl.body.scrollTop = animate ? 0 : scrollTop;
+    lucide.createIcons();
+  }
+
+  function openTxSheet(id) {
+    const item = ITEMS[id];
+    if (!item) return;
+    sheetItemId = id;
+    const tone = TONES[item.tone];
+    sheetEl.icon.style.background = tone.bg;
+    sheetEl.icon.innerHTML = iconHtml(item.icon, 18, tone.color);
+    sheetEl.title.textContent = item.name;
+    sheetEl.sub.textContent = item.parent || NO_SUB_LABEL;
+    sheetEl.month.innerHTML = `${iconHtml('calendar', 12)}${MONTHS_RU[cur.month]} ${cur.year}`;
+    renderSheetBody(true);
+    lastFocus = document.activeElement;
+    sheetEl.layer.classList.add('open');
+    sheetEl.layer.setAttribute('aria-hidden', 'false');
+    $('tx-close').focus({ preventScroll: true });
+  }
+
+  function closeTxSheet() {
+    if (!sheetEl.layer.classList.contains('open')) return;
+    sheetEl.layer.classList.remove('open');
+    sheetEl.layer.setAttribute('aria-hidden', 'true');
+    sheetItemId = null;
+    if (lastFocus && lastFocus.focus) lastFocus.focus({ preventScroll: true });
+  }
+
+  /** Recomputes the list screen and the open sheet after any data change. */
+  function refreshAll() {
+    refreshScreen();
+    if (sheetItemId) renderSheetBody(false);
+  }
+
+  // ── Toast ───────────────────────────────────────────────
+  let toastTimer = null;
+  function showToast(message, kind) {
+    const el = $('toast');
+    el.className = `toast ${kind}`;
+    el.innerHTML = iconHtml(kind === 'del' ? 'trash-2' : 'circle-check', 16) + `<span></span>`;
+    el.lastChild.textContent = message;
+    lucide.createIcons();
+    void el.offsetWidth;
+    el.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.classList.remove('show'), TOAST_MS);
+  }
+
+  // ── Picker sheet ────────────────────────────────────────
+  const pick = { layer: $('pick-layer'), title: $('pick-title'), body: $('pick-body') };
+  function openPick(title) {
+    pick.title.textContent = title;
+    pick.layer.classList.add('open');
+    pick.layer.setAttribute('aria-hidden', 'false');
+  }
+  function closePick() {
+    pick.layer.classList.remove('open');
+    pick.layer.setAttribute('aria-hidden', 'true');
+  }
+
+  /** items: [{ id, name, icon, tone, selected }] */
+  function openListPicker(title, items, onSelect) {
+    pick.body.innerHTML = items.map((it) => {
+      const t = TONES[it.tone];
+      return `<button class="pick-item" type="button" data-id="${it.id}">
+        <span class="pick-item-icon" style="background:${t.bg}">${iconHtml(it.icon, 15, t.color)}</span>
+        <span class="pick-item-name">${it.name}</span>
+        ${it.selected ? iconHtml('check', 16).replace('<i ', '<i class="pick-check" ') : ''}
+      </button>`;
+    }).join('');
+    pick.body.onclick = (e) => {
+      const btn = e.target.closest('.pick-item');
+      if (!btn) return;
+      onSelect(btn.dataset.id);
+      closePick();
+    };
+    lucide.createIcons();
+    openPick(title);
+  }
+
+  function openDatePicker() {
+    pick.body.innerHTML = `<div class="pick-date">
+      <input class="pick-date-input" id="pick-date-input" type="datetime-local" value="${ed.at}" aria-label="Дата и время">
+      <button class="btn-primary" id="pick-date-done" type="button">Готово</button>
+    </div>`;
+    pick.body.onclick = null;
+    $('pick-date-input').addEventListener('input', (e) => {
+      if (!e.target.value) return;
+      ed.at = e.target.value.slice(0, 16);
+      syncEdit();
+    });
+    $('pick-date-done').addEventListener('click', closePick);
+    openPick('Дата и время');
+  }
+
+  // ── Edit route ──────────────────────────────────────────
+  const emptySplit = () => ({ on: false, baseStr: '', amountStr: '', catId: null, subId: null });
+  let ed = { txId: null, type: 'expense', amountStr: '', desc: '', at: '', catId: null, subId: null,
+    targetWalletId: null, creditedStr: '', rate: null, split: emptySplit() };
+  let isSaving = false;
+
+  const ep = {
+    layer: $('ep-layer'), page: $('ep'), scroll: $('ep-scroll'), amount: $('ep-amount'), wrap: $('ep-amount-wrap'),
+    sign: $('ep-sign'), cur: $('ep-cur'), hint: $('ep-hint'), equiv: $('ep-equiv'),
+    desc: $('ep-desc'), credited: $('ep-credited'), splitAmount: $('ep-split-amount'),
+    save: $('ep-save'), del: $('ep-delete'), error: $('ep-error')
+  };
+
+  const defaultRate = (tx) => {
+    const target = WALLETS[ed.targetWalletId];
+    return target ? RATE_TO_UAH[WALLETS[tx.walletId].cur] / RATE_TO_UAH[target.cur] : null;
+  };
+
+  /** Credited amount follows the sent amount and the current rate (cross-currency transfer). */
+  function recalcCredited(tx) {
+    if (!isCrossCurrency(ed, tx) || ed.rate === null) { ed.creditedStr = ''; ep.credited.value = ''; return; }
+    const sent = parseAmountInput(ed.amountStr) || 0;
+    ed.creditedStr = kopToAmountStr(Math.round(sent * ed.rate * KOPECK_DIVISOR));
+    ep.credited.value = ed.creditedStr;
+  }
+
+  function categoryValueHtml(catId, subName) {
+    const real = catId && catId !== UNCATEGORIZED_ID;
+    if (!real) return '<span class="ep-row-value empty">—</span>';
+    const t = TONES[CATS[catId].tone];
+    return `<span class="ep-badge" style="background:${t.bg};color:${t.color}">${subName || CATS[catId].name}</span>`;
+  }
+
+  function syncEdit() {
+    const tx = findTx(ed.txId);
+    if (!tx) return;
+    const src = WALLETS[tx.walletId];
+    const isTransfer = ed.type === 'transfer';
+    const symbol = CURRENCY_SYMBOLS[src.cur];
+    ep.page.dataset.type = ed.type;
+    document.querySelectorAll('.ep-seg-btn').forEach((b) => b.classList.toggle('active', b.dataset.type === ed.type));
+    ep.sign.textContent = TYPE_SIGNS[ed.type];
+    ep.sign.hidden = !TYPE_SIGNS[ed.type];
+    ep.cur.textContent = symbol;
+    ep.amount.readOnly = ed.split.on;
+    ep.wrap.classList.toggle('readonly', ed.split.on);
+    ep.hint.hidden = !ed.split.on;
+
+    // UAH equivalent for a foreign-currency amount (not for transfers)
+    const showEquiv = !isTransfer && src.cur !== 'UAH';
+    ep.equiv.hidden = !showEquiv;
+    if (showEquiv) {
+      const kop = Math.round((editAmount(ed) || 0) * KOPECK_DIVISOR * tx.rate);
+      $('ep-equiv-amount').textContent = `≈ ${formatFixed(kop)} ₴`;
+      $('ep-equiv-hint').textContent = `1 ${symbol} = ${formatRate(tx.rate)} ₴`;
+    }
+
+    $('ep-wallet').textContent = src.label;
+    const target = WALLETS[ed.targetWalletId];
+    $('ep-row-target').hidden = !isTransfer;
+    $('ep-target').textContent = target ? target.name : 'Выберите...';
+    $('ep-target').classList.toggle('empty', !target);
+    const showCredited = isTransfer && isCrossCurrency(ed, tx);
+    $('ep-row-credited').hidden = !showCredited;
+    if (showCredited) {
+      const tSym = CURRENCY_SYMBOLS[target.cur];
+      $('ep-credited-sym').textContent = tSym;
+      $('ep-rate-pill').hidden = ed.rate === null;
+      if (ed.rate !== null) $('ep-rate').textContent = `1 ${symbol} = ${formatRate(ed.rate)} ${tSym}`;
+    }
+
+    const cat = ed.catId ? CATS[ed.catId] : null;
+    $('ep-row-cat').hidden = isTransfer;
+    $('ep-cat').innerHTML = categoryValueHtml(ed.catId);
+    const hasSubs = !!cat && cat.subs.length > 0;
+    $('ep-row-sub').hidden = isTransfer || !hasSubs;
+    $('ep-sub').innerHTML = ed.subId ? categoryValueHtml(ed.catId, SUBS[ed.subId].name) : '<span class="ep-row-value empty">—</span>';
+    $('ep-date').textContent = formatTxTime(ed.at);
+
+    // Split
+    $('ep-split-btn').hidden = ed.type !== 'expense' || ed.split.on;
+    $('ep-split-card').hidden = !ed.split.on;
+    if (ed.split.on) {
+      const sCat = ed.split.catId ? CATS[ed.split.catId] : null;
+      $('ep-split-cat').innerHTML = categoryValueHtml(ed.split.catId);
+      $('ep-split-row-sub').hidden = !sCat || !sCat.subs.length;
+      $('ep-split-sub').innerHTML = ed.split.subId ? categoryValueHtml(ed.split.catId, SUBS[ed.split.subId].name) : '<span class="ep-row-value empty">—</span>';
+      $('ep-split-sym').textContent = symbol;
+    }
+
+    ep.save.disabled = isSaving;
+    ep.del.disabled = isSaving;
+  }
+
+  function showError(message) {
+    $('ep-error-text').textContent = message;
+    ep.error.hidden = false;
+    ep.error.style.animation = 'none';
+    void ep.error.offsetWidth;
+    ep.error.style.animation = '';
+    lucide.createIcons();
+    ep.error.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  }
+  const hideError = () => { ep.error.hidden = true; };
+
+  function openEdit(txId) {
+    const tx = findTx(txId);
+    if (!tx) return;
+    ed = {
+      txId, type: tx.type, amountStr: String(tx.amt), desc: tx.desc, at: tx.at,
+      catId: tx.catId === UNCATEGORIZED_ID ? null : tx.catId, subId: tx.subId,
+      targetWalletId: tx.targetWalletId, creditedStr: '', rate: null, split: emptySplit()
+    };
+    isSaving = false;
+    ep.amount.value = ed.amountStr;
+    ep.desc.value = ed.desc;
+    ep.credited.value = '';
+    ep.splitAmount.value = '';
+    hideError();
+    syncEdit();
+    lucide.createIcons();
+    ep.scroll.scrollTop = 0;
+    ep.layer.classList.add('open');
+    ep.layer.setAttribute('aria-hidden', 'false');
+  }
+
+  function closeEdit() {
+    ep.layer.classList.remove('open');
+    ep.layer.setAttribute('aria-hidden', 'true');
+    closePick();
+  }
+
+  function setType(type) {
+    const tx = findTx(ed.txId);
+    if (type !== 'expense' && ed.split.on) resetSplit();
+    ed.type = type;
+    if (type === 'transfer' && ed.targetWalletId && ed.rate === null) ed.rate = defaultRate(tx);
+    recalcCredited(tx);
+    syncEdit();
+  }
+
+  const sanitizeAmount = (raw) => raw.replace(/[^\d.,]/g, '');
+  function onAmountInput() {
+    ed.amountStr = sanitizeAmount(ep.amount.value);
+    if (ep.amount.value !== ed.amountStr) ep.amount.value = ed.amountStr;
+    if (ed.type === 'transfer') recalcCredited(findTx(ed.txId));
+    syncEdit();
+  }
+
+  function onCreditedInput() {
+    ed.creditedStr = sanitizeAmount(ep.credited.value);
+    if (ep.credited.value !== ed.creditedStr) ep.credited.value = ed.creditedStr;
+    const sent = parseAmountInput(ed.amountStr);
+    const credited = parseAmountInput(ed.creditedStr);
+    if (sent && credited) ed.rate = credited / sent;
+    syncEdit();
+  }
+
+  // Split: the top amount becomes a read-only remainder
+  function syncRemainder() {
+    ep.amount.value = ed.split.on ? kopToAmountStr(Math.max(0,
+      amountStrToKop(ed.split.baseStr) - amountStrToKop(ed.split.amountStr))) : ed.amountStr;
+  }
+  function enableSplit() {
+    if (ed.type !== 'expense' || ed.split.on) return;
+    ed.split = { on: true, baseStr: ed.amountStr, amountStr: '', catId: null, subId: null };
+    ep.splitAmount.value = '';
+    syncRemainder();
+    syncEdit();
+  }
+  function resetSplit() {
+    ed.split = emptySplit();
+    syncRemainder();
+    syncEdit();
+  }
+  function onSplitAmountInput() {
+    let value = sanitizeAmount(ep.splitAmount.value);
+    const baseKop = amountStrToKop(ed.split.baseStr);
+    if (amountStrToKop(value) > baseKop) value = kopToAmountStr(baseKop);
+    ed.split.amountStr = value;
+    ep.splitAmount.value = value;
+    syncRemainder();
+    syncEdit();
+  }
+
+  function categoryItems(selectedId) {
+    return Object.keys(CATS).filter((id) => id !== UNCATEGORIZED_ID).map((id) => ({
+      id, name: CATS[id].name, icon: CATS[id].icon, tone: CATS[id].tone, selected: id === selectedId
+    }));
+  }
+  function subItems(catId, selectedId) {
+    return CATS[catId].subs.map((id) => ({
+      id, name: SUBS[id].name, icon: CATS[catId].icon, tone: CATS[catId].tone, selected: id === selectedId
+    }));
+  }
+  function walletItems(excludeId, selectedId) {
+    return Object.keys(WALLETS).filter((id) => id !== excludeId).map((id) => ({
+      id, name: WALLETS[id].name, icon: 'wallet', tone: 'blue', selected: id === selectedId
+    }));
+  }
+
+  function pickCategory(id) { ed.catId = id; ed.subId = null; syncEdit(); }
+  function pickSplitCategory(id) { ed.split.catId = id; ed.split.subId = null; syncEdit(); }
+  function pickTarget(id) {
+    const tx = findTx(ed.txId);
+    ed.targetWalletId = id;
+    ed.rate = defaultRate(tx);
+    recalcCredited(tx);
+    syncEdit();
+  }
+
+  function onSave() {
+    if (isSaving) return;
+    hideError();
+    const error = validateEdit(ed);
+    if (error) { showError(error); return; }
+    isSaving = true;
+    ep.save.innerHTML = '<span class="spinner"></span>';
+    syncEdit();
+    setTimeout(() => {
+      const before = findTx(ed.txId);
+      const wasHere = sheetItemId !== null && slotOf(before) === sheetItemId && isInSelectedMonth(before) && before.type === 'expense';
+      const saved = applyEdit(ed);
+      isSaving = false;
+      ep.save.textContent = 'Сохранить';
+      closeEdit();
+      refreshAll();
+      showToast(savedMessage(saved, wasHere), 'ok');
+    }, SAVE_DELAY_MS);
+  }
+
+  /** Short toast text describing where the saved transaction ended up. */
+  function savedMessage(tx, wasHere) {
+    if (!wasHere) return 'Транзакция сохранена';
+    if (tx.type !== 'expense') return 'Сохранено — не входит в расходы';
+    if (!isInSelectedMonth(tx)) {
+      const p = atParts(tx.at);
+      return `Сохранено — перенесена на ${MONTHS_GEN[p.m]} ${p.y}`;
+    }
+    const slot = slotOf(tx);
+    if (slot !== sheetItemId) return `Сохранено — перенесена в «${slot ? ITEMS[slot].name : CATS[tx.catId].name}»`;
+    return 'Транзакция сохранена';
+  }
+
+  // ── Delete confirmation ─────────────────────────────────
+  const del = { layer: $('del-layer'), card: $('del-card'), confirm: $('del-confirm'), cancel: $('del-cancel') };
+  let pendingDeleteId = null;
+  let isDeleting = false;
+
+  function deleteCardHtml(tx) {
+    const cat = CATS[tx.catId];
+    const t = TONES[cat.tone];
+    const isIncome = tx.type === 'income';
+    const sign = isIncome ? '+' : tx.type === 'expense' ? MINUS : '';
+    const amountColor = isIncome ? 'var(--accent-green)' : tx.type === 'expense' ? 'var(--accent-red)' : 'var(--accent-blue)';
+    const sym = CURRENCY_SYMBOLS[WALLETS[tx.walletId].cur];
+    const badge = tx.type === 'transfer' ? 'Перевод' : (tx.subId ? SUBS[tx.subId].name : cat.name);
+    return `<div class="dl-item">
+      <div class="dl-icon" style="background:${t.bg}">${iconHtml(cat.icon, 16, t.color)}</div>
+      <div class="dl-body">
+        <span class="dl-desc"></span>
+        <span class="dl-badge" style="background:${t.bg};color:${t.color}">${badge}</span>
+        <span class="dl-wallet">${WALLETS[tx.walletId].name}</span>
+      </div>
+      <div class="dl-right">
+        <span class="dl-amount" style="color:${amountColor}">${sign}${sym}${moneyFmt.format(tx.amt)}</span>
+        <span class="dl-time">${atParts(tx.at).time}</span>
+      </div>
+    </div>`;
+  }
+
+  function askDelete(txId) {
+    const tx = findTx(txId);
+    if (!tx) return;
+    pendingDeleteId = txId;
+    del.card.innerHTML = deleteCardHtml(tx);
+    del.card.querySelector('.dl-desc').textContent = tx.desc || ITEMS[slotOf(tx)]?.name || CATS[tx.catId].name;
+    lucide.createIcons();
+    del.layer.classList.add('open');
+    del.layer.setAttribute('aria-hidden', 'false');
+    del.cancel.focus({ preventScroll: true });
+  }
+
+  function closeDelete() {
+    if (isDeleting) return;
+    del.layer.classList.remove('open');
+    del.layer.setAttribute('aria-hidden', 'true');
+    pendingDeleteId = null;
+  }
+
+  function confirmDelete() {
+    if (isDeleting || !pendingDeleteId) return;
+    isDeleting = true;
+    const original = del.confirm.innerHTML;
+    del.confirm.innerHTML = '<span class="spinner light"></span>';
+    del.confirm.disabled = true;
+    del.cancel.disabled = true;
+    setTimeout(() => {
+      removeTx(pendingDeleteId);
+      isDeleting = false;
+      del.confirm.innerHTML = original;
+      del.confirm.disabled = false;
+      del.cancel.disabled = false;
+      closeDelete();
+      closeEdit();
+      refreshAll();
+      lucide.createIcons();
+      showToast('Транзакция удалена', 'del');
+    }, DELETE_DELAY_MS);
+  }
+
+  // ── Wiring ──────────────────────────────────────────────
+  sheetEl.body.addEventListener('click', (e) => {
+    const row = e.target.closest('.tx-row');
+    if (!row) return;
+    if (e.target.closest('[data-act="delete"]')) askDelete(row.dataset.tx);
+    else openEdit(row.dataset.tx);
+  });
+  sheetEl.body.addEventListener('keydown', (e) => {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    const row = e.target.closest('.tx-row');
+    if (!row || e.target !== row) return;
+    e.preventDefault();
+    openEdit(row.dataset.tx);
+  });
+
+  $('ep-back').addEventListener('click', closeEdit);
+  document.querySelectorAll('.ep-seg-btn').forEach((b) => b.addEventListener('click', () => setType(b.dataset.type)));
+  ep.amount.addEventListener('input', onAmountInput);
+  ep.credited.addEventListener('input', onCreditedInput);
+  ep.desc.addEventListener('input', () => { ed.desc = ep.desc.value; });
+  ep.splitAmount.addEventListener('input', onSplitAmountInput);
+  $('ep-split-btn').addEventListener('click', enableSplit);
+  $('ep-split-remove').addEventListener('click', resetSplit);
+  $('ep-row-cat').addEventListener('click', () => openListPicker('Категория', categoryItems(ed.catId), pickCategory));
+  $('ep-row-sub').addEventListener('click', () =>
+    openListPicker('Подкатегория', subItems(ed.catId, ed.subId), (id) => { ed.subId = id; syncEdit(); }));
+  $('ep-split-row-cat').addEventListener('click', () =>
+    openListPicker('Категория', categoryItems(ed.split.catId), pickSplitCategory));
+  $('ep-split-row-sub').addEventListener('click', () =>
+    openListPicker('Подкатегория', subItems(ed.split.catId, ed.split.subId), (id) => { ed.split.subId = id; syncEdit(); }));
+  $('ep-row-target').addEventListener('click', () => {
+    const tx = findTx(ed.txId);
+    openListPicker('Кошелёк-получатель', walletItems(tx.walletId, ed.targetWalletId), pickTarget);
+  });
+  $('ep-row-date').addEventListener('click', openDatePicker);
+  $('ep-error-close').addEventListener('click', hideError);
+  ep.save.addEventListener('click', onSave);
+  ep.del.addEventListener('click', () => askDelete(ed.txId));
+
+  $('pick-backdrop').addEventListener('click', closePick);
+  $('pick-close').addEventListener('click', closePick);
+  $('del-backdrop').addEventListener('click', closeDelete);
+  del.cancel.addEventListener('click', closeDelete);
+  del.confirm.addEventListener('click', confirmDelete);
+
+  // Leaf items of the main list: delegated click + keyboard activation
+  document.querySelectorAll('[data-leaf]').forEach((el) => {
+    el.setAttribute('role', 'button');
+    el.setAttribute('tabindex', '0');
+  });
+  document.querySelector('.phone').addEventListener('click', (e) => {
+    const leaf = e.target.closest('[data-leaf]');
+    if (leaf) openTxSheet(leaf.dataset.leaf);
+  });
+  document.querySelector('.phone').addEventListener('keydown', (e) => {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    const leaf = e.target.closest('[data-leaf]');
+    if (!leaf) return;
+    e.preventDefault();
+    openTxSheet(leaf.dataset.leaf);
+  });
+
+  $('tx-backdrop').addEventListener('click', closeTxSheet);
+  $('tx-close').addEventListener('click', closeTxSheet);
+
+  // Escape closes the topmost layer only
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape') return;
+    if (del.layer.classList.contains('open')) closeDelete();
+    else if (pick.layer.classList.contains('open')) closePick();
+    else if (ep.layer.classList.contains('open')) closeEdit();
+    else closeTxSheet();
+  });
+
+  // Drag the sheet header down to dismiss
+  let drag = null;
+  sheetEl.head.addEventListener('pointerdown', (e) => {
+    if (e.target.closest('button')) return;
+    drag = { startY: e.clientY, dy: 0 };
+    sheetEl.sheet.style.transition = 'none';
+    sheetEl.head.setPointerCapture(e.pointerId);
+  });
+  sheetEl.head.addEventListener('pointermove', (e) => {
+    if (!drag) return;
+    drag.dy = Math.max(0, e.clientY - drag.startY);
+    sheetEl.sheet.style.transform = `translateY(${drag.dy}px)`;
+  });
+  const endDrag = () => {
+    if (!drag) return;
+    const shouldClose = drag.dy > SHEET_CLOSE_DRAG_PX;
+    drag = null;
+    sheetEl.sheet.style.transition = '';
+    sheetEl.sheet.style.transform = '';
+    if (shouldClose) closeTxSheet();
+  };
+  sheetEl.head.addEventListener('pointerup', endDrag);
+  sheetEl.head.addEventListener('pointercancel', endDrag);
+
+  // Render list values from the data model
+  refreshScreen();
 
   // ── Lucide icons ────────────────────────────────────────
   lucide.createIcons();

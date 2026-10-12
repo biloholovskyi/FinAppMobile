@@ -12,11 +12,15 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { router } from 'expo-router'
 import * as icons from 'lucide-react-native'
-import { WalletTransactionType, getTransactionCurrency, type Transaction } from '@/entities/transaction'
+import {
+  WalletTransactionType,
+  DeleteTransactionModal,
+  TransactionAmountUah,
+  getTransactionCurrency,
+  type Transaction,
+} from '@/entities/transaction'
 import { TRANSFER_ICON_NAME , TRANSACTIONS_END_REACHED_THRESHOLD } from '@/shared/constants'
 import { FILTERS, useOperationsScreen, type DayGroup } from './useOperationsScreen'
-import { TransactionAmountUah } from './TransactionAmountUah/TransactionAmountUah'
-import { DeleteTransactionModal } from './DeleteTransactionModal/DeleteTransactionModal'
 import { OperationsFeedFooter } from './OperationsFeedFooter/OperationsFeedFooter'
 import { Icon } from '@/shared/ui/Icon/Icon'
 import { hexToRgba } from '@/shared/utils/colors'

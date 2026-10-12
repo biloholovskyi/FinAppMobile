@@ -1,4 +1,5 @@
-import { WalletTransactionType, type Transaction } from '@/entities/transaction'
+import { WalletTransactionType, type Transaction } from '../../model/types'
+import { getTransactionCurrency } from '../../lib/transactionUah'
 import { resolveIcon } from '@/shared/utils/icons'
 import { hexToRgba } from '@/shared/utils/colors'
 import { formatAmount, getCurrencySymbol } from '@/shared/utils/currency'
@@ -19,7 +20,8 @@ type TxDisplay = {
   time: string
 }
 
-export function useDeleteTransactionModal(transaction: Transaction): TxDisplay {
+/** Данные отображения транзакции в модалке подтверждения удаления. */
+export function getDeleteTransactionDisplay(transaction: Transaction): TxDisplay {
   const categoryInfo = transaction.subCategory ?? transaction.category ?? null
   const isTransfer = transaction.type === WalletTransactionType.transfer
   const isIncome = transaction.type === WalletTransactionType.income
@@ -34,7 +36,7 @@ export function useDeleteTransactionModal(transaction: Transaction): TxDisplay {
 
   const badgeLabel = categoryInfo?.name ?? (isTransfer ? 'Перевод' : null)
 
-  const currencySymbol = getCurrencySymbol(transaction.wallet?.currency)
+  const currencySymbol = getCurrencySymbol(getTransactionCurrency(transaction))
   const amountStr = isIncome
     ? `+${formatAmount(transaction.amount)} ${currencySymbol}`
     : `−${formatAmount(transaction.amount)} ${currencySymbol}`

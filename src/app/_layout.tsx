@@ -15,6 +15,15 @@ export default function RootLayout() {
         <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="transaction/[id]" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="spending/[leafKey]"
+            options={{
+              headerShown: false,
+              presentation: "formSheet",
+              sheetAllowedDetents: [0.85],
+              sheetGrabberVisible: true,
+            }}
+          />
           <Stack.Screen name="category/create" options={{ headerShown: false }} />
           <Stack.Screen name="category/[id]" options={{ headerShown: false }} />
           <Stack.Screen name="+not-found" />

@@ -2,6 +2,7 @@ import { View, Text, ScrollView, TouchableOpacity, KeyboardAvoidingView, Platfor
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Stack, router } from 'expo-router'
 import * as icons from 'lucide-react-native'
+import { DeleteTransactionModal } from '@/entities/transaction'
 import { useEditTransactionScreen } from './useEditTransactionScreen'
 import { CategoryPickerModal } from './CategoryPickerModal/CategoryPickerModal'
 import { WalletPickerModal } from './WalletPickerModal/WalletPickerModal'
@@ -44,7 +45,8 @@ export function EditTransactionScreen() {
     showCategoryRows, showTargetWalletRow,
     showCreditedRow, creditedValue, onCreditedChange, sourceCurrency, targetCurrency, conversionRate,
     selectedCategory, selectedSubCategory, selectedSourceWallet, selectedTargetWallet,
-    hasSubCategories, categories, wallets, onSave, handleDelete,
+    hasSubCategories, categories, wallets, onSave,
+    requestDelete, confirmDelete, cancelDelete, pendingDelete,
     errorMessage, clearError,
   } = useEditTransactionScreen()
 
@@ -148,7 +150,7 @@ export function EditTransactionScreen() {
               isDeleting={isDeleting}
               showDelete={!isCreateMode}
               onSave={onSave}
-              onDelete={handleDelete}
+              onDelete={requestDelete}
             />
           </View>
         </ScrollView>
@@ -171,6 +173,12 @@ export function EditTransactionScreen() {
         value={transactionTime ? new Date(transactionTime) : new Date()}
         onChange={date => setTransactionTime(date.toISOString())}
         onClose={() => setIsDatePickerOpen(false)}
+      />
+      <DeleteTransactionModal
+        transaction={pendingDelete}
+        isDeleting={isDeleting}
+        onConfirm={confirmDelete}
+        onCancel={cancelDelete}
       />
     </SafeAreaView>
   )

@@ -1,9 +1,6 @@
 import { KOPECK_MULTIPLIER, PERCENT_MULTIPLIER } from '@/shared/constants'
 import type { Transaction } from '@/entities/transaction'
-import {
-  getTransactionAmountUah,
-  WalletTransactionType,
-} from '@/entities/transaction'
+import { selectMonthExpenses } from '../../lib/selectMonthExpenses'
 import type { MonthBudgetRow } from '@/shared/api/budgets'
 
 export type SubCategorySpendingRow = {
@@ -40,20 +37,10 @@ export function aggregateCategorySpending(
   budgetRows: MonthBudgetRow[],
   selectedMonth: Date,
 ): AggregateResult {
-  const year = selectedMonth.getFullYear()
-  const month = selectedMonth.getMonth()
-
-  // 1. Filter: expense type + correct month (transactionTime is a real instant; the user's month is the device-local month)
   // Expenses without a UAH equivalent are excluded so totals and percentages converge
-  const expenses: { t: Transaction; amountUah: number }[] = []
-  for (const t of transactions) {
-    if (t.type !== WalletTransactionType.expense) continue
-    const d = new Date(t.transactionTime)
-    if (d.getFullYear() !== year || d.getMonth() !== month) continue
-    const uah = getTransactionAmountUah(t)
-    if (uah === null) continue
-    expenses.push({ t, amountUah: Math.abs(uah) })
-  }
+  const expenses = selectMonthExpenses(transactions, selectedMonth).map(
+    ({ transaction, amountUah }) => ({ t: transaction, amountUah }),
+  )
 
   const totalBudget =
     budgetRows.reduce((sum, r) => sum + r.baseBudget + r.additionalBudget, 0) *

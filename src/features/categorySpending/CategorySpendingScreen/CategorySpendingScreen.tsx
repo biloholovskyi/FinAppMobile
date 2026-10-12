@@ -1,3 +1,4 @@
+import { useCallback } from 'react'
 import { View, Text, FlatList, ActivityIndicator } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useCategorySpendingScreen } from './useCategorySpendingScreen'
@@ -9,23 +10,16 @@ import { ViewModeSegment } from './ViewModeSegment'
 import { getSpendingListItemKey } from './lib/flattenSpendingRows'
 import type { SpendingListItem } from './lib/flattenSpendingRows'
 
-function renderSpendingItem({ item }: { item: SpendingListItem }) {
-  switch (item.kind) {
-    case 'category':
-      return <CategoryCard row={item.row} />
-    case 'flat':
-      return <SpendingRowCard row={item.row} />
-    default: {
-      const unreachable: never = item
-      void unreachable
-      return null
-    }
-  }
+type CategorySpendingScreenProps = {
+  /** Открывает шторку транзакций листа за месяц `monthStr`. */
+  onOpenLeaf: (leafKey: string, monthStr: string) => void
 }
 
-export function CategorySpendingScreen() {
+/** Экран расходов по категориям за выбранный месяц. */
+export function CategorySpendingScreen({ onOpenLeaf }: CategorySpendingScreenProps) {
   const {
     selectedMonth,
+    monthStr,
     handlePrevMonth,
     handleNextMonth,
     isNextDisabled,
@@ -37,6 +31,28 @@ export function CategorySpendingScreen() {
     listItems,
     summary,
   } = useCategorySpendingScreen()
+
+  const handleOpenLeaf = useCallback(
+    (leafKey: string) => onOpenLeaf(leafKey, monthStr),
+    [onOpenLeaf, monthStr],
+  )
+
+  const renderSpendingItem = useCallback(
+    ({ item }: { item: SpendingListItem }) => {
+      switch (item.kind) {
+        case 'category':
+          return <CategoryCard row={item.row} onOpenLeaf={handleOpenLeaf} />
+        case 'flat':
+          return <SpendingRowCard row={item.row} onPress={handleOpenLeaf} />
+        default: {
+          const unreachable: never = item
+          void unreachable
+          return null
+        }
+      }
+    },
+    [handleOpenLeaf],
+  )
 
   return (
     <SafeAreaView className="flex-1 bg-[#0A0A12]">
