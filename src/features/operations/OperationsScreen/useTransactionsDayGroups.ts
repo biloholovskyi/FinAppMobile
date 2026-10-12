@@ -1,14 +1,19 @@
 import { useMemo } from 'react'
 import { WalletTransactionType, getSignedUahAmount, type Transaction } from '@/entities/transaction'
-
-/** Длина части `YYYY-MM-DD` в ISO-строке даты. */
-const ISO_DATE_LENGTH = 10
+import {
+  formatDayKey,
+  getKyivDayKey,
+  getKyivToday,
+  shiftDayKey,
+  type DayKey,
+} from '@/shared/utils/kyivCalendar'
 
 export type FilterType = 'all' | WalletTransactionType
 
 export type DayGroup = {
   label: string
-  date: string
+  /** Киевская дата группы. */
+  date: DayKey
   total: number
   hasTotal: boolean
   data: Transaction[]
@@ -21,46 +26,50 @@ export const FILTERS: { key: FilterType; label: string }[] = [
   { key: WalletTransactionType.transfer, label: 'Переводы' },
 ]
 
-function formatDayLabel(dateStr: string): string {
-  const today = new Date()
-  const todayStr = today.toISOString().slice(0, ISO_DATE_LENGTH)
-  const yesterday = new Date(today)
-  yesterday.setDate(today.getDate() - 1)
-  const yesterdayStr = yesterday.toISOString().slice(0, ISO_DATE_LENGTH)
+const DAY_LABEL_OPTIONS = { day: 'numeric', month: 'long', year: 'numeric' } as const
 
-  if (dateStr === todayStr) return 'Сегодня'
-  if (dateStr === yesterdayStr) return 'Вчера'
-
-  return new Date(dateStr).toLocaleDateString('ru-RU', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-  })
+/** Заголовок дня по киевскому календарю: «Сегодня», «Вчера» или дата. */
+function formatDayLabel(day: DayKey, today: DayKey): string {
+  if (day === today) return 'Сегодня'
+  if (day === shiftDayKey(today, -1)) return 'Вчера'
+  return formatDayKey(day, 'ru-RU', DAY_LABEL_OPTIONS)
 }
 
-/** Группирует загруженные транзакции по дням и отдаёт количество видимых после фильтра строк. */
+type UnlabeledDayGroup = Omit<DayGroup, 'label'>
+
+/** Группирует транзакции по киевским дням; новые дни сверху. */
+function groupByKyivDay(transactions: Transaction[]): UnlabeledDayGroup[] {
+  const map: Record<string, UnlabeledDayGroup> = {}
+  for (const tx of transactions) {
+    const date = getKyivDayKey(tx.transactionTime)
+    map[date] ??= { date, total: 0, hasTotal: false, data: [] }
+    map[date].data.push(tx)
+    const signedUah = getSignedUahAmount(tx)
+    if (signedUah !== null) {
+      map[date].total += signedUah
+      map[date].hasTotal = true
+    }
+  }
+  return Object.values(map).sort((a, b) => b.date.localeCompare(a.date))
+}
+
+/**
+ * Группирует загруженные транзакции по дням и отдаёт количество видимых после фильтра строк.
+ * Заголовки пересчитываются, когда меняется киевское «сегодня».
+ */
 export function useTransactionsDayGroups(transactions: Transaction[], filter: FilterType) {
-  return useMemo(() => {
-    const filtered =
-      filter === 'all' ? transactions : transactions.filter((tx) => tx.type === filter)
+  const filtered = useMemo(
+    () => (filter === 'all' ? transactions : transactions.filter((tx) => tx.type === filter)),
+    [transactions, filter],
+  )
+  const groups = useMemo(() => groupByKyivDay(filtered), [filtered])
+  const today = getKyivToday()
 
-    const map: Record<string, DayGroup> = {}
-    for (const tx of filtered) {
-      const date = tx.transactionTime.slice(0, ISO_DATE_LENGTH)
-      if (!map[date]) {
-        map[date] = { label: formatDayLabel(date), date, total: 0, hasTotal: false, data: [] }
-      }
-      map[date].data.push(tx)
-      const signedUah = getSignedUahAmount(tx)
-      if (signedUah !== null) {
-        map[date].total += signedUah
-        map[date].hasTotal = true
-      }
-    }
-
-    return {
-      sections: Object.values(map).sort((a, b) => b.date.localeCompare(a.date)),
+  return useMemo(
+    () => ({
+      sections: groups.map((group) => ({ ...group, label: formatDayLabel(group.date, today) })),
       visibleCount: filtered.length,
-    }
-  }, [transactions, filter])
+    }),
+    [groups, today, filtered.length],
+  )
 }

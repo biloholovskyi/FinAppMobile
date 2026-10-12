@@ -2,6 +2,7 @@ import { KOPECK_MULTIPLIER, PERCENT_MULTIPLIER } from '@/shared/constants'
 import type { Transaction } from '@/entities/transaction'
 import { selectMonthExpenses } from '../../lib/selectMonthExpenses'
 import type { MonthBudgetRow } from '@/shared/api/budgets'
+import type { MonthKey } from '@/shared/utils/kyivCalendar'
 
 export type SubCategorySpendingRow = {
   subCategoryId: string
@@ -35,10 +36,10 @@ export type AggregateResult = {
 export function aggregateCategorySpending(
   transactions: Transaction[],
   budgetRows: MonthBudgetRow[],
-  selectedMonth: Date,
+  month: MonthKey,
 ): AggregateResult {
   // Expenses without a UAH equivalent are excluded so totals and percentages converge
-  const expenses = selectMonthExpenses(transactions, selectedMonth).map(
+  const expenses = selectMonthExpenses(transactions, month).map(
     ({ transaction, amountUah }) => ({ t: transaction, amountUah }),
   )
 

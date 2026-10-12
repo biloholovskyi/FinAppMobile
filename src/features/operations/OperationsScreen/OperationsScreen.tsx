@@ -26,6 +26,7 @@ import { Icon } from '@/shared/ui/Icon/Icon'
 import { hexToRgba } from '@/shared/utils/colors'
 import { formatAmount, getCurrencySymbol } from '@/shared/utils/currency'
 import { formatDayTotal, formatTime } from '@/shared/utils/dateAndTime'
+import { formatMonthKey, getKyivCurrentMonthKey } from '@/shared/utils/kyivCalendar'
 
 
 type TxItemProps = { tx: Transaction; onEdit: (id: string) => void; onDelete: (tx: Transaction) => void }
@@ -125,7 +126,11 @@ export function OperationsScreen() {
     isDeleting,
   } = useOperationsScreen()
 
-  const currentMonth = new Date().toLocaleDateString('ru-RU', { month: 'long', year: 'numeric' })
+  const currentMonthKey = getKyivCurrentMonthKey()
+  const currentMonth = useMemo(
+    () => formatMonthKey(currentMonthKey, 'ru-RU', { month: 'long', year: 'numeric' }),
+    [currentMonthKey],
+  )
 
   const handleEdit = useCallback((id: string) => {
     router.push(`/transaction/${id}`)

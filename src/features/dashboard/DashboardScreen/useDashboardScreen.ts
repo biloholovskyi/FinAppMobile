@@ -1,7 +1,15 @@
+import { useMemo } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { fetchTransactions } from '@/shared/api/transactions'
 import { QUERY_KEYS } from '@/shared/constants/queryKeys'
 import { PERCENT_MULTIPLIER } from '@/shared/constants'
+import {
+  getDayOfMonth,
+  getKyivToday,
+  getMonthKeyOfDay,
+  shiftMonthKey,
+  splitMonthKey,
+} from '@/shared/utils/kyivCalendar'
 import { aggregateExpenses } from '../lib/aggregateExpenses'
 
 const MONTH_NAMES = [
@@ -20,13 +28,14 @@ export function useDashboardScreen() {
     queryFn: fetchTransactions,
   })
 
-  const today = new Date()
-  const currentDay = today.getDate()
-  const currentMonthIndex = today.getMonth()
-  const prevMonthIndex = currentMonthIndex === 0 ? 11 : currentMonthIndex - 1
+  const today = getKyivToday()
+  const currentDay = getDayOfMonth(today)
+  const currentMonth = getMonthKeyOfDay(today)
+  const currentMonthIndex = splitMonthKey(currentMonth).month - 1
+  const prevMonthIndex = splitMonthKey(shiftMonthKey(currentMonth, -1)).month - 1
 
   const { totalCurrent, totalPrev, chartDataCurrent, chartDataProjected, chartDataPrev } =
-    aggregateExpenses(transactions, today)
+    useMemo(() => aggregateExpenses(transactions, today), [transactions, today])
 
   const diff = totalCurrent - totalPrev
   const percentChange =

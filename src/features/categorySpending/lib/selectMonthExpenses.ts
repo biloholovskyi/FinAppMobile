@@ -1,4 +1,5 @@
 import type { Transaction } from '@/entities/transaction'
+import { getKyivMonthKey, type MonthKey } from '@/shared/utils/kyivCalendar'
 import {
   getTransactionAmountUah,
   WalletTransactionType,
@@ -12,25 +13,22 @@ export type MonthExpense = {
 }
 
 /**
- * Выбирает расходы выбранного месяца: тип `expense`, локальный месяц устройства
- * (`transactionTime` — реальный момент времени), известный эквивалент в UAH.
+ * Выбирает расходы выбранного месяца: тип `expense`, киевский месяц момента
+ * `transactionTime`, известный эквивалент в UAH.
  * Единый источник фильтра для агрегатора и шторки транзакций, чтобы суммы совпадали.
  *
  * @param transactions Все загруженные транзакции.
- * @param selectedMonth Любая дата выбранного месяца (локальный месяц устройства).
+ * @param month Выбранный киевский месяц.
  */
 export function selectMonthExpenses(
   transactions: Transaction[],
-  selectedMonth: Date,
+  month: MonthKey,
 ): MonthExpense[] {
-  const year = selectedMonth.getFullYear()
-  const month = selectedMonth.getMonth()
   const expenses: MonthExpense[] = []
 
   for (const transaction of transactions) {
     if (transaction.type !== WalletTransactionType.expense) continue
-    const date = new Date(transaction.transactionTime)
-    if (date.getFullYear() !== year || date.getMonth() !== month) continue
+    if (getKyivMonthKey(transaction.transactionTime) !== month) continue
     const amountUah = getTransactionAmountUah(transaction)
     if (amountUah === null) continue
     expenses.push({ transaction, amountUah: Math.abs(amountUah) })

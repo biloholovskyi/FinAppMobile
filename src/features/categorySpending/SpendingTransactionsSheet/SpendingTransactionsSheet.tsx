@@ -2,6 +2,7 @@ import { useCallback } from 'react'
 import { View, Text, SectionList, ActivityIndicator } from 'react-native'
 import type { SectionListRenderItem } from 'react-native'
 import { DeleteTransactionModal, type Transaction } from '@/entities/transaction'
+import type { MonthKey } from '@/shared/utils/kyivCalendar'
 import { SheetHeader } from './SheetHeader'
 import { SheetSummary } from './SheetSummary'
 import { SheetDayHeader } from './SheetDayHeader'
@@ -12,7 +13,8 @@ import type { DaySection } from './lib/groupTransactionsByDay'
 
 type SpendingTransactionsSheetProps = {
   leafKey: string
-  monthStr: string
+  /** Киевский месяц шторки. */
+  month: MonthKey
   onEditTransaction: (id: string) => void
   onClose: () => void
 }
@@ -20,11 +22,11 @@ type SpendingTransactionsSheetProps = {
 /** Шторка транзакций листа расходов за месяц с редактированием и удалением. */
 export function SpendingTransactionsSheet({
   leafKey,
-  monthStr,
+  month,
   onEditTransaction,
   onClose,
 }: SpendingTransactionsSheetProps) {
-  const sheet = useSpendingTransactionsSheet({ leafKey, monthStr })
+  const sheet = useSpendingTransactionsSheet({ leafKey, month })
   const { requestDelete } = sheet
 
   const renderItem = useCallback<SectionListRenderItem<Transaction, DaySection>>(
@@ -41,7 +43,7 @@ export function SpendingTransactionsSheet({
 
   return (
     <View className="flex-1 bg-[#10101C]">
-      <SheetHeader row={sheet.row} selectedMonth={sheet.selectedMonth} onClose={onClose} />
+      <SheetHeader row={sheet.row} month={sheet.month} onClose={onClose} />
 
       {sheet.isLoading ? (
         <View className="flex-1 items-center justify-center">

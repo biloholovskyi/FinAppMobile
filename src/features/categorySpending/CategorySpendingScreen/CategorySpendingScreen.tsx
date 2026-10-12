@@ -11,14 +11,14 @@ import { getSpendingListItemKey } from './lib/flattenSpendingRows'
 import type { SpendingListItem } from './lib/flattenSpendingRows'
 
 type CategorySpendingScreenProps = {
-  /** Открывает шторку транзакций листа за месяц `monthStr`. */
+  /** Открывает шторку транзакций листа за месяц `monthStr` (ключ бюджета). */
   onOpenLeaf: (leafKey: string, monthStr: string) => void
 }
 
 /** Экран расходов по категориям за выбранный месяц. */
 export function CategorySpendingScreen({ onOpenLeaf }: CategorySpendingScreenProps) {
   const {
-    selectedMonth,
+    month,
     monthStr,
     handlePrevMonth,
     handleNextMonth,
@@ -83,7 +83,7 @@ export function CategorySpendingScreen({ onOpenLeaf }: CategorySpendingScreenPro
           ListHeaderComponent={
             <View className="gap-2.5 pb-2.5">
               <MonthSwitcher
-                selectedMonth={selectedMonth}
+                month={month}
                 onPrev={handlePrevMonth}
                 onNext={handleNextMonth}
                 isNextDisabled={isNextDisabled}

@@ -1,4 +1,5 @@
 import type { Transaction } from '@/entities/transaction'
+import type { MonthKey } from '@/shared/utils/kyivCalendar'
 import { selectMonthExpenses } from './selectMonthExpenses'
 import type { FlatSpendingRow } from '../CategorySpendingScreen/lib/flattenSpendingRows'
 
@@ -79,14 +80,14 @@ function matchesLeaf(transaction: Transaction, leaf: SpendingLeafKey): boolean {
  *
  * @param transactions Все загруженные транзакции.
  * @param leaf Разобранный ключ листа.
- * @param selectedMonth Любая дата выбранного месяца.
+ * @param month Выбранный киевский месяц.
  */
 export function filterLeafTransactions(
   transactions: Transaction[],
   leaf: SpendingLeafKey,
-  selectedMonth: Date,
+  month: MonthKey,
 ): Transaction[] {
-  return selectMonthExpenses(transactions, selectedMonth)
+  return selectMonthExpenses(transactions, month)
     .map((expense) => expense.transaction)
     .filter((transaction) => matchesLeaf(transaction, leaf))
 }

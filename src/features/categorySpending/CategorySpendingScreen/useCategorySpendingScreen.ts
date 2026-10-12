@@ -10,10 +10,7 @@ import { useSpendingViewMode } from './useSpendingViewMode'
 export function useCategorySpendingScreen() {
   const month = useMonthNavigation()
   const mode = useSpendingViewMode()
-  const { rows, summary, isLoading, isError } = useSpendingData(
-    month.monthStr,
-    month.selectedMonth,
-  )
+  const { rows, summary, isLoading, isError } = useSpendingData(month.month)
 
   const listItems = useMemo<SpendingListItem[]>(() => {
     if (mode.viewMode === SPENDING_VIEW_MODE.categories) {

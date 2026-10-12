@@ -1,6 +1,6 @@
 import { router, useLocalSearchParams } from 'expo-router'
 import { SpendingTransactionsSheet } from '@/features/categorySpending/SpendingTransactionsSheet/SpendingTransactionsSheet'
-import { normalizeMonthStr } from '@/features/categorySpending/lib/parseMonthStr'
+import { normalizeMonthParam } from '@/features/categorySpending/lib/normalizeMonthParam'
 
 function firstParam(value: string | string[] | undefined): string {
   return (Array.isArray(value) ? value[0] : value) ?? ''
@@ -13,7 +13,7 @@ export default function SpendingTransactionsRoute() {
   return (
     <SpendingTransactionsSheet
       leafKey={firstParam(params.leafKey)}
-      monthStr={normalizeMonthStr(firstParam(params.month))}
+      month={normalizeMonthParam(firstParam(params.month))}
       onEditTransaction={(id) => router.push(`/transaction/${id}`)}
       onClose={() => router.back()}
     />

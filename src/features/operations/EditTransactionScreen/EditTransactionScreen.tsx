@@ -8,6 +8,7 @@ import { CategoryPickerModal } from './CategoryPickerModal/CategoryPickerModal'
 import { WalletPickerModal } from './WalletPickerModal/WalletPickerModal'
 import { SourceWalletPickerModal } from './SourceWalletPickerModal'
 import { DateTimePickerModal } from './DateTimePickerModal/DateTimePickerModal'
+import { formatKyivMoment, formatKyivTime, getKyivDayKey, getKyivToday } from '@/shared/utils/kyivCalendar'
 import { FormRow } from './FormRow'
 import { CreditedAmountRow } from './CreditedAmountRow'
 import { ErrorBanner } from './ErrorBanner'
@@ -18,14 +19,12 @@ import { ActionButtons } from './ActionButtons'
 import { SplitButton } from './SplitPaymentCard/SplitButton'
 import { SplitPaymentCard } from './SplitPaymentCard/SplitPaymentCard'
 
+/** Дата и время транзакции по Киеву: «Сегодня, HH:mm» или «5 окт., HH:mm». */
 function formatTransactionTime(isoString: string): string {
   if (!isoString) return '—'
-  const date = new Date(isoString)
-  const now = new Date()
-  const isToday = date.toDateString() === now.toDateString()
-  const timeStr = date.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })
-  if (isToday) return `Сегодня, ${timeStr}`
-  return `${date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' })}, ${timeStr}`
+  const timeStr = formatKyivTime(isoString, 'ru-RU')
+  if (getKyivDayKey(isoString) === getKyivToday()) return `Сегодня, ${timeStr}`
+  return `${formatKyivMoment(isoString, 'ru-RU', { day: 'numeric', month: 'short' })}, ${timeStr}`
 }
 
 export function EditTransactionScreen() {

@@ -65,6 +65,7 @@ Package scripts (`package.json`):
 - `rtk yarn format` — Prettier over `src`
 - `rtk yarn api:generate` — Orval codegen from the backend OpenAPI contract
 - `rtk yarn api:generate:watch` — Orval in watch mode
+- `rtk yarn calendar:check` — Kyiv calendar scenarios (`scripts/check-kyiv-calendar.mjs`, Node 22.15+); rule: `ai/rules/projects/fin-app-mobile/architecture.md`, Dates
 
 No `typecheck` script is defined — run `rtk yarn tsc --noEmit` directly.
 No test runner is installed — there is no `test` script, and none should be added without an explicit request.

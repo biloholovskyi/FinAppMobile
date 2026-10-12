@@ -2,6 +2,7 @@ import { View, Text, TouchableOpacity } from 'react-native'
 import { X } from 'lucide-react-native'
 import { SpendingIcon } from '../CategorySpendingScreen/SpendingIcon'
 import type { FlatSpendingRow } from '../CategorySpendingScreen/lib/flattenSpendingRows'
+import { formatMonthKey, type MonthKey } from '@/shared/utils/kyivCalendar'
 
 /** Прозрачность в hex для подложки иконки. */
 const ICON_BG_ALPHA = '26'
@@ -14,14 +15,14 @@ const NO_SUBCATEGORIES_SUBTITLE = 'Категория без подкатего�
 
 type SheetHeaderProps = {
   row: FlatSpendingRow | null
-  selectedMonth: Date
+  month: MonthKey
   onClose: () => void
 }
 
 /** Шапка шторки: иконка, имя листа, родитель и месяц. */
-export function SheetHeader({ row, selectedMonth, onClose }: SheetHeaderProps) {
+export function SheetHeader({ row, month, onClose }: SheetHeaderProps) {
   const iconColor = row?.color ?? ICON_COLOR_FALLBACK
-  const month = selectedMonth.toLocaleDateString('uk-UA', { month: 'long', year: 'numeric' })
+  const monthLabel = formatMonthKey(month, 'uk-UA', { month: 'long', year: 'numeric' })
 
   return (
     <View className="gap-2.5 border-b border-white/[0.08] px-4 pb-3 pt-4">
@@ -52,7 +53,7 @@ export function SheetHeader({ row, selectedMonth, onClose }: SheetHeaderProps) {
         </TouchableOpacity>
       </View>
       <View className="self-start rounded-full bg-[rgba(79,158,255,0.15)] px-2.5 py-1">
-        <Text className="text-[11px] font-medium capitalize text-[#4F9EFF]">{month}</Text>
+        <Text className="text-[11px] font-medium capitalize text-[#4F9EFF]">{monthLabel}</Text>
       </View>
     </View>
   )
