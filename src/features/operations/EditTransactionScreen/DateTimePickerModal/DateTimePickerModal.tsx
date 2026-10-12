@@ -3,6 +3,7 @@ import { Modal, View, Text, TouchableOpacity, Pressable, Platform } from 'react-
 import DateTimePicker from '@react-native-community/datetimepicker'
 import type { DateTimePickerEvent } from '@react-native-community/datetimepicker'
 import * as icons from 'lucide-react-native'
+import { getKyivTimeZone } from '@/shared/utils/kyivCalendar'
 
 type Props = {
   visible: boolean
@@ -33,6 +34,7 @@ export function DateTimePickerModal({ visible, value, onChange, onClose }: Props
         {visible && androidStep === 'date' && (
           <DateTimePicker
             value={pendingDate}
+            timeZoneName={getKyivTimeZone()}
             mode="date"
             display="default"
             onChange={(event: DateTimePickerEvent, date?: Date) => {
@@ -50,6 +52,7 @@ export function DateTimePickerModal({ visible, value, onChange, onClose }: Props
         {visible && androidStep === 'time' && (
           <DateTimePicker
             value={pendingDate}
+            timeZoneName={getKyivTimeZone()}
             mode="time"
             display="default"
             onChange={(event: DateTimePickerEvent, date?: Date) => {
@@ -76,6 +79,7 @@ export function DateTimePickerModal({ visible, value, onChange, onClose }: Props
         </View>
         <DateTimePicker
           value={value}
+          timeZoneName={getKyivTimeZone()}
           mode="datetime"
           display="spinner"
           themeVariant="dark"

@@ -3,19 +3,21 @@ import { useQuery } from '@tanstack/react-query'
 import { fetchTransactions } from '@/shared/api/transactions'
 import { getMonthBudget } from '@/shared/api/budgets'
 import { QUERY_KEYS } from '@/shared/constants/queryKeys'
+import type { Transaction } from '@/entities/transaction'
+import { toBudgetMonthKey, type MonthKey } from '@/shared/utils/kyivCalendar'
 import { aggregateCategorySpending } from './lib/aggregateCategorySpending'
 import type { AggregateResult } from './lib/aggregateCategorySpending'
 
 export type SpendingData = AggregateResult & {
+  /** Все загруженные транзакции — тот же кэш, что у ленты операций. */
+  transactions: Transaction[]
   isLoading: boolean
   isError: boolean
 }
 
-/** Загружает транзакции и бюджет месяца и агрегирует их в строки расходов. */
-export function useSpendingData(
-  monthStr: string,
-  selectedMonth: Date,
-): SpendingData {
+/** Загружает транзакции и бюджет киевского месяца и агрегирует их в строки расходов. */
+export function useSpendingData(month: MonthKey): SpendingData {
+  const monthStr = toBudgetMonthKey(month)
   const {
     data: transactions = [],
     isLoading: txLoading,
@@ -39,12 +41,13 @@ export function useSpendingData(
       aggregateCategorySpending(
         transactions,
         budgetData?.budgetRows ?? [],
-        selectedMonth,
+        month,
       ),
-    [transactions, budgetData, selectedMonth],
+    [transactions, budgetData, month],
   )
 
   return {
+    transactions,
     rows,
     summary,
     isLoading: txLoading || budgetLoading,

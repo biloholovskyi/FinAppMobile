@@ -2,14 +2,13 @@ import { useState } from 'react'
 import { router } from 'expo-router'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useWalletControllerCreateTransaction } from '@/shared/api/generated/wallets/wallets'
-import { updateTransaction, deleteTransaction } from '@/shared/api/transactions'
+import { updateTransaction } from '@/shared/api/transactions'
 import { getApiErrorMessage } from '@/shared/api/errors'
 import { QUERY_KEYS } from '@/shared/constants/queryKeys'
 import { TRANSACTION_SPLIT_MESSAGES } from '@/shared/constants/transactionSplit'
 import type { SavePayload } from './savePayloads'
 
 const SAVE_ERROR_FALLBACK = 'Не удалось сохранить. Попробуйте ещё раз'
-const DELETE_ERROR_FALLBACK = 'Не удалось удалить транзакцию. Попробуйте ещё раз'
 
 function toCreateData(p: SavePayload) {
   return {
@@ -53,13 +52,6 @@ export function useEditTransactionActions(transactionId: string | undefined) {
       }),
   })
 
-  const { mutate: remove, isPending: isDeleting } = useMutation({
-    mutationFn: () => deleteTransaction(transactionId!),
-    onSuccess: invalidateAndBack,
-    onError: (error: unknown) =>
-      setErrorMessage(getApiErrorMessage(error, DELETE_ERROR_FALLBACK)),
-  })
-
   const handleSave = async (payload: SavePayload, splitPayload?: SavePayload) => {
     setErrorMessage(null)
     // Локальный дубль признака: состояние React не обновится внутри этого же вызова.
@@ -88,18 +80,11 @@ export function useEditTransactionActions(transactionId: string | undefined) {
     }
   }
 
-  const handleDelete = () => {
-    setErrorMessage(null)
-    remove()
-  }
-
   return {
     handleSave,
-    handleDelete,
     setValidationError: (message: string) => setErrorMessage(message),
     resetSplitProgress: () => setIsSourceUpdated(false),
     isSaving: isCreating || isUpdating,
-    isDeleting,
     errorMessage,
     clearError: () => setErrorMessage(null),
   }

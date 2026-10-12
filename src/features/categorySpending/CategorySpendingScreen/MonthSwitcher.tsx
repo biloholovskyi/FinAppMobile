@@ -1,5 +1,6 @@
 import { View, Text, TouchableOpacity } from 'react-native'
 import { ChevronLeft, ChevronRight } from 'lucide-react-native'
+import { splitMonthKey, type MonthKey } from '@/shared/utils/kyivCalendar'
 
 const MONTH_NAMES_RU = [
   'январь', 'февраль', 'март', 'апрель', 'май', 'июнь',
@@ -7,13 +8,16 @@ const MONTH_NAMES_RU = [
 ]
 
 type Props = {
-  selectedMonth: Date
+  /** Выбранный киевский месяц. */
+  month: MonthKey
   onPrev: () => void
   onNext: () => void
   isNextDisabled: boolean
 }
 
-export function MonthSwitcher({ selectedMonth, onPrev, onNext, isNextDisabled }: Props) {
+export function MonthSwitcher({ month, onPrev, onNext, isNextDisabled }: Props) {
+  const { year, month: monthNumber } = splitMonthKey(month)
+
   return (
     <View className="flex-row items-center justify-between bg-[#10101C] border border-white/[0.08] rounded-2xl px-3.5 py-2.5">
       <TouchableOpacity
@@ -26,10 +30,10 @@ export function MonthSwitcher({ selectedMonth, onPrev, onNext, isNextDisabled }:
 
       <View className="items-center">
         <Text className="text-[#F2F2FF] text-[15px] font-bold capitalize">
-          {MONTH_NAMES_RU[selectedMonth.getMonth()]}
+          {MONTH_NAMES_RU[monthNumber - 1]}
         </Text>
         <Text className="text-[#8888AA] text-[11px]">
-          {selectedMonth.getFullYear()}
+          {year}
         </Text>
       </View>
 

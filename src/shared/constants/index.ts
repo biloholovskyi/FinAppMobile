@@ -21,3 +21,4 @@ export {
 } from './spendingViewMode'
 export type { SpendingViewMode } from './spendingViewMode'
 export { RATE_STALE_TIME_MS } from './currencyRate'
+export { KYIV_TIME_ZONE } from './calendar'

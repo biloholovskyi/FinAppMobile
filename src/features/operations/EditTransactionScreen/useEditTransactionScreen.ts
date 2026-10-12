@@ -1,3 +1,4 @@
+import { router } from 'expo-router'
 import { useEditTransactionData } from './useEditTransactionData'
 import { useEditTransactionForm } from './useEditTransactionForm'
 import { useEditTransactionActions } from './useEditTransactionActions'
@@ -7,6 +8,7 @@ import { useTransactionSplit } from './useTransactionSplit'
 import { useAmountUahEquivalent } from './useAmountUahEquivalent'
 import {
   WalletTransactionType,
+  useConfirmedDelete,
   getTransactionCurrency,
   getTransactionExchangeRate,
   useTransferTargetAmount,
@@ -18,6 +20,19 @@ export function useEditTransactionScreen() {
   const { transaction, categories, wallets, isLoading, isCreateMode } = useEditTransactionData()
   const form = useEditTransactionForm(transaction)
   const actions = useEditTransactionActions(transaction?.id)
+  const remove = useConfirmedDelete({
+    transactions: transaction ? [transaction] : [],
+    onError: actions.setValidationError,
+    onDeleted: () => router.back(),
+    // Экран размонтируется через router.back() — модалку не закрываем вручную.
+    keepOpenOnSuccess: true,
+    closeOnError: true,
+  })
+  const requestDelete = () => {
+    if (!transaction) return
+    actions.clearError()
+    remove.requestDelete(transaction)
+  }
 
   const isTransfer = form.type === WalletTransactionType.transfer
   const walletId = isCreateMode ? (form.sourceWalletId ?? '') : (transaction?.walletId ?? '')
@@ -81,7 +96,7 @@ export function useEditTransactionScreen() {
   return {
     isLoading,
     isSaving: actions.isSaving,
-    isDeleting: actions.isDeleting,
+    isDeleting: remove.isDeleting,
     isCreateMode,
     sourceWalletName: isCreateMode
       ? (selection.selectedSourceWallet?.name ?? '')
@@ -105,7 +120,10 @@ export function useEditTransactionScreen() {
     uahEquivalent,
     amountHint: split.isSplitActive ? TRANSACTION_SPLIT_MESSAGES.remainderHint : null,
     onSave,
-    handleDelete: actions.handleDelete,
+    requestDelete,
+    confirmDelete: remove.confirmDelete,
+    cancelDelete: remove.cancelDelete,
+    pendingDelete: remove.pendingDelete,
     errorMessage: actions.errorMessage,
     clearError: actions.clearError,
   }

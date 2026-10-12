@@ -1,9 +1,6 @@
 import { Text } from 'react-native'
-import {
-  getSignedUahAmount,
-  isForeignCurrencyTransaction,
-  type Transaction,
-} from '@/entities/transaction'
+import { getSignedUahAmount, isForeignCurrencyTransaction } from '../../lib/transactionUah'
+import type { Transaction } from '../../model/types'
 import { formatAmount, getCurrencySymbol } from '@/shared/utils/currency'
 import { UAH_CURRENCY_CODE } from '@/shared/utils/currencyConversion'
 

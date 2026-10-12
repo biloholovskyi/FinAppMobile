@@ -187,13 +187,18 @@ export const KOPECK_MULTIPLIER = 100;
 
 ## Dates
 
-```typescript
-// Display
-date.toLocaleDateString('uk-UA') // '09.04.2026'
+Calendar model: Europe/Kyiv in every FinApp project — `../fin-app-backend/docs/plans/kyiv-calendar-unification/design.md`. Implementation: `src/shared/utils/kyivCalendar/`.
 
-// Date + time
-date.toLocaleString('uk-UA')
-```
+- Days, months, "today", "current month" and period boundaries are computed only through `@/shared/utils/kyivCalendar`; the device time zone never affects the result
+- The zone name lives only in `src/shared/constants/calendar.ts` (`KYIV_TIME_ZONE`, `KYIV_TIME_ZONE_LEGACY` for old tzdata); `Intl` and `DateTimePicker` `timeZoneName` get it from `getKyivTimeZone()`
+- Calendar values travel as keys: `DayKey` (`YYYY-MM-DD`) and `MonthKey` (`YYYY-MM`) — never as local `Date`
+- Moments (`transactionTime`, `createdAt`) are sent and stored unchanged; only their calendar interpretation goes through the utility
+- Month range for REST: `getKyivMonthRange` — Kyiv midnight of the 1st to Kyiv midnight of the next month minus 1 ms
+- Budget key: `toBudgetMonthKey` (`YYYY-MM-01T00:00:00.000Z`); stored months (`budget.month`, `monthly_report.month`, `targetDate`) are read with `monthKeyFromStoredMonth`, never converted to Kyiv time
+- Stored days (`nextPaymentDate`, `date`) are displayed with `formatStoredDay`; a day from a form is sent as `toStoredDay`
+- UI formatting: `formatKyivMoment`, `formatKyivTime`, `formatDayKey`, `formatMonthKey`
+- Outside the utility: no `getFullYear` / `getMonth` / `getDate` / `getDay` / `getHours`, no `setDate` / `setMonth` / `setHours`, no `getUTC*` / `Date.UTC`, no `toISOString().slice`, no `toLocaleDateString` / `toLocaleTimeString`, no `new Date(year, month, …)`
+- Changes to the utility or its consumers: run `rtk yarn calendar:check` (cross-project scenarios under several process time zones)
 
 ## Commands
 

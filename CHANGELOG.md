@@ -1,18 +1,22 @@
+[1.12.0] 12.10.2026
+
+- Kyiv calendar unification
+
 [1.11.0] 05.10.2026
 
-- Эквивалент транзакций в UAH
+- Transaction UAH equivalent
 
 [1.10.0] 14.09.2026
 
-- Режимы отображения расходов
+- Spending view modes
 
 [1.9.0] 04.09.2026
 
-- Апгрейд Expo SDK 57
+- Expo SDK 57 upgrade
 
 [1.8.0] 17.08.2026
 
-- Разделение платежа
+- Payment split
 - Transactions infinite scroll
 - Claude config consolidation
 

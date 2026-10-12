@@ -6,9 +6,11 @@ import type {
   CategorySpendingRow,
   SubCategorySpendingRow,
 } from './aggregateCategorySpending'
-
-/** Ключ категории, к которой транзакции не отнесены. */
-const UNCATEGORIZED_CATEGORY_KEY = 'uncategorized'
+import {
+  buildCategoryLeafKey,
+  buildRemainderLeafKey,
+  buildSubCategoryLeafKey,
+} from '../../lib/spendingLeaf'
 
 /**
  * Строка плоского списка расходов: подкатегория, остаток категории
@@ -32,7 +34,7 @@ export type FlatSpendingRow = {
 
 /** Ключ строки категории, общий для плоского и иерархического режимов. */
 export function buildCategoryRowId(categoryId: string | null): string {
-  return `cat:${categoryId ?? UNCATEGORIZED_CATEGORY_KEY}`
+  return buildCategoryLeafKey(categoryId)
 }
 
 function sumSubCategorySpending(row: CategorySpendingRow): number {
@@ -57,7 +59,7 @@ function toSubCategoryRow(
   sub: SubCategorySpendingRow,
 ): FlatSpendingRow {
   return {
-    id: `sub:${sub.subCategoryId}`,
+    id: buildSubCategoryLeafKey(sub.subCategoryId),
     name: sub.subCategoryName,
     parentName: row.categoryName,
     icon: row.categoryIcon,
@@ -74,7 +76,7 @@ function toRemainderRow(
   totalSpent: number,
 ): FlatSpendingRow {
   return {
-    id: `rest:${row.categoryId ?? UNCATEGORIZED_CATEGORY_KEY}`,
+    id: buildRemainderLeafKey(row.categoryId),
     name: UNCATEGORIZED_SUB_LABEL,
     parentName: row.categoryName,
     icon: row.categoryIcon,

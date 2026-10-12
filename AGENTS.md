@@ -34,7 +34,8 @@ Pinned — never use APIs from other major versions (full table: `ai/rules/proje
 - NativeWind `className` for layout — no inline `style={{}}`, no hardcoded hex colors
 - TanStack Query v5 object syntax: `useQuery({ queryKey, queryFn })`; every mutation invalidates its queries
 - Money: API amounts in kopecks — `/100` for display, `Math.round(*100)` on submit
-- Locale `uk-UA`, currency `UAH`, dates `toLocaleDateString('uk-UA')`
+- Locale `uk-UA`, currency `UAH`
+- Calendar Europe/Kyiv: days, months, and period boundaries only through `src/shared/utils/kyivCalendar/` (`ai/rules/projects/fin-app-mobile/architecture.md`, Dates)
 - Push to `main` auto-publishes an OTA update — run the `deploy-preflight` skill before merging
 - Mutating git commands are never run by agents; the user writes every commit (`ai/rules/common/git-policy.md`)
 - Version and CHANGELOG are decided by the user (`ai/rules/common/versioning-changelog.md`)
@@ -46,6 +47,7 @@ Pinned — never use APIs from other major versions (full table: `ai/rules/proje
 - `rtk yarn lint` — ESLint with `--fix` over `src`
 - `rtk yarn tsc --noEmit` — type check
 - `rtk yarn agents:check --strict` — agent configuration consistency: canon ↔ adapters, invocation policy, paths
+- `rtk yarn calendar:check` — Kyiv calendar scenarios under several process time zones
 - `rtk yarn api:generate` — Orval codegen from the backend OpenAPI contract
 - `rtk npx eas build --profile production --platform all` — native build (explicit user request only)
 

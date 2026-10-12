@@ -4,6 +4,14 @@ import {
   WalletTransactionType,
 } from '@/entities/transaction'
 import { KOPECK_DIVISOR } from '@/shared/constants/money'
+import {
+  getDayOfMonth,
+  getDaysInMonth,
+  getKyivDayKey,
+  getMonthKeyOfDay,
+  shiftMonthKey,
+  type DayKey,
+} from '@/shared/utils/kyivCalendar'
 
 export type DailyPoint = { value: number }
 
@@ -15,20 +23,22 @@ type AggregateResult = {
   chartDataPrev: DailyPoint[]       // full previous month
 }
 
+/**
+ * Расходы текущего и прошлого киевского месяца по дням.
+ *
+ * @param transactions Все загруженные транзакции.
+ * @param today Киевское «сегодня».
+ */
 export function aggregateExpenses(
   transactions: Transaction[],
-  today: Date,
+  today: DayKey,
 ): AggregateResult {
-  const currentDay = today.getDate()
-  const currentMonth = today.getMonth()
-  const currentYear = today.getFullYear()
+  const currentDay = getDayOfMonth(today)
+  const currentMonth = getMonthKeyOfDay(today)
+  const prevMonth = shiftMonthKey(currentMonth, -1)
 
-  const prevMonthDate = new Date(currentYear, currentMonth - 1, 1)
-  const prevMonth = prevMonthDate.getMonth()
-  const prevYear = prevMonthDate.getFullYear()
-
-  const daysInCurrentMonth = new Date(currentYear, currentMonth + 1, 0).getDate()
-  const daysInPrevMonth = new Date(prevYear, prevMonth + 1, 0).getDate()
+  const daysInCurrentMonth = getDaysInMonth(currentMonth)
+  const daysInPrevMonth = getDaysInMonth(prevMonth)
 
   const currentDailyAmounts = new Array<number>(daysInCurrentMonth).fill(0)
   const prevDailyAmounts = new Array<number>(daysInPrevMonth).fill(0)
@@ -38,17 +48,16 @@ export function aggregateExpenses(
   )
 
   for (const t of expenses) {
-    const date = new Date(t.transactionTime)
-    const month = date.getMonth()
-    const year = date.getFullYear()
-    const day = date.getDate()
+    const dayKey = getKyivDayKey(t.transactionTime)
+    const month = getMonthKeyOfDay(dayKey)
+    const day = getDayOfMonth(dayKey)
     const uah = getTransactionAmountUah(t)
     if (uah === null) continue
     const amountUah = Math.abs(uah) / KOPECK_DIVISOR
 
-    if (year === currentYear && month === currentMonth) {
+    if (month === currentMonth) {
       currentDailyAmounts[day - 1] += amountUah
-    } else if (year === prevYear && month === prevMonth) {
+    } else if (month === prevMonth) {
       prevDailyAmounts[day - 1] += amountUah
     }
   }

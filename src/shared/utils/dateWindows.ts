@@ -2,6 +2,7 @@ import {
   TRANSACTIONS_INITIAL_WINDOW_DAYS,
   TRANSACTIONS_NEXT_WINDOW_DAYS,
 } from '@/shared/constants/pagination'
+import { getKyivDayStart, getKyivToday, shiftDayKey } from '@/shared/utils/kyivCalendar'
 
 /**
  * Зазор между соседними окнами. `transaction_time` хранится с миллисекундной
@@ -15,16 +16,14 @@ export type TransactionsDateWindow = {
 }
 
 /**
- * Нижняя граница окна: начало дня, отстоящего от `now` на глубину окна.
- * День отматывается через `setDate`, чтобы переход на летнее время не смещал границу.
+ * Нижняя граница окна: киевская полночь дня, отстоящего от киевского «сегодня»
+ * на глубину окна. Сдвиг идёт по календарным суткам, поэтому переход
+ * на летнее время не смещает границу.
  */
 function getWindowBoundary(windowIndex: number, now: Date): Date {
   const daysBack =
     TRANSACTIONS_INITIAL_WINDOW_DAYS + windowIndex * TRANSACTIONS_NEXT_WINDOW_DAYS
-  const boundary = new Date(now.getTime())
-  boundary.setDate(boundary.getDate() - daysBack)
-  boundary.setHours(0, 0, 0, 0)
-  return boundary
+  return getKyivDayStart(shiftDayKey(getKyivToday(now), -daysBack))
 }
 
 /**

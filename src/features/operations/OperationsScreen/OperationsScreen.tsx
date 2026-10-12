@@ -12,16 +12,21 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { router } from 'expo-router'
 import * as icons from 'lucide-react-native'
-import { WalletTransactionType, getTransactionCurrency, type Transaction } from '@/entities/transaction'
+import {
+  WalletTransactionType,
+  DeleteTransactionModal,
+  TransactionAmountUah,
+  getTransactionCurrency,
+  type Transaction,
+} from '@/entities/transaction'
 import { TRANSFER_ICON_NAME , TRANSACTIONS_END_REACHED_THRESHOLD } from '@/shared/constants'
 import { FILTERS, useOperationsScreen, type DayGroup } from './useOperationsScreen'
-import { TransactionAmountUah } from './TransactionAmountUah/TransactionAmountUah'
-import { DeleteTransactionModal } from './DeleteTransactionModal/DeleteTransactionModal'
 import { OperationsFeedFooter } from './OperationsFeedFooter/OperationsFeedFooter'
 import { Icon } from '@/shared/ui/Icon/Icon'
 import { hexToRgba } from '@/shared/utils/colors'
 import { formatAmount, getCurrencySymbol } from '@/shared/utils/currency'
 import { formatDayTotal, formatTime } from '@/shared/utils/dateAndTime'
+import { formatMonthKey, getKyivCurrentMonthKey } from '@/shared/utils/kyivCalendar'
 
 
 type TxItemProps = { tx: Transaction; onEdit: (id: string) => void; onDelete: (tx: Transaction) => void }
@@ -121,7 +126,11 @@ export function OperationsScreen() {
     isDeleting,
   } = useOperationsScreen()
 
-  const currentMonth = new Date().toLocaleDateString('ru-RU', { month: 'long', year: 'numeric' })
+  const currentMonthKey = getKyivCurrentMonthKey()
+  const currentMonth = useMemo(
+    () => formatMonthKey(currentMonthKey, 'ru-RU', { month: 'long', year: 'numeric' }),
+    [currentMonthKey],
+  )
 
   const handleEdit = useCallback((id: string) => {
     router.push(`/transaction/${id}`)

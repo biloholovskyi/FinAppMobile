@@ -1,4 +1,5 @@
-import { View, Text } from 'react-native'
+import { View, Text, TouchableOpacity } from 'react-native'
+import { ChevronRight } from 'lucide-react-native'
 import { BudgetProgress, BUDGET_PROGRESS_HEIGHT } from './BudgetProgress'
 import {
   formatKopecksUah,
@@ -18,17 +19,19 @@ const DOT_COLOR_EXCEEDED = 'rgba(255,75,107,0.6)'
 
 type SubCategoryItemProps = {
   row: SubCategorySpendingRow
+  /** Открывает шторку транзакций подкатегории. */
+  onPress: () => void
 }
 
 /** Строка подкатегории внутри раскрытой карточки категории. */
-export function SubCategoryItem({ row }: SubCategoryItemProps) {
+export function SubCategoryItem({ row, onPress }: SubCategoryItemProps) {
   const { hasBudget, pct, isExceeded } = getBudgetProgress(
     row.totalSpent,
     row.budget,
   )
 
   return (
-    <View className="gap-1.5">
+    <TouchableOpacity className="gap-1.5" activeOpacity={0.7} onPress={onPress}>
       <View className="flex-row items-center gap-2">
         <View
           className="h-[5px] w-[5px] rounded-full"
@@ -51,6 +54,7 @@ export function SubCategoryItem({ row }: SubCategoryItemProps) {
         <Text className="w-[38px] text-right text-[11px] text-[#44445A]">
           {formatPct(row.percentOfTotal)}
         </Text>
+        <ChevronRight size={13} color="#44445A" />
       </View>
 
       <View style={{ paddingLeft: NESTED_INDENT }}>
@@ -86,6 +90,6 @@ export function SubCategoryItem({ row }: SubCategoryItemProps) {
           </Text>
         )}
       </View>
-    </View>
+    </TouchableOpacity>
   )
 }

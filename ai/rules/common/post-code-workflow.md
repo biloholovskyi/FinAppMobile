@@ -9,6 +9,7 @@ Stop at the first error and fix it before the next step. A failed step is never 
 1. Code or build config changed (`src/**`, `*.ts`, `*.tsx`, `tsconfig.json`, `eslint.config.js`, `package.json`):
    - `rtk yarn lint` — fix ALL ESLint errors
    - `rtk yarn tsc --noEmit` — always, right after lint
+   - `rtk yarn calendar:check` — after the type check, when `src/shared/utils/kyivCalendar/` or calendar consumers changed (`architecture.md`, Dates)
 2. Agent configuration changed (`AGENTS.md`, `CLAUDE.md`, `ai/**`, `.claude/**`, `.codex/**`, `.agents/**`):
    - `rtk yarn agents:check --strict`
 3. Both sets changed: step 1, then step 2; a failure in step 1 stops the sequence and step 2 is reported as not run

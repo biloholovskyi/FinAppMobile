@@ -1,18 +1,15 @@
 import { useState, useCallback, useMemo } from 'react'
-
-/** Месяц в формате, пригодном для ключа запроса бюджета. */
-function toMonthStr(date: Date): string {
-  const year = date.getFullYear()
-  const month = String(date.getMonth() + 1).padStart(2, '0')
-  return `${year}-${month}-01T00:00:00.000Z`
-}
-
-function startOfMonth(date: Date): Date {
-  return new Date(date.getFullYear(), date.getMonth(), 1)
-}
+import {
+  getKyivCurrentMonthKey,
+  shiftMonthKey,
+  toBudgetMonthKey,
+  type MonthKey,
+} from '@/shared/utils/kyivCalendar'
 
 export type MonthNavigation = {
-  selectedMonth: Date
+  /** Выбранный киевский месяц. */
+  month: MonthKey
+  /** Ключ бюджета выбранного месяца, `YYYY-MM-01T00:00:00.000Z`. */
   monthStr: string
   handlePrevMonth: () => void
   handleNextMonth: () => void
@@ -20,27 +17,25 @@ export type MonthNavigation = {
   isNextDisabled: boolean
 }
 
-/** Навигация по месяцам экрана статистики. */
+/** Навигация по месяцам экрана статистики по киевскому календарю. */
 export function useMonthNavigation(): MonthNavigation {
-  const [selectedMonth, setSelectedMonth] = useState(() =>
-    startOfMonth(new Date()),
-  )
+  const [month, setSelectedMonth] = useState<MonthKey>(() => getKyivCurrentMonthKey())
 
   const handlePrevMonth = useCallback(() => {
-    setSelectedMonth((d) => new Date(d.getFullYear(), d.getMonth() - 1, 1))
+    setSelectedMonth((current) => shiftMonthKey(current, -1))
   }, [])
 
   const handleNextMonth = useCallback(() => {
-    setSelectedMonth((d) => new Date(d.getFullYear(), d.getMonth() + 1, 1))
+    setSelectedMonth((current) => shiftMonthKey(current, 1))
   }, [])
 
-  const monthStr = useMemo(() => toMonthStr(selectedMonth), [selectedMonth])
+  const monthStr = useMemo(() => toBudgetMonthKey(month), [month])
 
   return {
-    selectedMonth,
+    month,
     monthStr,
     handlePrevMonth,
     handleNextMonth,
-    isNextDisabled: monthStr >= toMonthStr(startOfMonth(new Date())),
+    isNextDisabled: month >= getKyivCurrentMonthKey(),
   }
 }

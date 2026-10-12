@@ -1,7 +1,7 @@
 import { Modal, View, Text, Pressable, TouchableOpacity, ActivityIndicator } from 'react-native'
 import * as icons from 'lucide-react-native'
-import type { Transaction } from '@/entities/transaction'
-import { useDeleteTransactionModal } from './useDeleteTransactionModal'
+import type { Transaction } from '../../model/types'
+import { getDeleteTransactionDisplay } from './getDeleteTransactionDisplay'
 
 type Props = {
   transaction: Transaction | null
@@ -11,7 +11,7 @@ type Props = {
 }
 
 function ModalContent({ transaction, isDeleting, onConfirm, onCancel }: Props & { transaction: Transaction }) {
-  const tx = useDeleteTransactionModal(transaction)
+  const tx = getDeleteTransactionDisplay(transaction)
 
   return (
     <View className="bg-[#10101C] rounded-t-3xl border-t border-white/[0.08] pt-3.5 px-5 pb-7 items-center">
@@ -96,6 +96,7 @@ function ModalContent({ transaction, isDeleting, onConfirm, onCancel }: Props & 
   )
 }
 
+/** Модалка подтверждения удаления транзакции. */
 export function DeleteTransactionModal({ transaction, isDeleting, onConfirm, onCancel }: Props) {
   return (
     <Modal visible={!!transaction} animationType="slide" transparent onRequestClose={onCancel}>
