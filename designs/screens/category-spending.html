@@ -369,6 +369,108 @@
       box-shadow: 0 0 0 1px rgba(79,158,255,0.3);
     }
 
+    /* ── Over-budget filter ── */
+    .filter-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .filter-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 5px 4px 10px;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--border-default);
+      background: var(--bg-surface);
+      color: var(--text-secondary);
+      font-family: 'Outfit', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background var(--t-base) var(--ease-out),
+                  border-color var(--t-base) var(--ease-out),
+                  color var(--t-base) var(--ease-out),
+                  transform var(--t-fast) var(--ease-spring);
+    }
+    .filter-chip:hover { border-color: var(--border-strong); }
+    .filter-chip:active { transform: scale(0.97); }
+    .filter-chip:focus-visible { outline: 2px solid var(--accent-blue); outline-offset: 2px; }
+
+    .filter-chip .chip-count {
+      min-width: 20px;
+      height: 20px;
+      padding: 0 6px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-full);
+      background: var(--bg-elevated);
+      color: var(--text-secondary);
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      transition: background var(--t-base) var(--ease-out), color var(--t-base) var(--ease-out);
+    }
+
+    .filter-chip.has-over { color: var(--text-primary); }
+    .filter-chip.has-over svg { color: var(--accent-red); }
+    .filter-chip.has-over .chip-count { background: var(--accent-red-glow); color: var(--accent-red); }
+
+    .filter-chip[aria-pressed="true"] {
+      background: var(--accent-red-glow);
+      border-color: var(--red-line);
+      color: var(--accent-red);
+    }
+    .filter-chip[aria-pressed="true"] .chip-count {
+      background: var(--accent-red);
+      color: var(--text-inverse);
+    }
+
+    .filter-note {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      background: var(--red-soft);
+      border: 1px solid var(--red-line);
+      border-radius: var(--radius-md);
+      color: var(--accent-red);
+      animation: fadeUp var(--t-base) var(--ease-out) both;
+    }
+    .filter-note svg { flex-shrink: 0; }
+    .filter-note-text {
+      flex: 1;
+      min-width: 0;
+      font-family: 'Outfit', sans-serif;
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+    .filter-note-amount {
+      font-family: 'Space Mono', monospace;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--accent-red);
+    }
+
+    .filter-reset {
+      margin-top: 4px;
+      padding: 8px 16px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-full);
+      color: var(--text-primary);
+      font-family: 'Outfit', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background var(--t-fast) var(--ease-out), border-color var(--t-fast) var(--ease-out);
+    }
+    .filter-reset:hover { background: var(--bg-overlay); border-color: var(--border-strong); }
+    #filter-empty .tx-empty-icon { color: var(--accent-green); background: var(--tint-green); }
+
     /* ── Shared: hide inactive view ── */
     .view-hidden { display: none !important; }
 
@@ -1368,8 +1470,22 @@
         <button class="view-switch-btn" id="view-btn-subcategories" onclick="switchView('subcategories')">Подкатегории</button>
       </div>
 
-      <!-- Section label -->
-      <span class="section-label" id="section-label">По категориям</span>
+      <!-- Section label + "over budget only" filter chip (works in both view modes) -->
+      <div class="filter-row">
+        <span class="section-label" id="section-label">По категориям</span>
+        <button class="filter-chip" id="filter-chip" type="button" aria-pressed="false" onclick="toggleOverOnly()">
+          <i data-lucide="alert-triangle" width="13" height="13"></i>
+          <span>Превышен бюджет</span>
+          <span class="chip-count" id="filter-count">0</span>
+        </button>
+      </div>
+
+      <!-- Filter summary: overspend of the visible (filtered) set -->
+      <div class="filter-note" id="filter-note" hidden>
+        <i data-lucide="trending-up" width="15" height="15"></i>
+        <span class="filter-note-text" id="filter-note-text"></span>
+        <span class="filter-note-amount" id="filter-note-amount"></span>
+      </div>
 
       <!-- Category list (sorted by spending desc) -->
       <div class="category-list" id="category-list">
@@ -2096,6 +2212,16 @@
         </div>
 
       </div><!-- /flat-list -->
+
+      <!-- Empty state: filter on, nothing over budget -->
+      <div class="tx-empty" id="filter-empty" hidden>
+        <div class="tx-empty-icon">
+          <i data-lucide="circle-check" width="26" height="26"></i>
+        </div>
+        <span class="tx-empty-title">Превышений нет</span>
+        <span class="tx-empty-text" id="filter-empty-text"></span>
+        <button class="filter-reset" type="button" onclick="toggleOverOnly()">Показать все</button>
+      </div>
     </div><!-- /content -->
   </div><!-- /screen -->
 
@@ -2406,24 +2532,73 @@
     });
   }
 
+  /** View mode and the "over budget only" filter are independent: each keeps its state when the other changes. */
+  let viewMode = 'categories';
+  let isOverOnly = false;
+
   function switchView(view) {
-    const categoryList    = document.getElementById('category-list');
-    const flatList        = document.getElementById('flat-list');
-    const btnCategories   = document.getElementById('view-btn-categories');
-    const btnSubcategories= document.getElementById('view-btn-subcategories');
-    const sectionLabel    = document.getElementById('section-label');
+    viewMode = view === 'subcategories' ? 'subcategories' : 'categories';
+    const showFlat = viewMode === 'subcategories';
 
-    const showFlat = view === 'subcategories';
+    $('category-list').classList.toggle('view-hidden', showFlat);
+    $('flat-list').classList.toggle('view-hidden', !showFlat);
+    $('view-btn-categories').classList.toggle('active', !showFlat);
+    $('view-btn-subcategories').classList.toggle('active', showFlat);
 
-    categoryList.classList.toggle('view-hidden', showFlat);
-    flatList.classList.toggle('view-hidden', !showFlat);
+    applyFilter();
+    replayStagger(showFlat ? $('flat-list') : $('category-list'));
+  }
 
-    btnCategories.classList.toggle('active', !showFlat);
-    btnSubcategories.classList.toggle('active', showFlat);
+  function toggleOverOnly() {
+    isOverOnly = !isOverOnly;
+    applyFilter();
+    replayStagger(viewMode === 'subcategories' ? $('flat-list') : $('category-list'));
+  }
 
-    sectionLabel.textContent = showFlat ? 'По подкатегориям' : 'По категориям';
+  /** Ids of budgeted entries (categories or leaf items) that already exceed their monthly budget. */
+  function overBudgetIds(entries, spentById) {
+    return Object.keys(entries).filter((id) => {
+      const info = budgetInfo(spentById[id], entries[id].budget);
+      return info && info.isOver;
+    });
+  }
 
-    replayStagger(showFlat ? flatList : categoryList);
+  /**
+   * Shows only over-budget entries of the active mode when the filter is on.
+   * Items without a budget are never over budget. The month summary card stays unfiltered;
+   * the chip count, the overspend note and the empty state follow the visible set.
+   */
+  function applyFilter() {
+    const agg = aggregate();
+    const isFlat = viewMode === 'subcategories';
+    const entries = isFlat ? ITEMS : CATS;
+    const spentById = isFlat ? agg.slots : agg.cats;
+    const overIds = overBudgetIds(entries, spentById);
+    const budgetedCount = Object.keys(entries).filter((id) => entries[id].budget).length;
+    const overKop = overIds.reduce((acc, id) => acc + spentById[id] - entries[id].budget * KOPECK_DIVISOR, 0);
+    const noun = isFlat ? 'подкатегориям' : 'категориям';
+
+    Object.keys(CATS).forEach((id) => { $(id).hidden = isOverOnly && !overIds.includes(id); });
+    Object.keys(ITEMS).forEach((id) => {
+      document.querySelector(`.flat-item[data-leaf="${id}"]`).hidden = isOverOnly && !overIds.includes(id);
+    });
+
+    $('section-label').textContent = (isFlat ? 'По подкатегориям' : 'По категориям') + (isOverOnly ? ' · превышено' : '');
+
+    const chip = $('filter-chip');
+    chip.setAttribute('aria-pressed', String(isOverOnly));
+    chip.classList.toggle('has-over', overIds.length > 0);
+    $('filter-count').textContent = overIds.length;
+
+    const hasResults = overIds.length > 0;
+    $('filter-note').hidden = !(isOverOnly && hasResults);
+    $('filter-note-text').textContent = `Превышение по ${overIds.length} из ${budgetedCount} ${noun} с бюджетом`;
+    $('filter-note-amount').textContent = '+' + money(overKop);
+
+    $('filter-empty').hidden = !(isOverOnly && !hasResults);
+    $('filter-empty-text').textContent = isFlat
+      ? 'Ни одна подкатегория не вышла за бюджет в этом месяце'
+      : 'Ни одна категория не вышла за бюджет в этом месяце';
   }
 
   // ── Transactions: data model, aggregates, edit & delete ──
@@ -2511,7 +2686,8 @@
     ],
     'sub-metro': [
       [2, '08:30', 'Метро — пополнение карты', 'mono', 300], [11, '08:34', 'Метро — пополнение карты', 'mono', 300],
-      [19, '08:29', 'Kyiv Smart Card', 'priv', 400], [27, '08:41', 'Метро — пополнение карты', 'mono', 200]
+      [19, '08:29', 'Kyiv Smart Card', 'priv', 400], [27, '08:41', 'Метро — пополнение карты', 'mono', 200],
+      [29, '08:36', 'Метро — пополнение карты', 'mono', 400]
     ],
     'sub-fuel': [
       [6, '16:20', 'WOG', 'mono', 280], [14, '18:45', 'OKKO', 'priv', 220], [22, '12:10', 'UPG', 'mono', 200]
@@ -2533,7 +2709,8 @@
       [17, '17:50', 'Аптека АНЦ', 'mono', 260], [23, '09:15', 'Synevo — анализы', 'priv', 300]
     ],
     'cat-6': [
-      [7, '15:20', 'Zara', 'mono', 450], [15, '14:05', 'H&M', 'priv', 300], [22, '16:40', 'Intertop', 'mono', 350]
+      [7, '15:20', 'Zara', 'mono', 450], [15, '14:05', 'H&M', 'priv', 300], [22, '16:40', 'Intertop', 'mono', 350],
+      [28, '12:30', 'Reserved', 'mono', 600]
     ],
     'cat-7': [
       [3, '21:10', 'Перевод на карту', 'mono', 200], [12, '13:25', 'Оплата по QR', 'priv', 150],
@@ -2543,8 +2720,8 @@
 
   /** Amounts (UAH) shown on the screen before any edit. */
   const EXPECTED_SPENT = {
-    'sub-super': 4500, 'sub-market': 1800, 'sub-cafe': 900, 'sub-taxi': 2900, 'sub-metro': 1200, 'sub-fuel': 700,
-    'cat-3': 3500, 'sub-electric': 1650, 'sub-internet': 1200, 'cat-5': 1800, 'cat-6': 1100, 'cat-7': 600
+    'sub-super': 4500, 'sub-market': 1800, 'sub-cafe': 900, 'sub-taxi': 2900, 'sub-metro': 1600, 'sub-fuel': 700,
+    'cat-3': 3500, 'sub-electric': 1650, 'sub-internet': 1200, 'cat-5': 1800, 'cat-6': 1700, 'cat-7': 600
   };
 
   const pad2 = (n) => String(n).padStart(2, '0');
@@ -2886,6 +3063,7 @@
     const flatEls = Object.keys(ITEMS).map((id) => document.querySelector(`.flat-item[data-leaf="${id}"]`));
     flatEls.forEach((el) => { el.innerHTML = flatItemHtml(el.dataset.leaf, agg); });
     sortChildren($('flat-list'), flatEls, (el) => agg.slots[el.dataset.leaf]);
+    applyFilter();
     lucide.createIcons();
   }
 

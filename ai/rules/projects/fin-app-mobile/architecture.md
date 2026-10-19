@@ -144,6 +144,8 @@ Dark mode:
 
 No hardcoded hex colors — use Tailwind tokens only.
 
+Color tokens live in `tailwind.config.js` under `theme.extend.colors` (e.g. `spending.*` — values from the `:root` of the matching `designs/screens/*.html`); lucide icon `color` props take named constants. Changing the config requires `rtk npx expo start --clear`.
+
 ## Money / Kopeck Math (CRITICAL)
 
 API amounts are in KOPECKS (integer). Always:
