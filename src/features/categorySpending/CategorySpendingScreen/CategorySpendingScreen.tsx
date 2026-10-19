@@ -7,6 +7,9 @@ import { BudgetSummaryCard } from './BudgetSummaryCard'
 import { CategoryCard } from './CategoryCard'
 import { SpendingRowCard } from './SpendingRowCard'
 import { ViewModeSegment } from './ViewModeSegment'
+import { OverBudgetFilterRow } from './OverBudgetFilterRow'
+import { OverBudgetNote } from './OverBudgetNote'
+import { OverBudgetEmpty } from './OverBudgetEmpty'
 import { getSpendingListItemKey } from './lib/flattenSpendingRows'
 import type { SpendingListItem } from './lib/flattenSpendingRows'
 
@@ -30,6 +33,11 @@ export function CategorySpendingScreen({ onOpenLeaf }: CategorySpendingScreenPro
     isError,
     listItems,
     summary,
+    isOverOnly,
+    onToggleOverOnly,
+    onResetOverOnly,
+    overStats,
+    hasAnyItems,
   } = useCategorySpendingScreen()
 
   const handleOpenLeaf = useCallback(
@@ -93,19 +101,27 @@ export function CategorySpendingScreen({ onOpenLeaf }: CategorySpendingScreenPro
                 viewMode={viewMode}
                 onChange={onViewModeChange}
               />
-              {listItems.length > 0 && (
-                <Text className="px-0.5 text-[11px] font-medium uppercase tracking-widest text-[#8888AA]">
-                  {sectionLabel}
-                </Text>
+              <OverBudgetFilterRow
+                sectionLabel={sectionLabel}
+                isOverOnly={isOverOnly}
+                overCount={overStats.overCount}
+                onToggleOverOnly={onToggleOverOnly}
+              />
+              {isOverOnly && listItems.length > 0 && (
+                <OverBudgetNote viewMode={viewMode} stats={overStats} />
               )}
             </View>
           }
           ListEmptyComponent={
-            <View className="items-center py-12">
-              <Text className="text-[14px] text-[#8888AA]">
-                Нет расходов за этот месяц
-              </Text>
-            </View>
+            isOverOnly && hasAnyItems ? (
+              <OverBudgetEmpty viewMode={viewMode} onReset={onResetOverOnly} />
+            ) : (
+              <View className="items-center py-12">
+                <Text className="text-[14px] text-[#8888AA]">
+                  Нет расходов за этот месяц
+                </Text>
+              </View>
+            )
           }
           renderItem={renderSpendingItem}
         />

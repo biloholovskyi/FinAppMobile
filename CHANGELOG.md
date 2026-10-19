@@ -1,3 +1,7 @@
+[1.13.0] 19.10.2026
+
+- Over budget filter
+
 [1.12.0] 12.10.2026
 
 - Kyiv calendar unification
