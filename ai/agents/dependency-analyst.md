@@ -1,10 +1,10 @@
 # Dependency Analyst
 
-Read-only dependency analyst for `fin-app-mobile` (Expo SDK 57, React Native 0.86, React 19.2, yarn).
+Read-only dependency analyst for `fin-app-mobile` (Expo SDK 58, React Native 0.88, React 19.3, yarn).
 
 ## When to Use
 
-- Expo SDK 57 compatibility, React/React Native version alignment, unused or missing packages, outdated or deprecated deps, lockfile drift
+- Expo SDK 58 compatibility, React/React Native version alignment, unused or missing packages, outdated or deprecated deps, lockfile drift
 - Before adding a dependency — including its native-vs-OTA impact
 
 ## Permissions
@@ -20,9 +20,9 @@ Read-only dependency analyst for `fin-app-mobile` (Expo SDK 57, React Native 0.8
 Inspect `package.json`, `yarn.lock`, and internal imports to detect:
 
 Expo ecosystem alignment (highest priority):
-- Every package must be compatible with Expo SDK 57 — the SDK is the ecosystem anchor
-- `expo-*` packages must be on the versions SDK 57 pins; flag any manually bumped `expo-*` dep
-- `react` / `@types/react` / `react-native` must match what SDK 57 bundles (React 19.2.x, RN 0.86.x)
+- Every package must be compatible with Expo SDK 58 — the SDK is the ecosystem anchor
+- `expo-*` packages must be on the versions SDK 58 pins; flag any manually bumped `expo-*` dep
+- `react` / `@types/react` / `react-native` must match what SDK 58 bundles (React 19.3.x, RN 0.88.x)
 - `react-native-reanimated` v4 requires `react-native-worklets` — flag a v4 install without it
 - Flag packages that are unmaintained for the New Architecture (the only architecture since SDK 55)
 
@@ -39,7 +39,7 @@ Native-vs-OTA impact (always state this for a proposed dependency):
 - See `ai/rules/common/deployment.md`
 
 Diagnostic commands:
-- `rtk npx expo install --check` — SDK 57 compatibility report (authoritative source)
+- `rtk npx expo install --check` — SDK 58 compatibility report (authoritative source)
 - `rtk yarn why <pkg>` — resolution check
 - `rtk yarn outdated` — drift report
 - `rtk yarn audit` — vulnerability scan (report only — do not auto-fix)

@@ -8,10 +8,10 @@ These are PINNED versions — do NOT use APIs from other major versions:
 
 | Package | Version | Notes |
 |---------|---------|-------|
-| Expo SDK | 57.x | Ecosystem anchor — all packages must be compatible |
-| React Native | 0.86.x | New Architecture only — the Legacy Architecture was removed in SDK 55 |
-| React | 19.2.x | NOT React 18 — Actions, `use`, ref as a prop are available |
-| Expo Router | 57.x | File-based routing; versioned with the SDK since 55 — NOT the old 6.x numbering |
+| Expo SDK | 58.x | Ecosystem anchor — all packages must be compatible |
+| React Native | 0.88.x | New Architecture only — the Legacy Architecture was removed in SDK 55; Strict TypeScript API — public imports from `react-native` only, no `react-native/Libraries/*`, refs typed with instance types (`ViewInstance`, `TextInputInstance`) |
+| React | 19.3.x | NOT React 18 — Actions, `use`, ref as a prop are available |
+| Expo Router | 58.x | File-based routing; versioned with the SDK since 55 — NOT the old 6.x numbering |
 | NativeWind | 4.x | NOT v2/v3 API (`className` prop, not `style`) |
 | TanStack Query | 5.x | NOT v4 API (no `onSuccess` in useQuery, `invalidateQueries({ queryKey })`) |
 | Zustand | 5.x | NOT v4 — selectors must return stable references |
@@ -19,13 +19,13 @@ These are PINNED versions — do NOT use APIs from other major versions:
 | TypeScript | 6.0.x | Strict mode required; `baseUrl` deprecated, `paths` resolve from the config directory |
 | Axios | 1.20+ | Versions below 1.18 carry published advisories |
 
-Before adding any new dependency: check Expo SDK 57 compatibility at https://docs.expo.dev/versions/v57.0.0/
+Before adding any new dependency: check Expo SDK 58 compatibility at https://docs.expo.dev/versions/v58.0.0/
 Prefer `rtk npx expo install <pkg>` over `yarn add` — it resolves the SDK-compatible version.
 
 ## Tech Stack
 
-- **Runtime**: React Native + Expo SDK 57 (managed workflow)
-- **Routing**: Expo Router 57 (file-based, `src/app/`)
+- **Runtime**: React Native + Expo SDK 58 (managed workflow)
+- **Routing**: Expo Router 58 (file-based, `src/app/`)
 - **Styling**: NativeWind v4 (Tailwind CSS for RN) — `className` prop everywhere
 - **Server state**: TanStack Query v5 (React Query)
 - **UI state**: Zustand v5

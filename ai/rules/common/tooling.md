@@ -10,6 +10,7 @@ Mission: define shell behavior and package scripts for `fin-app-mobile`, and poi
 - SHELL = `PowerShell`
 - SHELL_PREFIX = `rtk`
 - NODE_VERSION_CI = 22
+- NODE_VERSION_MIN = `^22.13` | `^24.3` | `>=26` (Expo SDK 58; odd majors unsupported)
 
 ## Package Manager
 
@@ -17,7 +18,7 @@ Mission: define shell behavior and package scripts for `fin-app-mobile`, and poi
 
 - `package-lock.json` is stale and must not be updated or committed — it is scheduled for removal
 - Never run `npm install` / `pnpm install` here — they desync `yarn.lock`
-- For Expo-ecosystem packages prefer `rtk npx expo install <pkg>` over `yarn add` — it resolves the SDK 57 compatible version
+- For Expo-ecosystem packages prefer `rtk npx expo install <pkg>` over `yarn add` — it resolves the SDK 58 compatible version
 
 ## Agent Layout
 
@@ -75,6 +76,7 @@ EAS:
 - `rtk npx eas update --branch production --environment production` — OTA update; `--environment` is required from SDK 55 onward
 - `rtk npx eas build:list --limit 5` — recent builds
 - `rtk npx eas submit --platform ios|android` — store submission
+- `eas-cli` is not a project dependency; when `npx eas` fails with `could not determine executable to run`, call it as `rtk proxy npx.cmd -y eas-cli@latest <command>`
 
 ## Anti-Patterns
 

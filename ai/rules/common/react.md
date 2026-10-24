@@ -1,6 +1,6 @@
 # React Native (AI Optimized)
 
-Shared React/React Native rules for fin-app-mobile (React 19.2 + Expo SDK 57).
+Shared React/React Native rules for fin-app-mobile (React 19.3 + Expo SDK 58).
 
 Load order:
 - Always: `ai/rules/common/react.md`
@@ -63,7 +63,7 @@ Load order:
 - Use `getItemLayout` for fixed-height lists (performance)
 - Use `windowSize`, `maxToRenderPerBatch` for optimization
 
-### Navigation (Expo Router 57)
+### Navigation (Expo Router 58)
 - Never import from `expo-router` in shared/, entities/, features/
 - Only `src/app/` route files use expo-router
 - Use typed routes: `router.push('/path')` with typed Href

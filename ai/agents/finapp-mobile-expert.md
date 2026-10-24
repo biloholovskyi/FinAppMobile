@@ -17,8 +17,8 @@ React Native + Expo expert for fin-app-mobile, a personal finance mobile app tha
 
 ## Tech Stack
 
-- React Native + Expo SDK 57
-- Expo Router 57 (file-based routing — app/ directory, like Next.js App Router)
+- React Native + Expo SDK 58
+- Expo Router 58 (file-based routing — app/ directory, like Next.js App Router)
 - NativeWind v4 (Tailwind CSS for React Native)
 - TypeScript (strict mode)
 - Axios + React Query (server state) + Zustand (UI/offline state)

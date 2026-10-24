@@ -18,8 +18,8 @@ Project rules define the workflow within system limits, permissions, and availab
 ## Stack
 
 Pinned — never use APIs from other major versions (full table: `ai/rules/projects/fin-app-mobile/architecture.md`):
-- Expo SDK 57 (managed), React Native 0.86 (New Architecture only), React 19.2
-- Expo Router 57, NativeWind 4, TanStack Query 5, Zustand 5, Reanimated 4 + `react-native-worklets`
+- Expo SDK 58 (managed), React Native 0.88 (New Architecture only), React 19.3
+- Expo Router 58, NativeWind 4, TanStack Query 5, Zustand 5, Reanimated 4 + `react-native-worklets`
 - TypeScript 6.0 strict — no `baseUrl`; `paths` resolve from the config directory
 - Axios via `src/shared/api/base.ts`; generated Orval hooks in `src/shared/api/generated/`
 
