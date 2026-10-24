@@ -19,7 +19,7 @@ export function CategoriesScreen() {
   const {
     categories,
     isLoading,
-    refetch,
+    handleRefresh,
     isRefetching,
     handleAddCategory,
     handleEdit,
@@ -78,7 +78,7 @@ export function CategoriesScreen() {
         refreshControl={
           <RefreshControl
             refreshing={isRefetching}
-            onRefresh={refetch}
+            onRefresh={handleRefresh}
             tintColor="#4F9EFF"
             colors={['#4F9EFF']}
           />

@@ -204,14 +204,14 @@ OK to use inline (no constant needed):
 ### Dependency Hygiene
 - Prefer existing utilities; add deps only when justified
 - Modules side-effect free on import
-- Respect Expo SDK 57 dependency constraints — check compatibility before adding packages
+- Respect Expo SDK 58 dependency constraints — check compatibility before adding packages
 - Use `yarn add` not npm
 
 ### Security Audit
 - Validate and sanitize all untrusted input at boundaries (API responses, user input)
 - Prevent injection patterns
 - Logging hygiene: never log tokens, secrets, passwords
-- Supply-chain hygiene: audit dependencies, verify compatibility with Expo SDK 57
+- Supply-chain hygiene: audit dependencies, verify compatibility with Expo SDK 58
 
 ## Anti-Patterns
 

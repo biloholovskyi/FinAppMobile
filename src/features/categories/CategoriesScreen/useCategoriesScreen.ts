@@ -15,6 +15,10 @@ export function useCategoriesScreen() {
     queryFn: fetchCategories,
   })
 
+  const handleRefresh = useCallback(async () => {
+    await refetch()
+  }, [refetch])
+
   const handleAddCategory = useCallback(() => {
     router.push('/category/create')
   }, [router])
@@ -61,7 +65,7 @@ export function useCategoriesScreen() {
   return {
     categories: data,
     isLoading,
-    refetch,
+    handleRefresh,
     isRefetching,
     handleAddCategory,
     handleEdit,

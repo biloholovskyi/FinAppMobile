@@ -1,6 +1,6 @@
 # React Performance Reviewer
 
-Read-only reviewer for React Native performance risks and optimization opportunities (Expo SDK 57, NativeWind v4, TanStack React Query v5).
+Read-only reviewer for React Native performance risks and optimization opportunities (Expo SDK 58, NativeWind v4, TanStack React Query v5).
 
 ## When to Use
 

@@ -1,3 +1,7 @@
+[1.13.1] 24.10.2026
+
+- Expo SDK 58 upgrade
+
 [1.13.0] 19.10.2026
 
 - Over budget filter

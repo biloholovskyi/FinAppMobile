@@ -1,11 +1,11 @@
 # React 19 Addendum (AI Optimized)
 
-Load after `ai/rules/common/react.md`. This project runs React 19.2 (bundled with Expo SDK 57).
+Load after `ai/rules/common/react.md`. This project runs React 19.3 (bundled with Expo SDK 58).
 
 ## Constants
 
-- REACT_VERSION = "19.2.x"
-- REACT_TYPES_VERSION = "~19.2.x"
+- REACT_VERSION = "19.3.x"
+- REACT_TYPES_VERSION = "~19.3.x"
 
 ## Decision Matrix
 

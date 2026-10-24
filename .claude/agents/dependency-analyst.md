@@ -1,6 +1,6 @@
 ---
 name: "Dependency Analyst"
-description: "Use this agent when you need to analyze fin-app-mobile dependencies — Expo SDK 57 compatibility, React/React Native version alignment, unused or missing packages, outdated or deprecated deps, lockfile drift — and get fix suggestions without files being modified.\\n\\n<example>\\nContext: The user wants to add a new native library.\\nuser: \"Can we add react-native-mmkv to the project?\"\\nassistant: \"I'll use the Dependency Analyst agent to check its Expo SDK 57 compatibility and whether it requires a native build.\"\\n<commentary>\\nChecking SDK compatibility and native-build impact before adding a dependency is exactly this agent's job.\\n</commentary>\\n</example>"
+description: "Use this agent when you need to analyze fin-app-mobile dependencies — Expo SDK 58 compatibility, React/React Native version alignment, unused or missing packages, outdated or deprecated deps, lockfile drift — and get fix suggestions without files being modified.\\n\\n<example>\\nContext: The user wants to add a new native library.\\nuser: \"Can we add react-native-mmkv to the project?\"\\nassistant: \"I'll use the Dependency Analyst agent to check its Expo SDK 58 compatibility and whether it requires a native build.\"\\n<commentary>\\nChecking SDK compatibility and native-build impact before adding a dependency is exactly this agent's job.\\n</commentary>\\n</example>"
 tools: Bash, Read, Glob, Grep
 model: sonnet
 memory: project

@@ -20,7 +20,7 @@ SSoT for the pipeline: `ai/rules/common/deployment.md`. Version/CHANGELOG rules:
 
 ## Codebase Knowledge
 
-- `fin-app-mobile` is a React Native + Expo SDK 57 app (Expo Router 57, React 19.2, RN 0.86, New Architecture), package manager `yarn`.
+- `fin-app-mobile` is a React Native + Expo SDK 58 app (Expo Router 58, React 19.3, RN 0.88, New Architecture), package manager `yarn`.
 - Two release paths: OTA (`eas update --branch production`, JS bundle only) and native build (`eas build --profile production`, new binary).
 - CI: `.github/workflows/deploy-expo.yml` publishes an OTA update on every push to `main`, running only `yarn tsc --noEmit` — ESLint is NOT run in CI.
 - Config-as-code: `app.json` (`expo.version`, `expo.runtimeVersion`, `expo.updates.url`, `expo.extra.eas.projectId`, plugins) and `eas.json` (single `production` profile bound to the `production` channel).
