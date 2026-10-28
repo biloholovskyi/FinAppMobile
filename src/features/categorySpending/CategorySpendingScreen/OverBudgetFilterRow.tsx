@@ -19,7 +19,7 @@ export function OverBudgetFilterRow({
 }: OverBudgetFilterRowProps) {
   return (
     <View className="flex-row items-center justify-between gap-2">
-      <Text className="px-0.5 text-[11px] font-medium uppercase tracking-widest text-spending-secondary">
+      <Text className="flex-1 px-0.5 text-[11px] font-medium uppercase tracking-widest text-spending-secondary">
         {sectionLabel}
       </Text>
       <OverBudgetChip

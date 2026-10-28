@@ -87,10 +87,10 @@ export function OverBudgetChip({
       accessibilityHint={OVER_BUDGET_CHIP_A11Y_HINT}
       hitSlop={CHIP_HIT_SLOP}
       onPress={onPress}
-      className={`flex-row items-center gap-1.5 rounded-full border py-1 pl-2.5 pr-1.5 active:opacity-80 ${tone.container}`}
+      className={`shrink flex-row items-center gap-1.5 rounded-full border py-1 pl-2.5 pr-1.5 active:opacity-80 ${tone.container}`}
     >
       <AlertTriangle size={CHIP_ICON_SIZE} color={tone.iconColor} />
-      <Text className={`text-[12px] font-medium ${tone.text}`}>
+      <Text className={`shrink text-[12px] font-medium ${tone.text}`}>
         {OVER_BUDGET_FILTER_LABEL}
       </Text>
       <View
